@@ -1,0 +1,17 @@
+# Copyright 2022 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../third_party.gni")
+
+third_party("libyuv") {
+  public_include_dirs = [
+    ".",
+    "../externals/libyuv/include",
+  ]
+
+  include_dirs = [ "../externals/libyuv" ]
+
+  sources = [
+  ]
+}

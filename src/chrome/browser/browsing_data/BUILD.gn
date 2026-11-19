@@ -1,0 +1,26 @@
+# Copyright 2020 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+source_set("constants") {
+  sources = [ "chrome_browsing_data_remover_constants.h" ]
+  deps = [
+    "//chrome/common:buildflags",
+    "//content/public/browser",
+    "//extensions/buildflags",
+  ]
+}
+
+source_set("browsing_data") {
+  public = [ "browsing_data_important_sites_util.h" ]
+
+  sources = [ "browsing_data_important_sites_util.cc" ]
+
+  public_deps = [
+    "//components/browsing_data/core",
+    "//content/public/browser",
+    "//ui/base/interaction",
+  ]
+
+  deps = [ ":constants" ]
+}

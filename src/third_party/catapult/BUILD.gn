@@ -1,0 +1,3 @@
+# Hallulium stub — catapult removed.
+group("catapult") {}
+group("telemetry_chrome_test_support") { }

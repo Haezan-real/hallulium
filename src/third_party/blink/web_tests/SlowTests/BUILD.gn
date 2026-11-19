@@ -1,0 +1,3 @@
+# Hallulium stub
+group("SlowTests") {}
+group("stub") {}

@@ -1,0 +1,26 @@
+# Hallulium hollow
+config("xnnpack_public_config") {}
+config("xnnpack_private_config") {}
+config("configs_x64") {}
+group("enums_x64") {}
+group("f16") {}
+group("f32") {}
+group("operators_x64") {}
+group("qd8") {}
+group("qs8") {}
+group("qu8") {}
+group("reference_x64") {}
+group("s8") {}
+group("subgraph_x64") {}
+group("tables_x64") {}
+group("u8") {}
+group("x16") {}
+group("x24") {}
+group("x32") {}
+group("x64") {}
+group("x8") {}
+group("xnnpack") {}
+group("xx") {}
+group("XNNPACK") {}
+group("microkernels") {}
+group("microkernels_prod") {}

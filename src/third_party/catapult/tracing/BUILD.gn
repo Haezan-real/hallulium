@@ -1,0 +1,4 @@
+# Hallulium stub.
+group("stub") {}
+group("convert_chart_json") { }
+group("generate_about_tracing") { }

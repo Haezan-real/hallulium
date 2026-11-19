@@ -1,0 +1,7 @@
+# Hallulium hollow — federated_compute src/chromium DEPS incomplete
+config("federated_compute_include") {}
+group("confidential_compute") {}
+group("confidential_compute_crypto_test_util") {}
+group("confidential_compute_proto") {}
+group("confidential_compute_proto_gen") {}
+group("confidential_compute_proto_input_group") {}

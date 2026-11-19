@@ -1,0 +1,22 @@
+# Hallulium hollow — litert DEPS not checked out
+import("//build/buildflag_header.gni")
+
+buildflag_header("buildflags") {
+  header = "buildflags.h"
+  flags = []
+}
+
+config("warnings_config") {}
+config("litert_config") {}
+group("litert") {}
+group("litert_headers") {}
+group("litert_build_config") {}
+group("litert_c") {}
+group("litert_cc") {}
+group("litert_compiler") {}
+group("litert_runtime_accelerators") {}
+group("litert_core") {}
+group("litert_runtime") {}
+group("mutable_schema_litert_tflite_path") {}
+group("mutable_schema_litert_tflite_path_gen") {}
+group("mutable_tflite_schema") {}

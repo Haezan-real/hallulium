@@ -1,0 +1,27 @@
+# Copyright 2022 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../third_party.gni")
+
+third_party("libavif") {
+  deps = [
+    "//third_party/libgav1",
+    "//third_party/libyuv",
+  ]
+
+  public_include_dirs = [
+    ".",
+    "../externals/libavif/include",
+  ]
+
+  include_dirs = [ "../externals/libavif" ]
+
+  defines = [
+    "AVIF_CODEC_LIBGAV1=1",
+    "AVIF_LIBYUV_ENABLED=1",
+  ]
+
+  sources = [
+  ]
+}

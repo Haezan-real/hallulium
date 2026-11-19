@@ -1,0 +1,112 @@
+# Copyright 2016 Google Inc.
+#
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../../gn/skia.gni")
+
+declare_args() {
+  skia_use_system_libjpeg_turbo = is_official_build && !is_canvaskit
+}
+
+import("../third_party.gni")
+
+if (skia_use_system_libjpeg_turbo) {
+  system("libjpeg") {
+    libs = [ "jpeg" ]
+  }
+} else {
+  source_set("libjpeg_headers") {
+    sources = [
+    ]
+  }
+
+  # Based on
+  # https://github.com/libjpeg-turbo/libjpeg-turbo/blob/20ade4de/CMakeLists.txt#L605
+  #
+  # Starting in 3.x, libjpeg-turbo supports runtime-selectable precision.
+  # This requires compiling some source sets multiple times, with different
+  # BITS_IN_JSAMPLE defines (16, 12, and the default 8), to generate precision-
+  # specific symbols (e.g. jpeg16_read_scanlines vs jpeg12_read_scanlines vs
+  # jpeg_read_scanlines).
+
+  libjpeg16_sources = [
+  ]
+
+  libjpeg12_sources = libjpeg16_sources + [
+                      ]
+
+  libjpeg_sources = libjpeg12_sources + [
+                    ]
+
+  static_library("libjpeg16") {
+    sources = libjpeg16_sources
+
+    defines = [
+      "NO_GETENV",
+      "NO_PUTENV",
+      "BITS_IN_JSAMPLE=16",
+    ]
+
+    public_deps = [ ":libjpeg_headers" ]
+  }
+
+  static_library("libjpeg12") {
+    sources = libjpeg12_sources
+
+    defines = [
+      "NO_GETENV",
+      "NO_PUTENV",
+      "BITS_IN_JSAMPLE=12",
+    ]
+
+    public_deps = [ ":libjpeg_headers" ]
+  }
+
+  third_party("libjpeg") {
+    public_include_dirs = [
+      ".",
+      "../externals/libjpeg-turbo",
+      "../externals/libjpeg-turbo/src",
+    ]
+
+    defines = [
+      "TURBO_FOR_WINDOWS",
+
+      # Add support for arithmetic encoding (C_) and decoding (D_).
+      # This matches Android. Note that such JPEGs are likely rare, given lack of
+      # support by major browsers.
+      "C_ARITH_CODING_SUPPORTED=1",
+      "D_ARITH_CODING_SUPPORTED=1",
+    ]
+
+    if (!is_win || is_clang) {
+      defines += [ "USE_CLZ_INTRINSIC" ]  # Cuts a 64K table.
+    }
+
+    sources = libjpeg_sources
+
+    public_deps = [
+      ":libjpeg12",
+      ":libjpeg16",
+      ":libjpeg_headers",
+    ]
+
+    if (!is_win && (current_cpu == "arm" || current_cpu == "arm64")) {
+      defines += [
+        "NEON_INTRINSICS",
+        "WITH_SIMD",
+      ]
+      sources += [
+      ]
+      include_dirs = [ "../externals/libjpeg-turbo/simd/arm" ]
+      if (current_cpu == "arm") {
+        sources += [
+        ]
+      } else if (current_cpu == "arm64") {
+        sources += [
+        ]
+      }
+    }
+  }
+}

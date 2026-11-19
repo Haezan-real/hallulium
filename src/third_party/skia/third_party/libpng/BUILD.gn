@@ -1,0 +1,46 @@
+# Copyright 2016 Google Inc.
+#
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../../gn/skia.gni")
+
+declare_args() {
+  skia_use_system_libpng = is_official_build && !is_canvaskit
+}
+
+import("../third_party.gni")
+
+if (skia_use_system_libpng) {
+  system("libpng") {
+    libs = [ "png" ]
+  }
+} else {
+  third_party("libpng") {
+    public_include_dirs = [
+      ".",
+      "../externals/libpng",
+    ]
+
+    defines = [ "PNG_SET_OPTION_SUPPORTED" ]
+    deps = [ "//third_party/zlib" ]
+    sources = [
+    ]
+
+    if (current_cpu == "arm" || current_cpu == "arm64") {
+      sources += [
+      ]
+    }
+
+    if (current_cpu == "x86" || current_cpu == "x64") {
+      defines += [ "PNG_INTEL_SSE" ]
+      sources += [
+      ]
+    }
+
+    if (current_cpu == "loong64") {
+      sources += [
+      ]
+    }
+  }
+}

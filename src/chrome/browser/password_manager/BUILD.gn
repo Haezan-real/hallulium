@@ -1,0 +1,83 @@
+# Copyright 2021 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/chrome_build.gni")
+
+source_set("password_manager") {
+  sources = []
+  deps = []
+  if (is_mac) {
+    sources += [
+      "password_manager_util_mac.h",
+      "password_manager_util_mac.mm",
+    ]
+  }
+
+  if (is_win) {
+    sources += [
+      "password_manager_util_win.cc",
+      "password_manager_util_win.h",
+    ]
+    deps += [ "//chrome/app:branded_strings" ]
+  }
+
+  public_deps = [ "//chrome/browser/password_manager/factories" ]
+
+  deps += [
+    "//base",
+    "//components/affiliations/core/browser:affiliations",
+    "//components/autofill/core/browser",
+    "//components/optimization_guide/core",
+    "//components/password_manager/core/browser",
+    "//components/password_manager/core/browser/features:password_features",
+    "//components/prefs",
+    "//content/public/browser",
+    "//ui/gfx",
+  ]
+
+  if (is_mac) {
+    frameworks = [
+      "Security.framework",
+      "Foundation.framework",
+    ]
+    deps += [
+      "//chrome/app:branded_strings",
+      "//chrome/app:generated_resources",
+    ]
+  }
+
+  if (is_win) {
+    deps += [
+      "//ui/aura",
+      "//ui/views",
+    ]
+  }
+}
+
+if (!is_android) {
+  static_library("startup_import") {
+    sources = [
+      "startup_passwords_import_service.cc",
+      "startup_passwords_import_service.h",
+      "startup_passwords_importer.cc",
+      "startup_passwords_importer.h",
+    ]
+
+    deps = [
+      ":password_manager",
+      "//base",
+      "//chrome/browser/affiliations",
+      "//chrome/browser/profiles:profile",
+      "//chrome/common:channel_info",
+      "//chrome/common:non_code_constants",
+      "//components/affiliations/core/browser:affiliations",
+      "//components/keyed_service/core",
+      "//components/password_manager/core/browser/import:csv",
+      "//components/password_manager/core/browser/import:importer",
+      "//components/password_manager/core/browser/password_store:password_store_interface",
+      "//components/password_manager/core/browser/ui",
+      "//content/public/browser",
+    ]
+  }
+}

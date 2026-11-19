@@ -1,0 +1,530 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import '//resources/cr_elements/cr_icon_button/cr_icon_button.js';
+
+import {I18nMixinLit} from '//resources/cr_elements/i18n_mixin_lit.js';
+import {assert} from '//resources/js/assert.js';
+import {loadTimeData} from '//resources/js/load_time_data.js';
+import {CrLitElement} from '//resources/lit/v3_0/lit.rollup.js';
+import type {PageHandlerRemote as SearchboxPageHandlerRemote} from '//resources/mojo/components/omnibox/browser/searchbox.mojom-webui.js';
+
+import type {PageHandlerRemote} from './composebox.mojom-webui.js';
+import {ComposeboxProxyImpl} from './composebox_proxy.js';
+import {getCss} from './composebox_voice_search.css.js';
+import {getHtml} from './composebox_voice_search.html.js';
+import {WindowProxy} from './window_proxy.js';
+
+/**
+ * Threshold for considering an interim speech transcript result as "confident
+ * enough". The more confident the API is about a transcript, the higher the
+ * confidence (number between 0 and 1).
+ */
+const RECOGNITION_CONFIDENCE_THRESHOLD: number = 0.7;
+
+/**
+ * Time in milliseconds to wait before closing the UI if no interaction
+ * has occurred since start, OR last word spoken. Matches Google3.
+ */
+const IDLE_TIMEOUT_MS: number = 1500;
+
+/**
+ * Maximum number of characters recognized before force-submitting a query.
+ * Includes characters of non-confident recognition transcripts.
+ */
+const QUERY_LENGTH_LIMIT: number = 120;
+
+/**
+ * Time in milliseconds to wait before automatically closing the UI after a
+ * NO_MATCH error occurs (when the error timer is enabled).
+ */
+const ERROR_TIMEOUT_MS: number = 24000;
+
+// The set of controller states.
+enum State {
+  // Initial state before voice recognition has been set up.
+  UNINITIALIZED = -1,
+  // Indicates that speech recognition has started, but no audio has yet
+  // been captured.
+  STARTED = 0,
+  // Indicates that audio is being captured by the Web Speech API, but no
+  // speech has yet been recognized. UI indicates that audio is being captured.
+  AUDIO_RECEIVED = 1,
+  // Indicates that speech has been recognized by the Web Speech API, but no
+  // resulting transcripts have yet been received back. UI indicates that audio
+  // is being captured and is pulsating audio button.
+  SPEECH_RECEIVED = 2,
+  // Indicates speech has been successfully recognized and text transcripts have
+  // been reported back. UI indicates that audio is being captured and is
+  // displaying transcripts received so far.
+  RESULT_RECEIVED = 3,
+  // Indicates that speech recognition has failed due to an error (or a no match
+  // error) being received from the Web Speech API. A timeout may have occurred
+  // as well. UI displays the error message.
+  ERROR_RECEIVED = 4,
+  // Indicates speech recognition has received a final search query but the UI
+  // has not yet redirected. The UI is displaying the final query.
+  RESULT_FINAL = 5,
+}
+
+export enum VoiceSearchError {
+  ABORTED = 0,
+  AUDIO_CAPTURE = 1,
+  BAD_GRAMMAR = 2,
+  LANGUAGE_NOT_SUPPORTED = 3,
+  NETWORK = 4,
+  NO_MATCH = 5,
+  NO_SPEECH = 6,
+  NOT_ALLOWED = 7,
+  OTHER = 8,
+  SERVICE_NOT_ALLOWED = 9,
+  MAX_VALUE = SERVICE_NOT_ALLOWED,
+}
+
+// These values are persisted to logs. Entries should not be renumbered and
+// numeric values should never be reused.
+export enum VoiceSearchAction {
+  ACTIVATED_BY_ICON = 0,
+  ACTIVATED_BY_KEYBOARD = 1,
+  // CLOSED_OVERLAY = 2, // Obsolete, replaced by CANCELED_BY_USER
+  QUERY_SUBMITTED = 3,
+  SUPPORT_LINK_CLICKED = 4,
+  RETRY_BY_TRY_AGAIN_CLICKED = 5,
+  // TODO(b/492216568): Implement UI and metric logging for STOP and RESUME
+  //   actions.
+  // TRY_AGAIN_MIC_BUTTON = 6, // Obsolete. Deprecated as of 09/2022.
+  STOP_BUTTON_CLICKED = 7,
+  RESUME_BUTTON_CLICKED = 8,
+  ERROR_NON_CANCELING = 9,
+  ERROR_CANCELING = 10,
+  CANCELED_BY_USER = 11,
+  MAX_VALUE = CANCELED_BY_USER,
+}
+
+export enum VoiceSearchMetricType {
+  ACTION = 'Action',
+  ERROR = 'Errors',
+}
+
+function toError(webkitError: string): VoiceSearchError {
+  switch (webkitError) {
+    case 'aborted':
+      return VoiceSearchError.ABORTED;
+    case 'audio-capture':
+      return VoiceSearchError.AUDIO_CAPTURE;
+    case 'language-not-supported':
+      return VoiceSearchError.LANGUAGE_NOT_SUPPORTED;
+    case 'network':
+      return VoiceSearchError.NETWORK;
+    case 'no-speech':
+      return VoiceSearchError.NO_SPEECH;
+    case 'not-allowed':
+      return VoiceSearchError.NOT_ALLOWED;
+    case 'service-not-allowed':
+      return VoiceSearchError.SERVICE_NOT_ALLOWED;
+    case 'bad-grammar':
+      return VoiceSearchError.BAD_GRAMMAR;
+    default:
+      return VoiceSearchError.OTHER;
+  }
+}
+
+// TODO(crbug.com/40449919): Remove when bug is fixed.
+declare global {
+  interface Window {
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
+export interface ComposeboxVoiceSearchElement {
+  $: {
+    input: HTMLInputElement,
+    closeButton: HTMLElement,
+  };
+}
+
+const ComposeboxVoiceSearchElementBase = I18nMixinLit(CrLitElement);
+
+export class ComposeboxVoiceSearchElement extends
+    ComposeboxVoiceSearchElementBase {
+  static get is() {
+    return 'cr-composebox-voice-search';
+  }
+
+  static override get styles() {
+    return getCss();
+  }
+
+  override render() {
+    return getHtml.bind(this)();
+  }
+
+  static override get properties() {
+    return {
+      transcript_: {type: String},
+      listeningPlaceholder_: {type: String},
+      state_: {type: Number},
+      finalResult_: {type: String},
+      interimResult_: {type: String},
+      errorMessage_: {type: String},
+      error_: {type: Number},
+      detailsUrl_: {type: String},
+      detailedError_: {type: Number},
+      hasErrorTimer: {type: Boolean},
+    };
+  }
+
+  protected accessor transcript_: string = '';
+  protected accessor listeningPlaceholder_: string =
+      loadTimeData.getString('voiceListening');
+  protected accessor finalResult_: string = '';
+  protected accessor interimResult_: string = '';
+  protected accessor error_: VoiceSearchError|null = null;
+  protected accessor errorMessage_: string = '';
+  accessor detailedError_: VoiceSearchError|null = null;
+  protected accessor detailsUrl_: string =
+      `https://support.google.com/chrome/?p=ui_voice_search&hl=${
+          window.navigator.language}`;
+  private accessor state_: State = State.UNINITIALIZED;
+
+  private pageHandler_: PageHandlerRemote =
+      ComposeboxProxyImpl.getInstance().handler;
+  private voiceRecognition_: SpeechRecognition;
+  private timerId_: number|null = null;
+  private searchboxHandler_: SearchboxPageHandlerRemote =
+      ComposeboxProxyImpl.getInstance().searchboxHandler;
+  accessor hasErrorTimer: boolean = false;
+
+  constructor() {
+    super();
+    this.voiceRecognition_ = new window.webkitSpeechRecognition();
+    this.voiceRecognition_.continuous = true;
+    this.voiceRecognition_.interimResults = true;
+    this.voiceRecognition_.lang = window.navigator.language;
+    this.voiceRecognition_.onresult = this.onResult_.bind(this);
+    this.voiceRecognition_.onend = this.onEnd_.bind(this);
+    this.voiceRecognition_.onaudiostart = this.onAudioStart_.bind(this);
+    this.voiceRecognition_.onspeechstart = this.onSpeechStart_.bind(this);
+    this.voiceRecognition_.onerror = (e) => {
+      this.onError_(toError(e.error));
+    };
+    this.voiceRecognition_.onnomatch = () => {
+      this.onError_(VoiceSearchError.NO_MATCH);
+    };
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.voiceRecognition_.abort();
+  }
+
+  protected shouldShowErrorScrim_(): boolean {
+    return !!this.errorMessage_;
+  }
+
+  start() {
+    this.errorMessage_ = '';
+    this.voiceRecognition_.start();
+    this.state_ = State.STARTED;
+    this.resetIdleTimer_();
+    // TODO(crbug.com/504726157): When the NTP searchbox migrates to use this
+    // component, it will need to log VoiceSearchAction.ACTIVATED_BY_KEYBOARD.
+    this.recordMetric_(
+        VoiceSearchMetricType.ACTION, VoiceSearchAction.ACTIVATED_BY_ICON,
+        VoiceSearchAction.MAX_VALUE + 1);
+  }
+
+  stop() {
+    this.recordMetric_(
+        VoiceSearchMetricType.ACTION, VoiceSearchAction.STOP_BUTTON_CLICKED,
+        VoiceSearchAction.MAX_VALUE + 1);
+    this.voiceRecognition_.stop();
+  }
+
+  private resetIdleTimer_() {
+    WindowProxy.getInstance().clearTimeout(this.timerId_);
+    this.timerId_ = WindowProxy.getInstance().setTimeout(
+        this.onIdleTimeout_.bind(this), IDLE_TIMEOUT_MS);
+  }
+
+  private onIdleTimeout_() {
+    if (this.state_ === State.RESULT_FINAL) {
+      // Waiting for query redirect.
+      return;
+    }
+    // If there is text transcribed, process it as final.
+    if (this.transcript_) {
+      this.onFinalResult_(this.transcript_);
+      return;
+    }
+    this.onError_(VoiceSearchError.NO_SPEECH);
+    this.voiceRecognition_.abort();
+  }
+
+  private onAudioStart_() {
+    this.resetIdleTimer_();
+    this.state_ = State.AUDIO_RECEIVED;
+  }
+
+  private onSpeechStart_() {
+    this.resetIdleTimer_();
+    this.state_ = State.SPEECH_RECEIVED;
+    this.fire('speech-received');
+  }
+
+
+  private onResult_(e: SpeechRecognitionEvent) {
+    this.resetIdleTimer_();
+    switch (this.state_) {
+      case State.STARTED:
+        // Network bugginess (the onspeechstart packet was lost).
+        this.onAudioStart_();
+        this.onSpeechStart_();
+        break;
+      case State.AUDIO_RECEIVED:
+        // Network bugginess (the onaudiostart packet was lost).
+        this.onSpeechStart_();
+        break;
+      case State.SPEECH_RECEIVED:
+      case State.RESULT_RECEIVED:
+        // Normal, expected states for processing results.
+        break;
+      default:
+        // Not expecting results in any other states.
+        return;
+    }
+    const results = e.results;
+    if (results.length === 0) {
+      return;
+    }
+
+    this.state_ = State.RESULT_RECEIVED;
+    this.interimResult_ = '';
+    this.finalResult_ = '';
+
+    const speechResult = results[e.resultIndex];
+    assert(speechResult);
+    // Process final results if is fully final.
+    if (!!speechResult && speechResult.isFinal) {
+      this.finalResult_ = speechResult[0]!.transcript;
+      this.onFinalResult_(this.finalResult_);
+      return;
+    }
+
+    // Process interim results based on confidence.
+    for (let j = 0; j < results.length; j++) {
+      const resultList = results[j]!;
+      const result = resultList[0];  // best guess
+      assert(result);
+
+      this.transcript_ += result.transcript;
+      if (result.confidence > RECOGNITION_CONFIDENCE_THRESHOLD) {
+        this.finalResult_ += result.transcript;  // Displayed
+      } else {
+        this.interimResult_ += result.transcript;
+      }
+    }
+    this.fire('transcript-update', this.transcript_);
+
+    // Force-stop long queries.
+    if (this.interimResult_.length > QUERY_LENGTH_LIMIT) {
+      this.onFinalResult_(this.transcript_);
+    }
+  }
+
+  private onEnd_() {
+    switch (this.state_) {
+    // If voiceRecognition calls `onEnd_` with the state being anything other
+    // than RESULT_FINAL, close out voice search since there was an error.
+    // The Web Speech API normally fires `onerror` before `onend` for explicit
+    // errors. However, for transient or silent errors (e.g., mic disconnection
+    // or manual aborts), `onerror` is bypassed and `onend` is called directly.
+    // Thus, if the state is anything other than RESULT_FINAL or ERROR_RECEIVED,
+    // we use this switch as a fallback router to manually catch these silent
+    // failures and pipe them to `onError_`.
+      case State.STARTED:
+        this.onError_(VoiceSearchError.AUDIO_CAPTURE);
+        return;
+      case State.AUDIO_RECEIVED:
+        this.onError_(VoiceSearchError.NO_SPEECH);
+        return;
+      case State.SPEECH_RECEIVED:
+      case State.RESULT_RECEIVED:
+        this.onError_(VoiceSearchError.NO_MATCH);
+        return;
+      case State.ERROR_RECEIVED:
+      case State.RESULT_FINAL:
+        return;
+      default:
+        this.onError_(VoiceSearchError.OTHER);
+        return;
+    }
+  }
+
+  private async recordMetric_(
+      type: VoiceSearchMetricType, value: number, max: number) {
+    // Safety return statement in rare case chrome metrics is not available.
+    if (!chrome.metricsPrivate) {
+      return;
+    }
+
+    const {metricSource} = await this.searchboxHandler_.getPageClassification();
+    if (!metricSource) {
+      return;
+    }
+    const metricName = `VoiceSearch.${type}.${metricSource}`;
+    chrome.metricsPrivate.recordEnumerationValue(metricName, value, max);
+
+    const aggregateMetricName = `VoiceSearch.${type}`;
+    chrome.metricsPrivate.recordEnumerationValue(
+        aggregateMetricName, value, max);
+  }
+
+  private onError_(error: VoiceSearchError) {
+    if (this.state_ === State.ERROR_RECEIVED && this.error_ === error) {
+      return;
+    }
+    // Record the specific error type.
+    this.recordMetric_(
+        VoiceSearchMetricType.ERROR, error, VoiceSearchError.MAX_VALUE + 1);
+
+    if (error === VoiceSearchError.ABORTED) {
+      return;
+    }
+    WindowProxy.getInstance().clearTimeout(this.timerId_);
+    this.state_ = State.ERROR_RECEIVED;
+    this.error_ = error;
+    this.detailedError_ = error;
+
+    this.errorMessage_ = this.getErrorText_(error);
+
+    if (this.hasErrorTimer && error === VoiceSearchError.NO_MATCH) {
+      // NO_MATCH errors with a timer auto-close after 24s (NTP Realbox Case).
+      // Log as a canceling error.
+      this.recordMetric_(
+          VoiceSearchMetricType.ACTION, VoiceSearchAction.ERROR_CANCELING,
+          VoiceSearchAction.MAX_VALUE + 1);
+
+      this.fire('voice-search-error', /*canceled-by-error=*/ true);
+
+      // Start the auto-close timer. Do not record metrics here to avoid double
+      // counting.
+      this.timerId_ = WindowProxy.getInstance().setTimeout(() => {
+        this.resetState_();
+        this.fire('voice-search-cancel', /*canceled-by-user=*/ false);
+      }, ERROR_TIMEOUT_MS);
+
+    } else {
+      // All other errors keep the UI open permanently. Log as a non-canceling
+      // error.
+      this.recordMetric_(
+          VoiceSearchMetricType.ACTION, VoiceSearchAction.ERROR_NON_CANCELING,
+          VoiceSearchAction.MAX_VALUE + 1);
+
+      this.fire('voice-search-error', /*canceled-by-error=*/ false);
+    }
+  }
+
+  private getErrorText_(error: VoiceSearchError): string {
+    switch (error) {
+      case VoiceSearchError.NO_SPEECH:
+        return loadTimeData.getString('noVoice');
+      case VoiceSearchError.AUDIO_CAPTURE:
+        return loadTimeData.getString('audioError');
+      case VoiceSearchError.NETWORK:
+        return loadTimeData.getString('networkError');
+      case VoiceSearchError.NOT_ALLOWED:
+      case VoiceSearchError.SERVICE_NOT_ALLOWED:
+        return loadTimeData.getString('voicePermissionError');
+      case VoiceSearchError.LANGUAGE_NOT_SUPPORTED:
+        return loadTimeData.getString('languageError');
+      case VoiceSearchError.NO_MATCH:
+        return loadTimeData.getString('noTranslation');
+      case VoiceSearchError.BAD_GRAMMAR:
+      case VoiceSearchError.ABORTED:
+      case VoiceSearchError.OTHER:
+      default:
+        return loadTimeData.getString('otherError');
+    }
+  }
+
+  protected voiceModeEndCleanup_() {
+    this.voiceRecognition_.abort();
+    this.resetState_();
+  }
+
+  private onFinalResult_(result: string) {
+    if (!result) {
+      return;
+    }
+    this.state_ = State.RESULT_FINAL;
+    // Metric recorded through this event firing:
+    this.fire('voice-search-final-result', result);
+    this.recordMetric_(
+        VoiceSearchMetricType.ACTION, VoiceSearchAction.QUERY_SUBMITTED,
+        VoiceSearchAction.MAX_VALUE + 1);
+    this.voiceModeEndCleanup_();
+  }
+
+  protected onCloseClick_() {
+    this.voiceModeEndCleanup_();
+    // Record metric by setting canceled-by-user param to true in this event:
+    this.fire(
+        'voice-search-cancel',
+        /*canceled-by-user=*/ true);
+    this.recordMetric_(
+        VoiceSearchMetricType.ACTION, VoiceSearchAction.CANCELED_BY_USER,
+        VoiceSearchAction.MAX_VALUE + 1);
+  }
+
+  private resetState_() {
+    this.state_ = State.UNINITIALIZED;
+    this.finalResult_ = '';
+    this.transcript_ = '';
+    this.interimResult_ = '';
+    this.error_ = null;
+    this.errorMessage_ = '';
+    this.detailedError_ = null;
+    WindowProxy.getInstance().clearTimeout(this.timerId_);
+    this.timerId_ = null;
+  }
+
+  protected onLinkClick_(e: Event) {
+    // Manually handle navigation to support WebView environments where
+    // default link clicks may be ignored.
+    e.preventDefault();
+    const href = (e.currentTarget as HTMLAnchorElement).href;
+    if (href) {
+      this.pageHandler_.navigateUrl(href);
+    }
+    /* Do not record metric by setting canceled-by-user
+     * param to false in this event:
+     */
+    this.fire('voice-search-cancel', /*canceled-by-user=*/ false);
+    this.recordMetric_(
+        VoiceSearchMetricType.ACTION, VoiceSearchAction.SUPPORT_LINK_CLICKED,
+        VoiceSearchAction.MAX_VALUE + 1);
+  }
+
+  protected onTryAgainClick_(e: Event) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.recordMetric_(
+        VoiceSearchMetricType.ACTION,
+        VoiceSearchAction.RETRY_BY_TRY_AGAIN_CLICKED,
+        VoiceSearchAction.MAX_VALUE + 1);
+    this.errorMessage_ = '';
+    this.error_ = null;
+    this.start();
+  }
+  }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'cr-composebox-voice-search': ComposeboxVoiceSearchElement;
+  }
+}
+
+customElements.define(
+    ComposeboxVoiceSearchElement.is, ComposeboxVoiceSearchElement);

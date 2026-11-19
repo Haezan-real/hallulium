@@ -1,0 +1,62 @@
+# Copyright 2020 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/protobuf/proto_library.gni")
+
+proto_library("prediction_service_messages_proto") {
+  sources = [
+    "permissions_aiv4_model_metadata.proto",
+    "prediction_model_metadata.proto",
+    "prediction_service_messages.proto",
+  ]
+}
+
+# Hallulium: drop on-device TFLite permission AI executors.
+source_set("prediction_service") {
+  sources = [
+    "permission_ui_selector.cc",
+    "permission_ui_selector.h",
+    "prediction_common.cc",
+    "prediction_common.h",
+    "prediction_request_features.h",
+    "prediction_service.cc",
+    "prediction_service.h",
+    "prediction_service_base.h",
+  ]
+  deps = [
+    "//components/keyed_service/content",
+    "//components/passage_embeddings/core",
+    "//components/permissions:permissions_common",
+    "//components/version_info",
+    "//content/public/browser",
+    "//services/network/public/cpp",
+    "//skia",
+    "//third_party/protobuf:protobuf_lite",
+  ]
+  public_deps = [
+    ":prediction_service_messages_proto",
+    "//components/optimization_guide/core",
+    "//components/optimization_guide/proto:optimization_guide_proto",
+  ]
+}
+
+source_set("unit_tests") {
+  testonly = true
+  sources = [ "prediction_service_unittest.cc" ]
+  deps = [
+    ":prediction_service",
+    "//base",
+    "//base/test:test_support",
+    "//components/optimization_guide/core:test_support",
+    "//components/permissions:permissions_common",
+    "//components/permissions:test_support",
+    "//services/network:test_support",
+    "//services/network/public/cpp",
+    "//testing/gtest",
+    "//third_party/protobuf:protobuf_lite",
+    "//ui/gfx",
+  ]
+  data = [ "//components/test/data/permissions/" ]
+  configs += [ "//build/config/compiler:no_exit_time_destructors" ]
+}

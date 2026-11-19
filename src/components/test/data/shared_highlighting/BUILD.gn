@@ -1,0 +1,3 @@
+# Hallulium stub
+group("shared_highlighting") {}
+group("stub") {}

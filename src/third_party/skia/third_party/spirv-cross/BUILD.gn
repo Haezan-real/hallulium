@@ -1,0 +1,16 @@
+import("../third_party.gni")
+
+spirv_cross = "//third_party/externals/spirv-cross"
+
+third_party("spirv_cross") {
+  public_include_dirs = [
+    "//third_party/externals",
+    "//third_party/externals/spirv-cross",
+  ]
+  public_defines = [ "SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS" ]
+
+  sources = rebase_path([
+                        ],
+                        ".",
+                        "${spirv_cross}")
+}

@@ -1,0 +1,3 @@
+# Hallulium stub
+group("pc") {}
+group("stub") {}

@@ -1,0 +1,12 @@
+# Hallulium hollow
+group("//build/config/sanitizers/sanitizers.gni") {}
+group("//third_party/flatbuffers/flatbuffer.gni") {}
+group("//third_party/protobuf/proto_library.gni") {}
+group("tflite_support_config") {}
+group("tflite_support_proto") {}
+group("tflite_support_flags") {}
+group("metadata_schema") {}
+group("tflite_support") {}
+group("tflite_support_proto_gen") {}
+group("tflite_support_proto_input_group") {}
+group("metadata_schema_gen") {}

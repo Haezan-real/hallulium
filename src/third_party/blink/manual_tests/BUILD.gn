@@ -1,0 +1,3 @@
+# Hallulium stub
+group("manual_tests") {}
+group("stub") {}

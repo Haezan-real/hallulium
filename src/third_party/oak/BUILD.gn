@@ -1,0 +1,13 @@
+# Hallulium hollow
+group("//components/proto_extras/proto_extras.gni") {}
+group("//third_party/protobuf/proto_library.gni") {}
+group("oak_proto") {}
+group("oak_proto_extras") {}
+group("oak_proto_test_extras") {}
+group("oak_proto_extras_to_value") {}
+group("oak_proto_extras_to_value_gen") {}
+group("oak_proto_extras_to_value_input_group") {}
+group("oak_proto_gen") {}
+group("oak_proto_input_group") {}
+group("oak_proto_test_extras_gen") {}
+group("oak_proto_test_extras_input_group") {}

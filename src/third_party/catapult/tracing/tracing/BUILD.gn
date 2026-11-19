@@ -1,0 +1,5 @@
+# Hallulium stub
+group("stub") {}
+group("histogram") {}
+group("reserved_infos") {}
+group("tracing") {}

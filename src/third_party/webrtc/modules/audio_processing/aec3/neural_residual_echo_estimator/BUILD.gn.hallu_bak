@@ -1,0 +1,19 @@
+# Hallulium: TFLite purged - neural residual echo estimator is a no-op.
+import("../../../../webrtc.gni")
+
+rtc_library("neural_residual_echo_estimator_impl") {
+  visibility = [ "*" ]
+  poisonous = [ "default_neural_residual_echo_estimator" ]
+  sources = [ "neural_residual_echo_estimator_impl_stub.cc" ]
+  deps = [
+    "../../../../api/audio:neural_residual_echo_estimator_api",
+    "../../../../rtc_base:checks",
+  ]
+}
+
+if (rtc_include_tests) {
+  rtc_library("neural_residual_echo_estimator_unittest") {
+    testonly = true
+    sources = []
+  }
+}

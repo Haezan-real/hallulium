@@ -1,0 +1,22 @@
+#ifndef MODULES_AUDIO_PROCESSING_AEC3_NEURAL_RESIDUAL_ECHO_ESTIMATOR_NEURAL_RESIDUAL_ECHO_ESTIMATOR_IMPL_H_
+#define MODULES_AUDIO_PROCESSING_AEC3_NEURAL_RESIDUAL_ECHO_ESTIMATOR_NEURAL_RESIDUAL_ECHO_ESTIMATOR_IMPL_H_
+
+#include <memory>
+
+#include "absl/base/nullability.h"
+#include "api/audio/neural_residual_echo_estimator.h"
+#include "media/webrtc/hallulium_tflite_shim.h"
+#include "third_party/tflite/src/tensorflow/lite/op_resolver.h"
+
+namespace webrtc {
+
+class NeuralResidualEchoEstimatorImpl {
+ public:
+  static absl_nullable std::unique_ptr<NeuralResidualEchoEstimator> Create(
+      const tflite::FlatBufferModel* model,
+      const tflite::OpResolver& op_resolver);
+};
+
+}  // namespace webrtc
+
+#endif

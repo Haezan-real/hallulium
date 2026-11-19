@@ -1,0 +1,179 @@
+# Copyright 2026 The PDFium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/buildflags_paint_preview.gni")
+import("//build/config/chrome_build.gni")
+import("//build/config/ui.gni")
+import("//third_party/harfbuzz/harfbuzz.gni")
+
+if (use_system_harfbuzz) {
+  import("//build/config/linux/pkg_config.gni")
+  pkg_config("harfbuzz_from_pkgconfig") {
+    visibility = [
+      "//third_party/freetype",
+      "//third_party/harfbuzz",
+    ]
+    packages = [
+      "harfbuzz",
+      "harfbuzz-subset",
+    ]
+  }
+
+  component("harfbuzz") {
+    public_configs = [ ":harfbuzz_from_pkgconfig" ]
+  }
+} else {
+  config("harfbuzz_config") {
+    include_dirs = [ "src/src" ]
+  }
+
+  config("harfbuzz_warnings") {
+    cflags = []
+
+    if (is_win) {
+      # Result of 32-bit shift implicitly converted to 64 bits.
+      cflags += [ "/wd4334" ]
+    }
+
+    # TODO(crbug.com/483020951): Replace this with `-Wno-array-bounds-member` if
+    # that gets implemented. Then patch harfbuzz and remove this completely.
+    # Upstream issue: https://github.com/harfbuzz/harfbuzz/issues/5738
+    cflags += [ "-Wno-array-bounds" ]
+  }
+
+  component("harfbuzz") {
+    public = [
+    ]
+
+    sources = [
+    ]
+
+    # The following sources are explictly not used.
+    # They are referenced to aid in detecting previously uncategorized files.
+    unused_sources = [
+    ]
+    assert(unused_sources != [])
+
+    defines = [
+      "HAVE_OT",
+      "HAVE_ICU",
+      "HAVE_ICU_BUILTIN",
+      "HB_NO_MMAP",
+      "HB_NO_RESOURCE_FORK",
+
+      # Use assignment to empty value to work around a build failure.
+      "HB_NO_PAINT=",
+
+      # Size reductions by disabling parts that we do not currently require:
+
+      # SkPDF needs subsetting but does not require subsetting of layout or CFF tables.
+      "HB_NO_SUBSET_LAYOUT",
+      "HB_NO_SUBSET_CFF",
+
+      # Fallback shaper not required, we only use the HarfBuzz internal OT shaper.
+      "HB_NO_FALLBACK_SHAPE",
+
+      # Tells HarfBuzz to use ICU instead of the own mini UCDN implementation
+      # that is part of HarfBuzz.
+      "HB_NO_UCD",
+
+      # Disable .fon file support, not needed for Chrome, and code behind this
+      # flag produces warnings in Clang. Compare https://crbug.com/1002945.
+      "HB_NO_WIN1256",
+
+      # TODO(https://crbug.com/949962): Remove once this is fixed upstream.
+      "U_DISABLE_VERSION_SUFFIX=0",
+
+      # Buffer verification not used in production build.
+      "HB_NO_BUFFER_VERIFY",
+
+      # We're not using HarfBuzz' drawing functions or debug tools in this build.
+      "HB_NO_DRAW",
+
+      # Don't ship experimental extensions.
+      "HB_NO_BORING_EXPANSION",
+
+      # Don't ship AVAR2 yet.
+      "HB_NO_AVAR2",
+
+      # Letting HarfBuzz enable warnings through pragmas can block compiler
+      # upgrades in situations where say a ToT compiler build adds a new
+      # stricter warning under -Wfoowarning-subgroup. HarfBuzz pragma-enables
+      # -Wfoowarning which default-enables -Wfoowarning-subgroup implicitly but
+      # HarfBuzz upstream is not yet clean of warnings produced for
+      # -Wfoowarning-subgroup. Hence disabling pragma warning control here.
+      # See also https:/crbug.com/1203071
+      "HB_NO_PRAGMA_GCC_DIAGNOSTIC_ERROR",
+      "HB_NO_PRAGMA_GCC_DIAGNOSTIC_WARNING",
+    ]
+
+    if (!is_win && !is_mac) {
+      # Needed for HarfBuzz mutex implementation, see hb-mutex.hh
+      defines += [ "HAVE_PTHREAD" ]
+    }
+
+    if (enable_paint_preview) {
+      # Paint Previews make use of CFF subsetting. However, enabling this is
+      # expensive for binary size so only compile it when Paint Previews are
+      # compiled.
+      defines -= [ "HB_NO_SUBSET_CFF" ]
+    }
+
+    if (is_component_build) {
+      if (is_win) {
+        defines += [ "HB_EXTERN=__declspec(dllexport)" ]
+      } else {
+        defines += [ "HB_EXTERN=__attribute__((visibility(\"default\")))" ]
+      }
+    }
+
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [
+      "//build/config/compiler:no_chromium_code",
+
+      # Must be after no_chromium_code for warning flags to be ordered
+      # correctly.
+      ":harfbuzz_warnings",
+    ]
+
+    # This allows the compiler to do further optimizations in the code.
+    if (!is_debug) {
+      configs -= [ "//build/config/compiler:default_optimization" ]
+      configs += [ "//build/config/compiler:optimize_speed" ]
+    }
+
+    public_configs = [ ":harfbuzz_config" ]
+
+    deps = [ "//third_party/icu:icuuc" ]
+
+    if (use_glib) {
+      configs += [ "//build/config/linux:glib" ]
+      public += [ "src/src/hb-glib.h" ]
+      sources += [ "src/src/hb-glib.cc" ]
+    }
+  }
+}
+
+# Not all checkouts have a //base directory.
+if (build_with_chromium) {
+  import("//testing/libfuzzer/fuzzer_test.gni")
+
+  fuzzer_test("hb_shape_fuzzer") {
+    sources = [ "fuzz/hb_shape_fuzzer.cc" ]
+    deps = [
+      "//base",
+      "//third_party/harfbuzz",
+    ]
+    seed_corpus = "fuzz/seed_corpus"
+  }
+
+  fuzzer_test("hb_subset_fuzzer") {
+    sources = [ "fuzz/hb_subset_fuzzer.cc" ]
+    deps = [
+      "//base",
+      "//third_party/harfbuzz",
+    ]
+    seed_corpus = "fuzz/seed_corpus"
+  }
+}

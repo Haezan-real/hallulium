@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/hallulium_stub_resources.h" type="rc_header" />
+    <output filename="hallulium_stub_resources.pak" type="data_package" />
+  </outputs>
+  <release seq="1">
+    <includes />
+    <messages />
+    <structures />
+  </release>
+</grit>

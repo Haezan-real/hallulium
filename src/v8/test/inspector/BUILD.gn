@@ -1,0 +1,4 @@
+# Hallulium stub
+group("inspector") {}
+group("inspector_test") {}
+group("stub") {}

@@ -1,0 +1,16 @@
+# Hallulium hollow — emit empty grd placeholders DevTools purge removed
+action("generate_devtools_grd") {
+  script = "//build/hallulium/write_empty.py"
+  outputs = [ "$root_gen_dir/third_party/devtools-frontend/src/front_end/devtools_resources.grd" ]
+  args = rebase_path(outputs, root_build_dir)
+}
+action("generate_devtools_inspector_overlay_resources") {
+  script = "//build/hallulium/write_empty.py"
+  outputs = [ "$root_out_dir/resources/inspector_overlay/inspector_overlay_resources.grd" ]
+  args = rebase_path(outputs, root_build_dir)
+}
+group("devtools_frontend_resources") {
+  public_deps = [ ":generate_devtools_grd" ]
+}
+group("devtools_all_files") {}
+group("stub") {}

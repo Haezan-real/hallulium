@@ -1,0 +1,61 @@
+# Copyright (c) 2025 The WebRTC project authors. All Rights Reserved.
+#
+# Use of this source code is governed by a BSD-style license
+# that can be found in the LICENSE file in the root of the source
+# tree. An additional intellectual property rights grant can be found
+# in the file PATENTS.  All contributing project authors may
+# be found in the AUTHORS file in the root of the source tree.
+
+import("../webrtc.gni")
+
+modules_tests_resources = [
+]
+group("modules_tests_data") {
+  data = modules_tests_resources
+}
+if (is_ios) {
+  bundle_data("modules_tests_bundle_data") {
+    testonly = true
+    sources = modules_tests_resources
+    outputs = [ "{{bundle_resources_dir}}/{{source_file_part}}" ]
+  }
+}
+
+modules_unittests_resources = [
+]
+group("modules_unittests_data") {
+  data = modules_unittests_resources
+}
+if (is_ios) {
+  bundle_data("modules_unittests_bundle_data") {
+    testonly = true
+    sources = modules_unittests_resources
+    outputs = [ "{{bundle_resources_dir}}/{{source_file_part}}" ]
+  }
+}
+
+webrtc_perf_tests_resources = [
+]
+group("webrtc_perf_tests_data") {
+  data = webrtc_perf_tests_resources
+}
+if (is_ios) {
+  bundle_data("webrtc_perf_tests_bundle_data") {
+    testonly = true
+    sources = webrtc_perf_tests_resources
+    outputs = [ "{{bundle_resources_dir}}/{{source_file_part}}" ]
+  }
+}
+
+video_engine_tests_resources = [
+]
+group("video_engine_tests_data") {
+  data = video_engine_tests_resources
+}
+if (is_ios) {
+  bundle_data("video_engine_tests_bundle_data") {
+    testonly = true
+    sources = video_engine_tests_resources
+    outputs = [ "{{bundle_resources_dir}}/{{source_file_part}}" ]
+  }
+}

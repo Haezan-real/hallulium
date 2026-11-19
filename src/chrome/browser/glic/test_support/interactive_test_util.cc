@@ -1,0 +1,104 @@
+// Copyright 2025 The Chromium Authors
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#include "chrome/browser/glic/test_support/interactive_test_util.h"
+
+#include "base/scoped_observation_traits.h"
+#include "chrome/browser/glic/fre/glic_fre_controller.h"
+#include "chrome/browser/glic/public/service/glic_instance_coordinator.h"
+#include "chrome/browser/glic/widget/glic_widget.h"
+#include "ui/base/interaction/element_identifier.h"
+#include "ui/base/interaction/polling_state_observer.h"
+#include "ui/views/widget/widget_delegate.h"
+
+namespace glic::test {
+
+namespace internal {
+
+GlicFreShowingDialogObserver::GlicFreShowingDialogObserver(
+    const GlicFreController& controller)
+    : PollingStateObserver(
+          [&controller]() { return controller.IsShowingDialog(); }) {}
+GlicFreShowingDialogObserver::~GlicFreShowingDialogObserver() = default;
+
+DEFINE_STATE_IDENTIFIER_VALUE(GlicFreShowingDialogObserver,
+                              kGlicFreShowingDialogState);
+
+GlicInstanceCoordinatorStateObserver::GlicInstanceCoordinatorStateObserver(
+    const GlicInstanceCoordinator& controller,
+    tabs::TabInterface* tab)
+    : PollingStateObserver([&controller, tab]() {
+        if (!tab) {
+          return controller.state();
+        }
+
+        auto* instance = controller.GetInstanceForTab(tab);
+        if (instance && instance->IsShowing()) {
+          return GlicInstanceCoordinator::State::kOpen;
+        } else {
+          return GlicInstanceCoordinator::State::kClosed;
+        }
+      }) {}
+GlicInstanceCoordinatorStateObserver::~GlicInstanceCoordinatorStateObserver() =
+    default;
+
+DEFINE_STATE_IDENTIFIER_VALUE(GlicInstanceCoordinatorStateObserver,
+                              kGlicInstanceCoordinatorState);
+
+GlicInstanceCoordinatorResizeObserver::GlicInstanceCoordinatorResizeObserver(
+    GlicInstanceCoordinator& controller)
+    : PollingStateObserver([&controller]() {
+        return controller.GetGlicWidget()
+                   ? controller.GetGlicWidget()->widget_delegate()->CanResize()
+                   : false;
+      }) {}
+GlicInstanceCoordinatorResizeObserver::
+    ~GlicInstanceCoordinatorResizeObserver() = default;
+
+DEFINE_STATE_IDENTIFIER_VALUE(GlicInstanceCoordinatorResizeObserver,
+                              kGlicInstanceCoordinatorResizeState);
+
+GlicAppStateObserver::GlicAppStateObserver(Host* host)
+    : ObservationStateObserver(host) {
+  WebUiStateChanged(host->GetPrimaryWebUiState());
+}
+
+GlicAppStateObserver::~GlicAppStateObserver() = default;
+
+void GlicAppStateObserver::WebUiStateChanged(mojom::WebUiState state) {
+  OnStateObserverStateChanged(state);
+}
+
+DEFINE_STATE_IDENTIFIER_VALUE(GlicAppStateObserver, kGlicAppState);
+
+WaitingStateObserver::WaitingStateObserver() {
+  OnStateObserverStateChanged(true);
+}
+
+WaitingStateObserver::~WaitingStateObserver() = default;
+
+WebUiStateObserver::WebUiStateObserver(Host* host) : host_(host) {
+  observation_.Observe(host);
+}
+
+WebUiStateObserver::~WebUiStateObserver() {
+  observation_.Reset();
+}
+
+mojom::WebUiState WebUiStateObserver::GetStateObserverInitialState() const {
+  return host_->GetPrimaryWebUiState();
+}
+
+void WebUiStateObserver::WebUiStateChanged(mojom::WebUiState state) {
+  OnStateObserverStateChanged(state);
+}
+
+}  // namespace internal
+
+DEFINE_ELEMENT_IDENTIFIER_VALUE(kGlicHostElementId);
+DEFINE_ELEMENT_IDENTIFIER_VALUE(kGlicContentsElementId);
+DEFINE_ELEMENT_IDENTIFIER_VALUE(kGlicFreHostElementId);
+DEFINE_ELEMENT_IDENTIFIER_VALUE(kGlicFreContentsElementId);
+
+}  // namespace glic::test

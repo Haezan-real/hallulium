@@ -1,0 +1,60 @@
+# Hallulium hollow — tflite src DEPS not present; keep buildflags only.
+import("//build/buildflag_header.gni")
+import("//third_party/tflite/features.gni")
+
+buildflag_header("buildflags") {
+  header = "buildflags.h"
+  flags = [
+    "BUILD_TFLITE_WITH_NNAPI=$build_tflite_with_nnapi",
+    "BUILD_TFLITE_WITH_OPENCL=$build_tflite_with_opencl",
+    "BUILD_TFLITE_WITH_XNNPACK=$build_tflite_with_xnnpack",
+  ]
+}
+
+config("tflite_config") {
+  include_dirs = [
+    "src",
+    "src/third_party/xla",
+    "$root_gen_dir/third_party/tflite/src",
+  ]
+}
+config("tflite_config_no_undef") {}
+config("tflite_flags") {}
+group("benchmark_result_proto") {}
+group("fft2d_deps") {}
+group("mutable_schema") {}
+group("mutable_schema_compiler_path") {}
+group("mutable_schema_tflite_path") {}
+group("tflite") {}
+group("tflite_benchmark") {}
+group("tflite_builtin_op_resolver") {}
+group("tflite_builtin_op_resolver_internals") {}
+group("tflite_compiler_utils") {}
+group("tflite_kernel_common_headers") {}
+group("tflite_kernel_internals") {}
+group("tflite_kernels") {}
+group("tflite_litert") {}
+group("tflite_logging") {}
+group("tflite_logging_standalone") {}
+group("tflite_op_resolver_proto") {}
+group("tflite_op_shim") {}
+group("tflite_proto") {}
+source_set("tflite_public_headers") {
+  public_configs = [ ":tflite_config" ]
+}
+group("tflite_tools_proto") {}
+group("weight_cache_schema_generated") {}
+group("tflite_proto_gen") {}
+group("tflite_proto_input_group") {}
+group("tflite_op_resolver_proto_gen") {}
+group("tflite_op_resolver_proto_input_group") {}
+group("tflite_tools_proto_gen") {}
+group("tflite_tools_proto_input_group") {}
+group("benchmark_result_proto_gen") {}
+group("benchmark_result_proto_input_group") {}
+group("mutable_schema_tflite_path_gen") {}
+group("weight_cache_schema_generated_gen") {}
+group("tflite_gpu_common") {}
+group("tflite_gpu_delegate_headers") {}
+group("tflite_gpu_opencl") {}
+group("tflite_gpu_opencl_default") {}

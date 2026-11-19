@@ -1,0 +1,5 @@
+# Hallulium hollow
+group("stub") {}
+group("webgpu") {}
+group("webgpu_cts") {}
+group("webgpu-cts") {}

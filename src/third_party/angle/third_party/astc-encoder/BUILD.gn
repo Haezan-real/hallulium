@@ -1,0 +1,21 @@
+# Copyright 2022 The ANGLE Project Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+#
+# Build integration for astc-encoder.
+
+source_set("astcenc") {
+  sources = [
+  ]
+
+  defines = [ "ASTCENC_DECOMPRESS_ONLY=1" ]
+
+  # To improve performance on debug builds, enable optimization for them.
+  if (is_debug) {
+    configs += [ "//build/config/compiler:optimize" ]
+  }
+
+  if (is_clang) {
+    cflags_cc = [ "-Wno-unused-but-set-variable" ]
+  }
+}

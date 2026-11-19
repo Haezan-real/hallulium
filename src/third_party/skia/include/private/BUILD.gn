@@ -1,0 +1,3 @@
+# Hallulium stub
+group("private") {}
+group("stub") {}

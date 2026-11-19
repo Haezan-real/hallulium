@@ -1,0 +1,6 @@
+# Hallulium hollow — tflite path unfinished
+visibility = [ "*" ]
+group("op_resolver") {}
+group("inference") {}
+group("test_support") {}
+group("unit_tests") {}

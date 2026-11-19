@@ -1,0 +1,29 @@
+# Copyright 2016 Google Inc.
+#
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+declare_args() {
+  skia_use_system_lua = is_official_build
+}
+
+import("../third_party.gni")
+
+if (skia_use_system_lua) {
+  system("lua") {
+    libs = [ "lua" ]
+  }
+} else {
+  third_party("lua") {
+    public_include_dirs = [ "../externals/lua" ]
+
+    sources = [
+    ]
+
+    if (!is_win) {
+      # Prefer mkstemp() over tmpnam().  This isn't super important,
+      # but it does stifle an annoying GNU linker warning.
+      defines = [ "LUA_USE_POSIX=1" ]
+    }
+  }
+}

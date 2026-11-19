@@ -1,0 +1,124 @@
+# Copyright 2016 The Chromium Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//testing/test.gni")
+import("//third_party/flatbuffers/flatbuffer.gni")
+
+config("flatbuffers_config") {
+  include_dirs = [
+    "src/include",
+    "src/src",
+    "src",
+    "generated"
+  ]
+
+  # Required to prevent static initialization of locale
+  # in util.cpp
+  defines = [ "FLATBUFFERS_LOCALE_INDEPENDENT=0" ]
+
+  if (is_clang) {
+    cflags = [
+      "-Wno-constant-conversion",
+      "-Wno-shorten-64-to-32"
+    ]
+  }
+}
+
+# The part of FlatBuffers that Chrome is interested in.
+source_set("flatbuffers") {
+  public = [
+
+    # Required for tflite.
+  ]
+
+  if (is_win) {
+    data_deps = [ "//build/win:runtime_libs" ]
+  }
+
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
+
+  public_configs = [ ":flatbuffers_config" ]
+}
+
+# The complete FlatBuffers library, as required to build the flatc compiler and
+# some of the tests.
+source_set("compiler_files") {
+  include_dirs = [ "src/grpc" ]
+  sources = [
+  ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
+  visibility = [ ":*" ]
+  deps = [ ":flatbuffers" ]
+}
+
+executable("flatc") {
+  sources = [ "src/src/flatc_main.cpp" ]
+  deps = [
+    ":compiler_files",
+    ":flatbuffers"
+  ]
+}
+
+# The following is just for testing.
+
+flatbuffer("flatbuffers_samplebuffer") {
+  testonly = true
+  sources = [
+  ]
+  flatc_include_dirs = [ "src/tests/include_test" ]
+}
+
+# This combines sources, "flatbuffers" and "flatbuffers_test", specified in the
+# public github repo required to build the unittests. This must be separate
+# from ":compiler_files".
+source_set("flatbuffers_test_files") {
+  include_dirs = [ "src/grpc" ]
+  sources = [
+  ]
+
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
+  deps = [ ":flatbuffers" ]
+}
+
+test("flatbuffers_unittests") {
+  sources = [
+  ]
+  deps = [
+    ":flatbuffers",
+    ":flatbuffers_samplebuffer",
+    ":flatbuffers_test_files"
+  ]
+  data = [
+    "src/tests/",
+
+    "//testing/scripts/run_flatbuffers_unittests.py"
+  ]
+
+  data_deps = [ "//testing:test_scripts_shared" ]
+
+  defines = [
+    "FLATBUFFERS_TRACK_VERIFIER_BUFFER_SIZE",
+
+    # Careful, this test suite needs to be run in the actual out/<build_dir>
+    # directory.
+    "FLATBUFFERS_TEST_PATH_PREFIX=" +
+        rebase_path("//third_party/flatbuffers/src/", root_build_dir)
+  ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
+  libs = [ "log" ]
+}
+
+if (is_android) {
+  import("//build/config/android/rules.gni")
+
+  android_library("flatbuffers_java") {
+    chromium_code = false
+    sources = [
+    ]
+  }
+}

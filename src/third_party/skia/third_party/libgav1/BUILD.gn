@@ -1,0 +1,23 @@
+# Copyright 2022 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("../third_party.gni")
+
+third_party("libgav1") {
+  public_include_dirs = [
+    ".",
+    "../externals/libgav1/src",
+  ]
+
+  include_dirs = [ "../externals/libgav1" ]
+
+  defines = [
+    "LIBGAV1_MAX_BITDEPTH=12",
+    "LIBGAV1_THREADPOOL_USE_STD_MUTEX",
+    "LIBGAV1_ENABLE_LOGGING=0",
+  ]
+
+  sources = [
+  ]
+}

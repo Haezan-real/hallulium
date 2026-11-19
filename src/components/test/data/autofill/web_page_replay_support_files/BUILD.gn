@@ -1,0 +1,3 @@
+# Hallulium stub
+group("web_page_replay_support_files") {}
+group("stub") {}

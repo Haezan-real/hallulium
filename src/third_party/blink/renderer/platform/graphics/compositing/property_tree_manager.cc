@@ -393,6 +393,8 @@ bool TransformsMayBe2dAxisMisaligned(const TransformPaintPropertyNode& a,
 // composited layers or render surfaces. We set the reason on an effect node
 // when updating the cc effect property tree, and remove unnecessary ones in
 // UpdateConditionalRenderSurfaceReasons() after layerization.
+static int StackingZForEffect(const EffectPaintPropertyNode& start);
+
 static bool IsConditionalRenderSurfaceReason(cc::RenderSurfaceReason reason) {
   return reason == cc::RenderSurfaceReason::kBlendModeDstIn ||
          reason == cc::RenderSurfaceReason::kOpacity ||
@@ -412,6 +414,13 @@ void PropertyTreeManager::SetCurrentEffectState(
   current_.effect = &effect;
   current_.clip = &clip;
   current_.transform = &transform;
+
+  // Synthetic clip effects are what the layer is actually drawn with. The
+  // capture cutoff reads that effect, so it has to carry the real z-index.
+  if (cc::EffectNode* node = effect_tree_.Node(cc_effect_node.id)) {
+    if (!node->stacking_z)
+      node->stacking_z = StackingZForEffect(effect);
+  }
 
   if (cc_effect_node.HasRenderSurface() &&
       !IsConditionalRenderSurfaceReason(cc_effect_node.render_surface_reason)) {
@@ -1327,7 +1336,7 @@ static cc::RenderSurfaceReason RenderSurfaceReasonForEffect(
   return conditional_reason;
 }
 
-int StackingZForEffect(const EffectPaintPropertyNode& start) {
+static int StackingZForEffect(const EffectPaintPropertyNode& start) {
   for (const EffectPaintPropertyNode* node = &start; node;
        node = node->UnaliasedParent()) {
     if (node->StackingZ().has_value())

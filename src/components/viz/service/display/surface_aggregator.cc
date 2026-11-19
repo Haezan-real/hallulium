@@ -8,7 +8,9 @@
 
 #include <algorithm>
 #include <map>
+#include <optional>
 #include <set>
+#include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -2170,98 +2172,140 @@ void SurfaceAggregator::ApplyHaezansCapture() {
     }
   }
 
-  bool any_below = false;
-  for (const DrawQuad* quad : content->quad_list) {
-    if (quad->shared_quad_state->stacking_z <= max_z) {
-      any_below = true;
-      break;
+  // A render-pass quad's own stacking_z is not the z of what it contains.
+  // Rebuild a capture tree that keeps only quads at or below the cutoff, and
+  // leave the on-screen passes alone.
+  struct Filter {
+    SurfaceAggregator* agg;
+    int max_z;
+    std::vector<std::unique_ptr<AggregatedRenderPass>> made;
+    std::vector<AggregatedRenderPass*> stack;
+    std::vector<std::pair<AggregatedRenderPassId, AggregatedRenderPassId>>
+        reused;
+    std::vector<AggregatedRenderPassId> dropped;
+    std::set<std::tuple<uint32_t, int, int, int, int>> rects;
+
+    AggregatedRenderPass* Find(AggregatedRenderPassId id) const {
+      if (!agg->dest_pass_list_)
+        return nullptr;
+      for (const auto& candidate : *agg->dest_pass_list_) {
+        if (candidate->id == id)
+          return candidate.get();
+      }
+      return nullptr;
     }
-  }
-  if (!any_below) {
+
+    std::optional<AggregatedRenderPassId> Build(AggregatedRenderPass* src) {
+      for (AggregatedRenderPassId id : dropped) {
+        if (id == src->id)
+          return std::nullopt;
+      }
+      for (const auto& item : reused) {
+        if (item.first == src->id)
+          return item.second;
+      }
+      for (AggregatedRenderPass* seen : stack) {
+        if (seen == src)
+          return std::nullopt;
+      }
+      stack.push_back(src);
+
+      bool needs_copy = false;
+      for (const DrawQuad* quad : src->quad_list) {
+        if (quad->material == DrawQuad::Material::kAggregatedRenderPass ||
+            quad->shared_quad_state->stacking_z > max_z) {
+          needs_copy = true;
+          break;
+        }
+      }
+      if (!needs_copy) {
+        stack.pop_back();
+        reused.emplace_back(src->id, src->id);
+        return src->id;
+      }
+
+      auto filtered = std::make_unique<AggregatedRenderPass>(
+          src->shared_quad_state_list.size(), src->quad_list.size());
+      const AggregatedRenderPassId id =
+          agg->render_pass_id_generator_.GenerateNextId();
+      filtered->SetAll(id, src->output_rect, src->output_rect,
+                       src->transform_to_root_target, src->content_color_usage,
+                       /*has_transparent_background=*/true,
+                       /*cache_render_pass=*/true,
+                       /*has_damage_from_contributing_content=*/true,
+                       /*generate_mipmap=*/false);
+
+      const SharedQuadState* last = nullptr;
+      for (const DrawQuad* quad : src->quad_list) {
+        if (const auto* pass_quad =
+                quad->DynamicCast<AggregatedRenderPassDrawQuad>()) {
+          AggregatedRenderPass* child = Find(pass_quad->render_pass_id);
+          if (!child)
+            continue;
+          std::optional<AggregatedRenderPassId> child_id = Build(child);
+          if (!child_id)
+            continue;
+          if (quad->shared_quad_state != last) {
+            last = quad->shared_quad_state;
+            *filtered->CreateAndAppendSharedQuadState() =
+                *quad->shared_quad_state;
+          }
+          auto* copy =
+              filtered->CopyFromAndAppendRenderPassDrawQuad(pass_quad);
+          copy->render_pass_id = *child_id;
+          continue;
+        }
+        if (quad->shared_quad_state->stacking_z > max_z)
+          continue;
+        if (quad->shared_quad_state != last) {
+          last = quad->shared_quad_state;
+          *filtered->CreateAndAppendSharedQuadState() = *quad->shared_quad_state;
+        }
+        filtered->CopyFromAndAppendDrawQuad(quad);
+        gfx::Rect rect = cc::MathUtil::MapEnclosingClippedRect(
+            quad->shared_quad_state->quad_to_target_transform,
+            quad->visible_rect);
+        rect.Intersect(src->output_rect);
+        if (!rect.IsEmpty()) {
+          rects.insert(std::tuple<uint32_t, int, int, int, int>{
+              quad->shared_quad_state->layer_id, rect.x(), rect.y(),
+              rect.width(), rect.height()});
+        }
+      }
+      stack.pop_back();
+      if (filtered->quad_list.empty()) {
+        dropped.push_back(src->id);
+        return std::nullopt;
+      }
+      made.push_back(std::move(filtered));
+      reused.emplace_back(src->id, id);
+      return id;
+    }
+  };
+
+  Filter filter;
+  filter.agg = this;
+  filter.max_z = max_z;
+  std::optional<AggregatedRenderPassId> capture_id = filter.Build(content);
+  if (!capture_id ||
+      (filter.made.empty() && *capture_id == content->id &&
+       content->quad_list.empty())) {
     haezans_quads_.clear();
     haezans_pass_id_.reset();
     return;
   }
+  haezans_quads_ = std::move(filter.rects);
 
-  if (!haezans_pass_id_)
-    haezans_pass_id_ = render_pass_id_generator_.GenerateNextId();
-
-  auto capture = std::make_unique<AggregatedRenderPass>(
-      content->shared_quad_state_list.size(), content->quad_list.size());
-  capture->SetAll(*haezans_pass_id_, content->output_rect, content->damage_rect,
-                  content->transform_to_root_target, content->content_color_usage,
-                  /*has_transparent_background=*/true,
-                  /*cache_render_pass=*/true,
-                  /*has_damage_from_contributing_content=*/
-                  !content->damage_rect.IsEmpty(),
-                  /*generate_mipmap=*/false);
-
-  auto replacement = content->Copy(content->id);
-  replacement->is_from_surface_root_pass = content->is_from_surface_root_pass;
-#if BUILDFLAG(IS_WIN)
-  replacement->will_backing_be_read_by_viz =
-      content->will_backing_be_read_by_viz;
-  replacement->needs_synchronous_dcomp_commit =
-      content->needs_synchronous_dcomp_commit;
-#endif
-  replacement->video_capture_enabled = content->video_capture_enabled;
-  replacement->copy_requests = std::move(content->copy_requests);
-
-  const SharedQuadState* capture_sqs = nullptr;
-  const SharedQuadState* replacement_sqs = nullptr;
-  std::set<std::tuple<uint32_t, int, int, int, int>> current;
-
-  auto append = [](AggregatedRenderPass* dest, const DrawQuad* quad,
-                   const SharedQuadState*& last) {
-    if (quad->shared_quad_state != last) {
-      last = quad->shared_quad_state;
-      *dest->CreateAndAppendSharedQuadState() = *quad->shared_quad_state;
-    }
-    if (const auto* pass_quad =
-            quad->DynamicCast<AggregatedRenderPassDrawQuad>()) {
-      dest->CopyFromAndAppendRenderPassDrawQuad(pass_quad);
-    } else {
-      dest->CopyFromAndAppendDrawQuad(quad);
-    }
-  };
-
-  for (const DrawQuad* quad : content->quad_list) {
-    if (quad->shared_quad_state->stacking_z <= max_z) {
-      append(capture.get(), quad, capture_sqs);
-      gfx::Rect rect = cc::MathUtil::MapEnclosingClippedRect(
-          quad->shared_quad_state->quad_to_target_transform, quad->visible_rect);
-      rect.Intersect(content->output_rect);
-      if (!rect.IsEmpty()) {
-        current.insert(std::tuple<uint32_t, int, int, int, int>{
-            quad->shared_quad_state->layer_id, rect.x(), rect.y(), rect.width(),
-            rect.height()});
-      }
-    } else {
-      append(replacement.get(), quad, replacement_sqs);
-    }
+  AggregatedRenderPass* capture = nullptr;
+  if (!filter.made.empty() && filter.made.back()->id == *capture_id)
+    capture = filter.made.back().get();
+  else {
+    capture = filter.Find(*capture_id);
   }
-
-  auto* backdrop_sqs = replacement->CreateAndAppendSharedQuadState();
-  backdrop_sqs->SetAll(gfx::Transform(), content->output_rect,
-                       content->output_rect, gfx::MaskFilterInfo(),
-                       /*clip=*/std::nullopt, /*contents_opaque=*/false,
-                       /*opacity_f=*/1.f, SkBlendMode::kSrcOver,
-                       /*sorting_context=*/0, /*layer=*/0u,
-                       /*fast_rounded_corner=*/false);
-  backdrop_sqs->stacking_z = max_z + 1;
-  auto* backdrop = replacement->CreateAndAppendDrawQuad<
-      AggregatedRenderPassDrawQuad>();
-  backdrop->SetNew(backdrop_sqs, content->output_rect, content->output_rect,
-                   *haezans_pass_id_, kInvalidResourceId, gfx::RectF(),
-                   gfx::Size(), gfx::RectF(content->output_rect),
-                   /*force_anti_aliasing_off=*/false);
-
-  haezans_quads_ = std::move(current);
-
-  // Nested groups stay render-pass quads. The renderer draws those groups
-  // first, then draws this pass from the finished textures, then the copy
-  // below reads that finished texture. A shared image, not a pixel readback.
-  RequireHaezansPassesDrawn(capture.get());
+  if (!capture) {
+    haezans_quads_.clear();
+    return;
+  }
 
   const gfx::Rect rect = content->output_rect;
   auto request = std::make_unique<CopyOutputRequest>(
@@ -2281,9 +2325,20 @@ void SurfaceAggregator::ApplyHaezansCapture() {
       base::SequencedTaskRunner::GetCurrentDefault());
   capture->copy_requests.push_back(std::move(request));
 
-  dest_pass_list_->insert(dest_pass_list_->begin() + content_index,
-                          std::move(capture));
-  (*dest_pass_list_)[content_index + 1] = std::move(replacement);
+  if (!filter.made.empty()) {
+    dest_pass_list_->insert(dest_pass_list_->begin() + content_index,
+                            std::make_move_iterator(filter.made.begin()),
+                            std::make_move_iterator(filter.made.end()));
+  }
+  AggregatedRenderPass* inserted = nullptr;
+  for (const auto& candidate : *dest_pass_list_) {
+    if (candidate->id == *capture_id) {
+      inserted = candidate.get();
+      break;
+    }
+  }
+  if (inserted)
+    RequireHaezansPassesDrawn(inserted);
 }
 
 void SurfaceAggregator::RequireHaezansPassesDrawn(AggregatedRenderPass* pass) {

@@ -734,6 +734,19 @@ bool PaintArtifactCompositor::Layerizer::DecompositeEffect(
     return false;
   if (effect.HasDirectCompositingReasons())
     return false;
+  // A plain z-index has an effect, but no direct compositing reason, so this
+  // fold paints it into the parent layer. The capture then sees the parent's
+  // z. Keep the layer when the used z-index differs from the parent group.
+  auto used_stacking_z = [](const EffectPaintPropertyNode& node) {
+    for (const EffectPaintPropertyNode* current = &node; current;
+         current = current->UnaliasedParent()) {
+      if (current->StackingZ())
+        return *current->StackingZ();
+    }
+    return 0;
+  };
+  if (used_stacking_z(effect) != used_stacking_z(parent_effect))
+    return false;
 
   PropertyTreeState group_state(effect.LocalTransformSpace().Unalias(),
                                 effect.OutputClip()

@@ -1715,6 +1715,34 @@ bool FragmentPaintPropertyTreeBuilder::NeedsEffectFor2DScaleTransform() const {
   return true;
 }
 
+// Z-index of the stacking context that is a direct child of the root
+// stacking context. A nested z-index does not escape its parent, so a
+// layer inside z-index 400 keeps 400.
+static int UsedStackingZ(const LayoutObject& object) {
+  const LayoutView* view = object.GetDocument().GetLayoutView();
+  const PaintLayer* root = view ? view->Layer() : nullptr;
+  const PaintLayer* start = nullptr;
+  for (const LayoutObject* current = &object; current && !start;
+       current = current->Parent()) {
+    if (current->HasLayer())
+      start = To<LayoutBoxModelObject>(current)->Layer();
+  }
+  // The root element is a stacking context with an automatic z-index. Keeping
+  // that would store 0 and throw away the z-index that actually participates
+  // next to the cutoff. Skip automatic contexts. A nested explicit z-index
+  // still loses to the ancestor that contains it.
+  int used = 0;
+  for (const PaintLayer* layer = start; layer && layer != root;
+       layer = layer->Parent()) {
+    if (!layer->GetLayoutObject().IsStackingContext())
+      continue;
+    const ComputedStyle& style = layer->GetLayoutObject().StyleRef();
+    if (!style.HasAutoZIndex())
+      used = style.ZIndex();
+  }
+  return used;
+}
+
 static bool NeedsEffectIgnoringClipPathAnd2DScale(
     const LayoutObject& object,
     CompositingReasons direct_compositing_reasons) {
@@ -1774,6 +1802,11 @@ static bool NeedsEffectIgnoringClipPathAnd2DScale(
   if (NeedsEffectForViewTransition(object)) {
     return true;
   }
+
+  // A plain z-index does not otherwise need an effect, but the capture
+  // cutoff reads the layer's effect. Without this node the z-index stays 0.
+  if (is_css_isolated_group && !style.HasAutoZIndex())
+    return true;
 
   return false;
 }
@@ -1982,8 +2015,7 @@ void FragmentPaintPropertyTreeBuilder::UpdateEffect() {
       if (EffectCanUseCurrentClipAsOutputClip())
         state.output_clip = context_.current.clip;
       state.opacity = style.Opacity();
-      if (!style.HasAutoZIndex())
-        state.stacking_z = style.ZIndex();
+      state.stacking_z = UsedStackingZ(object_);
       // If the mask image is not valid, it must be treated as a transparent
       // black image layer. See
       // https://drafts.fxtf.org/css-masking-1/#the-mask-image.

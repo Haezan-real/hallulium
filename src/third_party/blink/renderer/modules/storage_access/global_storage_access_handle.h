@@ -11,7 +11,6 @@
 #include "third_party/blink/public/mojom/worker/shared_worker_connector.mojom-blink.h"
 #include "third_party/blink/renderer/core/fileapi/public_url_manager.h"
 #include "third_party/blink/renderer/core/frame/local_dom_window.h"
-#include "third_party/blink/renderer/modules/cache_storage/cache_storage.h"
 #include "third_party/blink/renderer/modules/indexeddb/idb_factory.h"
 #include "third_party/blink/renderer/modules/locks/lock_manager.h"
 #include "third_party/blink/renderer/modules/storage/storage_area.h"
@@ -44,7 +43,6 @@ class GlobalStorageAccessHandle final
   StorageArea* GetLocalStorageArea();
   IDBFactory* GetIDBFactory();
   LockManager* GetLockManager();
-  CacheStorage* GetCacheStorage();
   PublicURLManager* GetPublicURLManager();
   HeapMojoAssociatedRemote<mojom::blink::BroadcastChannelProvider>&
   GetBroadcastChannelProvider();
@@ -62,7 +60,6 @@ class GlobalStorageAccessHandle final
   Member<StorageArea> local_storage_area_;
   Member<IDBFactory> idb_factory_;
   Member<LockManager> lock_manager_;
-  Member<CacheStorage> cache_storage_;
   Member<PublicURLManager> public_url_manager_;
   HeapMojoAssociatedRemote<mojom::blink::BroadcastChannelProvider>
       broadcast_channel_provider_;

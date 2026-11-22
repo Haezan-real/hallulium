@@ -13,7 +13,6 @@
 namespace blink {
 
 class MojoHandle;
-class FileSystemFileHandle;
 
 class MojoFileSystemAccess final
     : public GarbageCollected<MojoFileSystemAccess>,
@@ -22,10 +21,6 @@ class MojoFileSystemAccess final
   static const char kSupplementName[];
   explicit MojoFileSystemAccess(Mojo&);
   static MojoFileSystemAccess& From(Mojo&);
-
-  // IDL interface methods:
-  static MojoHandle* getFileSystemAccessTransferToken(
-      FileSystemFileHandle* fs_handle);
 
   void Trace(Visitor* visitor) const override;
 };

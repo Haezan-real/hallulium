@@ -7,7 +7,6 @@
 
 #include "third_party/blink/renderer/bindings/core/v8/script_value.h"
 #include "third_party/blink/renderer/core/typed_arrays/dom_typed_array.h"
-#include "third_party/blink/renderer/modules/webgl/webgl_object.h"
 #include "third_party/blink/renderer/platform/wtf/forward.h"
 
 namespace blink {
@@ -22,7 +21,6 @@ ScriptValue WebGLAny(ScriptState*, int64_t value);
 ScriptValue WebGLAny(ScriptState*, uint64_t value);
 ScriptValue WebGLAny(ScriptState*, float value);
 ScriptValue WebGLAny(ScriptState*, String value);
-ScriptValue WebGLAny(ScriptState*, WebGLObject* value);
 ScriptValue WebGLAny(ScriptState*, DOMFloat32Array* value);
 ScriptValue WebGLAny(ScriptState*, DOMInt32Array* value);
 ScriptValue WebGLAny(ScriptState*, DOMUint8Array* value);

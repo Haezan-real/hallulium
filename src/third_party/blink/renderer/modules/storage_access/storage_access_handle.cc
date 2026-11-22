@@ -12,7 +12,6 @@
 #include "third_party/blink/renderer/core/fileapi/blob.h"
 #include "third_party/blink/renderer/core/workers/shared_worker.h"
 #include "third_party/blink/renderer/modules/broadcastchannel/broadcast_channel.h"
-#include "third_party/blink/renderer/modules/file_system_access/storage_manager_file_system_access.h"
 #include "third_party/blink/renderer/modules/storage_access/global_storage_access_handle.h"
 #include "third_party/blink/renderer/platform/bindings/exception_state.h"
 
@@ -188,12 +187,6 @@ StorageAccessHandle::StorageAccessHandle(
   if (storage_access_types_->all() || storage_access_types_->locks()) {
     GlobalStorageAccessHandle::From(window).GetLockManager();
   }
-  if (storage_access_types_->all() || storage_access_types_->caches()) {
-    GlobalStorageAccessHandle::From(window).GetCacheStorage();
-  }
-  if (storage_access_types_->all() || storage_access_types_->getDirectory()) {
-    GlobalStorageAccessHandle::From(window).GetRemote();
-  }
   if (storage_access_types_->all() || storage_access_types_->estimate()) {
     GlobalStorageAccessHandle::From(window).GetRemote();
   }
@@ -290,54 +283,6 @@ LockManager* StorageAccessHandle::locks(ExceptionState& exception_state) const {
       WebFeature::
           kStorageAccessAPI_requestStorageAccess_BeyondCookies_locks_Use);
   return GlobalStorageAccessHandle::From(*GetSupplementable()).GetLockManager();
-}
-
-CacheStorage* StorageAccessHandle::caches(
-    ExceptionState& exception_state) const {
-  if (!storage_access_types_->all() && !storage_access_types_->caches()) {
-    exception_state.ThrowSecurityError(kCachesNotRequested);
-    return nullptr;
-  }
-  GetSupplementable()->CountUse(
-      WebFeature::
-          kStorageAccessAPI_requestStorageAccess_BeyondCookies_caches_Use);
-  return GlobalStorageAccessHandle::From(*GetSupplementable())
-      .GetCacheStorage();
-}
-
-ScriptPromise<FileSystemDirectoryHandle> StorageAccessHandle::getDirectory(
-    ScriptState* script_state,
-    ExceptionState& exception_state) const {
-  if (!storage_access_types_->all() && !storage_access_types_->getDirectory()) {
-    auto* resolver =
-        MakeGarbageCollected<ScriptPromiseResolver<FileSystemDirectoryHandle>>(
-            script_state, exception_state.GetContext());
-    auto promise = resolver->Promise();
-    resolver->RejectWithSecurityError(kGetDirectoryNotRequested,
-                                      kGetDirectoryNotRequested);
-    return promise;
-  }
-  GetSupplementable()->CountUse(
-      WebFeature::
-          kStorageAccessAPI_requestStorageAccess_BeyondCookies_getDirectory_Use);
-  return StorageManagerFileSystemAccess::CheckStorageAccessIsAllowed(
-      script_state, exception_state,
-      BindOnce(&StorageAccessHandle::GetDirectoryImpl,
-               WrapWeakPersistent(this)));
-}
-
-void StorageAccessHandle::GetDirectoryImpl(
-    ScriptPromiseResolver<FileSystemDirectoryHandle>* resolver) const {
-  HeapMojoRemote<mojom::blink::StorageAccessHandle>& remote =
-      GlobalStorageAccessHandle::From(*GetSupplementable()).GetRemote();
-  if (!remote) {
-    resolver->Reject(MakeGarbageCollected<DOMException>(
-        DOMExceptionCode::kInvalidStateError));
-    return;
-  }
-  remote->GetDirectory(
-      BindOnce(&StorageManagerFileSystemAccess::DidGetSandboxedFileSystem,
-               WrapPersistent(resolver)));
 }
 
 ScriptPromise<StorageEstimate> StorageAccessHandle::estimate(

@@ -9,8 +9,6 @@
 #include "third_party/blink/renderer/core/workers/global_scope_creation_params.h"
 #include "third_party/blink/renderer/core/workers/worker_backing_thread.h"
 #include "third_party/blink/renderer/core/workers/worklet_thread_holder.h"
-#include "third_party/blink/renderer/modules/animationworklet/animation_worklet_global_scope.h"
-#include "third_party/blink/renderer/modules/csspaint/paint_worklet_global_scope.h"
 #include "third_party/blink/renderer/platform/heap/thread_state.h"
 #include "third_party/blink/renderer/platform/instrumentation/tracing/trace_event.h"
 #include "third_party/blink/renderer/platform/scheduler/public/post_cross_thread_task.h"
@@ -89,17 +87,12 @@ void AnimationAndPaintWorkletThread::CollectAllGarbageForTesting() {
 WorkerOrWorkletGlobalScope*
 AnimationAndPaintWorkletThread::CreateWorkerGlobalScope(
     std::unique_ptr<GlobalScopeCreationParams> creation_params) {
+  (void)creation_params;
   switch (worklet_type_) {
-    case WorkletType::kAnimation: {
-      TRACE_EVENT0(TRACE_DISABLED_BY_DEFAULT("animation-worklet"),
-                   "AnimationAndPaintWorkletThread::CreateWorkerGlobalScope");
-      return MakeGarbageCollected<AnimationWorkletGlobalScope>(
-          std::move(creation_params), this);
-    }
+    case WorkletType::kAnimation:
+      return nullptr;
     case WorkletType::kPaint:
-      TRACE_EVENT0(TRACE_DISABLED_BY_DEFAULT("paint-worklet"),
-                   "AnimationAndPaintWorkletThread::CreateWorkerGlobalScope");
-      return PaintWorkletGlobalScope::Create(std::move(creation_params), this);
+      return nullptr;
   };
 }
 

@@ -12,13 +12,11 @@
 #include "third_party/blink/public/platform/web_audio_latency_hint.h"
 #include "third_party/blink/public/platform/web_audio_sink_descriptor.h"
 #include "third_party/blink/public/web/web_local_frame.h"
-#include "third_party/blink/renderer/modules/peerconnection/peer_connection_dependency_factory.h"
 #include "third_party/blink/renderer/modules/webaudio/audio_node_input.h"
 #include "third_party/blink/renderer/modules/webaudio/audio_node_output.h"
 #include "third_party/blink/renderer/modules/webaudio/audio_worklet.h"
 #include "third_party/blink/renderer/modules/webaudio/audio_worklet_messaging_proxy.h"
 #include "third_party/blink/renderer/modules/webaudio/cross_thread_audio_worklet_processor_info.h"
-#include "third_party/blink/renderer/modules/webrtc/webrtc_audio_device_impl.h"
 #include "third_party/blink/renderer/platform/audio/audio_destination.h"
 #include "third_party/blink/renderer/platform/audio/audio_utilities.h"
 #include "third_party/blink/renderer/platform/audio/denormal_disabler.h"
@@ -402,19 +400,7 @@ void RealtimeAudioDestinationHandler::StartPlatformDestination() {
           media::OutputDeviceStatus::OUTPUT_DEVICE_STATUS_MAX + 1);
       if (output_device_status ==
           media::OutputDeviceStatus::OUTPUT_DEVICE_STATUS_OK) {
-        if (auto* execution_context = Context()->GetExecutionContext()) {
-          PeerConnectionDependencyFactory::From(*execution_context)
-              .GetWebRtcAudioDevice()
-              ->SetOutputDeviceForAec(sink_descriptor_.SinkId());
-          SendLogMessage(
-              __func__,
-              "=> sink is OK and echo cancellation reference was updated.");
-        } else {
-          SendLogMessage(
-              __func__,
-              String::Format("=> sink is OK but execution_context was null, "
-                             "echo cancellation reference was not updated."));
-        }
+        SendLogMessage(__func__, "=> sink is OK.");
       } else {
         SendLogMessage(
             __func__,

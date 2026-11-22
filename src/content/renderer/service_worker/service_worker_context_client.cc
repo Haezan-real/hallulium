@@ -438,29 +438,9 @@ void ServiceWorkerContextClient::ReportConsoleMessage(
 
 scoped_refptr<blink::WebServiceWorkerFetchContext>
 ServiceWorkerContextClient::CreateWorkerFetchContextOnInitiatorThread() {
-  DCHECK(initiator_thread_task_runner_->RunsTasksInCurrentSequence());
-  DCHECK(preference_watcher_receiver_.is_valid());
-
-  // TODO(bashi): Consider changing WebServiceWorkerFetchContext to take
-  // URLLoaderFactoryInfo.
-  auto pending_script_loader_factory =
-      std::make_unique<network::WrapperPendingSharedURLLoaderFactory>(std::move(
-          service_worker_provider_info_->script_loader_factory_remote));
-
-  std::vector<blink::WebString> web_cors_exempt_header_list =
-      base::ToVector(cors_exempt_header_list_, &blink::WebString::FromLatin1);
-
-  return blink::WebServiceWorkerFetchContext::Create(
-      renderer_preferences_, script_url_, loader_factories_->PassInterface(),
-      std::move(pending_script_loader_factory), script_url_to_skip_throttling_,
-      GetContentClient()->renderer()->CreateURLLoaderThrottleProvider(
-          blink::URLLoaderThrottleProviderType::kWorker),
-      GetContentClient()
-          ->renderer()
-          ->CreateWebSocketHandshakeThrottleProvider(),
-      std::move(preference_watcher_receiver_),
-      std::move(pending_subresource_loader_updater_),
-      web_cors_exempt_header_list, storage_key_.IsThirdPartyContext());
+  // Service worker fetch contexts lived in the removed Blink module. A worker
+  // that reaches this point has no subresource loader.
+  return nullptr;
 }
 
 void ServiceWorkerContextClient::OnNavigationPreloadResponse(
@@ -556,10 +536,10 @@ void ServiceWorkerContextClient::SetupNavigationPreload(
         preload_url_loader_client_receiver) {
   DCHECK(worker_task_runner_->RunsTasksInCurrentSequence());
   DCHECK(context_);
-  auto preload_request = blink::WebNavigationPreloadRequest::Create(
-      this, fetch_event_id, url, std::move(preload_url_loader_client_receiver));
-  context_->preload_requests.AddWithID(std::move(preload_request),
-                                       fetch_event_id);
+  // Navigation preload lived in the removed Blink service worker module.
+  (void)fetch_event_id;
+  (void)url;
+  (void)preload_url_loader_client_receiver;
 }
 
 void ServiceWorkerContextClient::RequestTermination(

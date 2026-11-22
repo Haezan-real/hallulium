@@ -7,7 +7,6 @@
 #include "base/task/single_thread_task_runner.h"
 #include "media/base/limits.h"
 #include "third_party/blink/renderer/modules/mediastream/media_stream_video_track.h"
-#include "third_party/blink/renderer/modules/peerconnection/media_stream_remote_video_source.h"
 #include "third_party/blink/renderer/platform/mediastream/media_stream_audio_processor_options.h"
 #include "third_party/blink/renderer/platform/mediastream/media_stream_audio_source.h"
 #include "third_party/blink/renderer/platform/scheduler/public/post_cross_thread_task.h"
@@ -38,32 +37,14 @@ RemoteVideoTrackAdapter::RemoteVideoTrackAdapter(
 
 RemoteVideoTrackAdapter::~RemoteVideoTrackAdapter() {
   DCHECK(main_thread_->BelongsToCurrentThread());
-  if (initialized()) {
-    // TODO(crbug.com/704136): When moving RemoteVideoTrackAdapter out of the
-    // public API, make this managed by Oilpan. Note that, the destructor will
-    // not allowed to touch other on-heap objects like track().
-    static_cast<MediaStreamRemoteVideoSource*>(
-        track()->Source()->GetPlatformSource())
-        ->OnSourceTerminated();
-  }
 }
 
 void RemoteVideoTrackAdapter::InitializeWebVideoTrack(
     std::unique_ptr<TrackObserver> observer,
     bool enabled) {
   DCHECK(main_thread_->BelongsToCurrentThread());
-  auto video_source_ptr = std::make_unique<MediaStreamRemoteVideoSource>(
-      main_thread_, std::move(observer));
-  MediaStreamRemoteVideoSource* video_source = video_source_ptr.get();
-  InitializeTrack(
-      MediaStreamSource::kTypeVideo, std::move(video_source_ptr),
-      std::make_unique<MediaStreamVideoTrack>(
-          video_source, MediaStreamVideoSource::ConstraintsOnceCallback(),
-          enabled));
-
-  MediaStreamSource::Capabilities capabilities;
-  capabilities.device_id = id();
-  track()->Source()->SetCapabilities(capabilities);
+  (void)observer;
+  (void)enabled;
 }
 
 RemoteAudioTrackAdapter::RemoteAudioTrackAdapter(

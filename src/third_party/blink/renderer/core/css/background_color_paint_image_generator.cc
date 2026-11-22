@@ -23,7 +23,8 @@ void BackgroundColorPaintImageGenerator::Init(
 
 BackgroundColorPaintImageGenerator* BackgroundColorPaintImageGenerator::Create(
     LocalFrame& local_root) {
-  DCHECK(g_create_function);
+  if (!g_create_function)
+    return nullptr;
   return g_create_function(local_root);
 }
 

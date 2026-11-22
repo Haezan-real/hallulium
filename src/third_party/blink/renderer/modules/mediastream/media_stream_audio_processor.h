@@ -18,7 +18,6 @@
 #include "third_party/blink/renderer/modules/modules_export.h"
 #include "third_party/blink/renderer/platform/mediastream/aec_dump_agent_impl.h"
 #include "third_party/blink/renderer/platform/mediastream/media_stream_audio_processor_options.h"
-#include "third_party/blink/renderer/platform/webrtc/webrtc_source.h"
 #include "third_party/webrtc/api/media_stream_interface.h"
 #include "third_party/webrtc/modules/audio_processing/include/audio_processing.h"
 
@@ -30,7 +29,6 @@ struct AudioProcessingSettings;
 namespace blink {
 
 class AecDumpAgentImpl;
-class WebRtcAudioDeviceImpl;
 
 using webrtc::AudioProcessorInterface;
 
@@ -40,8 +38,7 @@ using webrtc::AudioProcessorInterface;
 // and renderer-specific threading requirements. All processing functionality is
 // delegated to the media::AudioProcessor.
 class MODULES_EXPORT MediaStreamAudioProcessor
-    : public WebRtcPlayoutDataSource::Sink,
-      public AudioProcessorInterface,
+    : public AudioProcessorInterface,
       public AecDumpAgentImpl::Delegate {
  public:
   // Callback for consuming processed capture audio.
@@ -59,8 +56,7 @@ class MODULES_EXPORT MediaStreamAudioProcessor
   MediaStreamAudioProcessor(
       DeliverProcessedAudioCallback deliver_processed_audio_callback,
       const media::AudioProcessingSettings& settings,
-      const media::AudioParameters& capture_data_source_params,
-      scoped_refptr<WebRtcAudioDeviceImpl> playout_data_source);
+      const media::AudioParameters& capture_data_source_params);
 
   MediaStreamAudioProcessor(const MediaStreamAudioProcessor&) = delete;
   MediaStreamAudioProcessor& operator=(const MediaStreamAudioProcessor&) =
@@ -99,18 +95,10 @@ class MODULES_EXPORT MediaStreamAudioProcessor
   ~MediaStreamAudioProcessor() override;
 
  private:
-  class PlayoutListener;
   friend class MediaStreamAudioProcessorTest;
 
   // Format of input to ProcessCapturedAudio().
   const media::AudioParameters& GetInputFormatForTesting() const;
-
-  // WebRtcPlayoutDataSource::Sink implementation.
-  void OnPlayoutData(media::AudioBus* audio_bus,
-                     int sample_rate,
-                     base::TimeDelta audio_delay) override;
-  void OnPlayoutDataSourceChanged() override;
-  void OnRenderThreadChanged() override;
 
   std::optional<webrtc::AudioProcessing::Config>
   GetAudioProcessingModuleConfigForTesting() const {
@@ -124,17 +112,11 @@ class MODULES_EXPORT MediaStreamAudioProcessor
   // Handles audio processing, rebuffering, and input/output formatting.
   const std::unique_ptr<media::AudioProcessor> audio_processor_;
 
-  // Manages subscription to the playout reference audio. Must be outlived by
-  // |audio_processor_|.
-  std::unique_ptr<PlayoutListener> playout_listener_;
-
   // Task runner for the main render thread.
   const scoped_refptr<base::SingleThreadTaskRunner> main_thread_runner_;
 
   // Used to DCHECK that some methods are called on the capture audio thread.
   THREAD_CHECKER(capture_thread_checker_);
-  // Used to DCHECK that some methods are called on the render audio thread.
-  THREAD_CHECKER(render_thread_checker_);
 
   // Communication with browser for AEC dump.
   std::unique_ptr<AecDumpAgentImpl> aec_dump_agent_impl_;

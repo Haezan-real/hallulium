@@ -360,6 +360,13 @@ void RootCompositorFrameSinkImpl::SetHaezansDomCapture(
     bool enabled,
     int32_t max_z,
     mojo::PendingRemote<mojom::HaezansDomCaptureClient> client) {
+  // A negative cutoff appends a layer and keeps the client already bound.
+  if (max_z < 0 && haezans_client_.is_bound()) {
+    display_->SetHaezansDomCapture(
+        max_z, base::BindRepeating(&RootCompositorFrameSinkImpl::OnHaezansRegion,
+                                   base::Unretained(this)));
+    return;
+  }
   if (!enabled || !client) {
     haezans_held_.clear();
     haezans_client_.reset();

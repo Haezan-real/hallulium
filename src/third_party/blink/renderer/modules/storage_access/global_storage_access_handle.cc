@@ -136,25 +136,6 @@ LockManager* GlobalStorageAccessHandle::GetLockManager() {
   return lock_manager_;
 }
 
-CacheStorage* GlobalStorageAccessHandle::GetCacheStorage() {
-  if (!cache_storage_) {
-    if (!GetSupplementable()->GetSecurityOrigin()->CanAccessCacheStorage()) {
-      return nullptr;
-    }
-    HeapMojoRemote<mojom::blink::StorageAccessHandle>& remote = GetRemote();
-    if (!remote) {
-      return nullptr;
-    }
-    mojo::PendingRemote<mojom::blink::CacheStorage> cache_remote;
-    remote->BindCaches(cache_remote.InitWithNewPipeAndPassReceiver());
-    cache_storage_ = MakeGarbageCollected<CacheStorage>(
-        GetSupplementable()->GetExecutionContext(),
-        GlobalFetch::ScopedFetcher::From(*GetSupplementable()),
-        std::move(cache_remote));
-  }
-  return cache_storage_;
-}
-
 PublicURLManager* GlobalStorageAccessHandle::GetPublicURLManager() {
   if (!public_url_manager_) {
     if (GetSupplementable()->GetSecurityOrigin()->IsOpaque()) {
@@ -217,7 +198,6 @@ void GlobalStorageAccessHandle::Trace(Visitor* visitor) const {
   visitor->Trace(local_storage_area_);
   visitor->Trace(idb_factory_);
   visitor->Trace(lock_manager_);
-  visitor->Trace(cache_storage_);
   visitor->Trace(public_url_manager_);
   visitor->Trace(broadcast_channel_provider_);
   visitor->Trace(shared_worker_connector_);

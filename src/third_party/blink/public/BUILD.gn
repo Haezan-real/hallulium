@@ -45,7 +45,6 @@ group("test_support") {
     "//third_party/blink/renderer/core/exported:test_support",
     "//third_party/blink/renderer/modules/exported:test_support",
     "//third_party/blink/renderer/modules/mediastream:test_support",
-    "//third_party/blink/renderer/modules/peerconnection:test_support",
     "//third_party/blink/renderer/platform:test_support",
   ]
 }

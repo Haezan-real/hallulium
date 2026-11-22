@@ -13,7 +13,6 @@
 #include "build/build_config.h"
 #include "media/base/audio_parameters.h"
 #include "third_party/blink/public/platform/modules/webrtc/webrtc_logging.h"
-#include "third_party/blink/renderer/modules/webrtc/webrtc_audio_device_impl.h"
 #include "third_party/blink/renderer/platform/mediastream/aec_dump_agent_impl.h"
 #include "third_party/blink/renderer/platform/wtf/functional.h"
 
@@ -24,31 +23,10 @@ void WebRtcLogStringPiece(std::string_view message) {
 }
 }  // namespace
 
-// Subscribes a sink to the playout data source for the duration of the
-// PlayoutListener lifetime.
-class MediaStreamAudioProcessor::PlayoutListener {
- public:
-  PlayoutListener(scoped_refptr<WebRtcAudioDeviceImpl> playout_data_source,
-                  WebRtcPlayoutDataSource::Sink* sink)
-      : playout_data_source_(std::move(playout_data_source)), sink_(sink) {
-    DCHECK(playout_data_source_);
-    DCHECK(sink_);
-    playout_data_source_->AddPlayoutSink(sink_);
-  }
-
-  ~PlayoutListener() { playout_data_source_->RemovePlayoutSink(sink_); }
-
- private:
-  // TODO(crbug.com/704136): Replace with Member at some point.
-  scoped_refptr<WebRtcAudioDeviceImpl> const playout_data_source_;
-  const raw_ptr<WebRtcPlayoutDataSource::Sink> sink_;
-};
-
 MediaStreamAudioProcessor::MediaStreamAudioProcessor(
     DeliverProcessedAudioCallback deliver_processed_audio_callback,
     const media::AudioProcessingSettings& settings,
-    const media::AudioParameters& capture_data_source_params,
-    scoped_refptr<WebRtcAudioDeviceImpl> playout_data_source)
+    const media::AudioParameters& capture_data_source_params)
     : audio_processor_(media::AudioProcessor::Create(
           std::move(deliver_processed_audio_callback),
           /*log_callback=*/
@@ -63,14 +41,7 @@ MediaStreamAudioProcessor::MediaStreamAudioProcessor(
       aec_dump_agent_impl_(AecDumpAgentImpl::Create(this)),
       stopped_(false) {
   DCHECK(main_thread_runner_);
-  // Register as a listener for the playout reference signal. Used for e.g. echo
-  // cancellation.
-  if (audio_processor_->needs_playout_reference() && playout_data_source) {
-    playout_listener_ =
-        std::make_unique<PlayoutListener>(std::move(playout_data_source), this);
-  }
   DETACH_FROM_THREAD(capture_thread_checker_);
-  DETACH_FROM_THREAD(render_thread_checker_);
 }
 
 MediaStreamAudioProcessor::~MediaStreamAudioProcessor() {
@@ -96,7 +67,6 @@ void MediaStreamAudioProcessor::Stop() {
 
   aec_dump_agent_impl_.reset();
   audio_processor_->OnStopDump();
-  playout_listener_.reset();
 }
 
 const media::AudioParameters&
@@ -112,24 +82,6 @@ void MediaStreamAudioProcessor::OnStartDump(base::File dump_file) {
 void MediaStreamAudioProcessor::OnStopDump() {
   DCHECK(main_thread_runner_->BelongsToCurrentThread());
   audio_processor_->OnStopDump();
-}
-
-void MediaStreamAudioProcessor::OnPlayoutData(media::AudioBus* audio_bus,
-                                              int sample_rate,
-                                              base::TimeDelta audio_delay) {
-  DCHECK_CALLED_ON_VALID_THREAD(render_thread_checker_);
-  DCHECK(audio_bus);
-  audio_processor_->OnPlayoutData(*audio_bus, sample_rate, audio_delay);
-}
-
-void MediaStreamAudioProcessor::OnPlayoutDataSourceChanged() {
-  DCHECK(main_thread_runner_->BelongsToCurrentThread());
-  DETACH_FROM_THREAD(render_thread_checker_);
-}
-
-void MediaStreamAudioProcessor::OnRenderThreadChanged() {
-  DETACH_FROM_THREAD(render_thread_checker_);
-  DCHECK_CALLED_ON_VALID_THREAD(render_thread_checker_);
 }
 
 webrtc::AudioProcessorInterface::AudioProcessorStatistics

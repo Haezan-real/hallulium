@@ -4,10 +4,6 @@
 
 #include "third_party/blink/renderer/modules/mojo/mojo_file_system_access.h"
 
-#include "third_party/blink/public/mojom/file_system_access/file_system_access_file_handle.mojom-blink.h"
-#include "third_party/blink/renderer/core/mojo/mojo_handle.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_file_handle.h"
-
 namespace blink {
 
 const char MojoFileSystemAccess::kSupplementName[] = "MojoFileSystemAccess";
@@ -28,14 +24,6 @@ MojoFileSystemAccess& MojoFileSystemAccess::From(Mojo& mojo) {
 
 void MojoFileSystemAccess::Trace(Visitor* visitor) const {
   Supplement<Mojo>::Trace(visitor);
-}
-
-// static
-MojoHandle* MojoFileSystemAccess::getFileSystemAccessTransferToken(
-    FileSystemFileHandle* fs_handle) {
-  return MakeGarbageCollected<MojoHandle>(
-      mojo::ScopedHandleBase<mojo::Handle>::From(
-          fs_handle->Transfer().PassPipe()));
 }
 
 }  // namespace blink

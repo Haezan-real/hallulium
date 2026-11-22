@@ -22,7 +22,6 @@
 #include "third_party/blink/renderer/core/frame/local_frame.h"
 #include "third_party/blink/renderer/modules/mediastream/apply_constraints_processor.h"
 #include "third_party/blink/renderer/modules/mediastream/media_constraints.h"
-#include "third_party/blink/renderer/modules/peerconnection/peer_connection_tracker.h"
 #include "third_party/blink/renderer/platform/mediastream/webrtc_uma_histograms.h"
 #include "third_party/blink/renderer/platform/wtf/functional.h"
 
@@ -352,19 +351,6 @@ void UserMediaClient::RequestUserMedia(UserMediaRequest* user_media_request) {
         LocalFrame::HasTransientUserActivation(window->GetFrame());
   }
   user_media_request->set_request_id(request_id);
-
-  // TODO(crbug.com/787254): Communicate directly with the
-  // PeerConnectionTrackerHost mojo object once it is available from Blink.
-  if (auto* window = user_media_request->GetWindow()) {
-    if (user_media_request->MediaRequestType() ==
-        UserMediaRequestType::kUserMedia) {
-      PeerConnectionTracker::From(*window).TrackGetUserMedia(
-          user_media_request);
-    } else {
-      PeerConnectionTracker::From(*window).TrackGetDisplayMedia(
-          user_media_request);
-    }
-  }
 
   user_media_request->set_has_transient_user_activation(
       has_transient_user_activation);

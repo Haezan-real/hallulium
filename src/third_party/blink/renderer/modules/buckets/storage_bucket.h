@@ -13,15 +13,11 @@
 #include "third_party/blink/renderer/core/execution_context/execution_context.h"
 #include "third_party/blink/renderer/core/execution_context/execution_context_lifecycle_observer.h"
 #include "third_party/blink/renderer/core/execution_context/navigator_base.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_directory_handle.h"
-#include "third_party/blink/renderer/modules/file_system_access/storage_manager_file_system_access.h"
 #include "third_party/blink/renderer/platform/bindings/script_wrappable.h"
 #include "third_party/blink/renderer/platform/mojo/heap_mojo_remote.h"
 
 namespace blink {
 
-class CacheStorage;
-class FileSystemDirectoryHandle;
 class IDBFactory;
 class LockManager;
 class ScriptState;
@@ -49,16 +45,6 @@ class StorageBucket final : public ScriptWrappable,
   ScriptPromise<IDLNullable<IDLDOMHighResTimeStamp>> expires(ScriptState*);
   IDBFactory* indexedDB();
   LockManager* locks();
-  CacheStorage* caches(ExceptionState&);
-  ScriptPromise<FileSystemDirectoryHandle> getDirectory(ScriptState*,
-                                                        ExceptionState&);
-
-  // An empty `directory_path_components` array will retrieve the root.
-  void GetDirectoryForDevTools(
-      ExecutionContext* context,
-      Vector<String> directory_path_components,
-      base::OnceCallback<void(mojom::blink::FileSystemAccessErrorPtr,
-                              FileSystemDirectoryHandle*)> callback);
 
   // GarbageCollected
   void Trace(Visitor*) const override;
@@ -86,14 +72,6 @@ class StorageBucket final : public ScriptWrappable,
       ScriptPromiseResolver<IDLNullable<IDLDOMHighResTimeStamp>>* resolver,
       const std::optional<base::Time> expires,
       bool success);
-  void GetSandboxedFileSystem(
-      ScriptPromiseResolver<FileSystemDirectoryHandle>* resolver);
-  void GetSandboxedFileSystemForDevtools(
-      ExecutionContext* context,
-      const Vector<String>& directory_path_components,
-      base::OnceCallback<void(mojom::blink::FileSystemAccessErrorPtr,
-                              FileSystemDirectoryHandle*)> callback,
-      mojom::blink::FileSystemAccessErrorPtr result);
 
   String name_;
 
@@ -102,7 +80,6 @@ class StorageBucket final : public ScriptWrappable,
 
   Member<IDBFactory> idb_factory_;
   Member<LockManager> lock_manager_;
-  Member<CacheStorage> caches_;
   Member<NavigatorBase> navigator_base_;
 };
 

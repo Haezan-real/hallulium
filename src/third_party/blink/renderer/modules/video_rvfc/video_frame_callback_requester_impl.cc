@@ -16,9 +16,6 @@
 #include "third_party/blink/renderer/core/timing/performance.h"
 #include "third_party/blink/renderer/core/timing/time_clamper.h"
 #include "third_party/blink/renderer/modules/video_rvfc/video_frame_request_callback_collection.h"
-#include "third_party/blink/renderer/modules/xr/xr_frame_provider.h"
-#include "third_party/blink/renderer/modules/xr/xr_session.h"
-#include "third_party/blink/renderer/modules/xr/xr_system.h"
 #include "third_party/blink/renderer/platform/heap/persistent.h"
 #include "third_party/blink/renderer/platform/wtf/functional.h"
 
@@ -125,70 +122,7 @@ void VideoFrameCallbackRequesterImpl::ScheduleExecution() {
     return;
 
   pending_execution_ = true;
-
-  if (TryScheduleImmersiveXRSessionRaf())
-    return;
-
   ScheduleWindowRaf();
-}
-
-void VideoFrameCallbackRequesterImpl::OnImmersiveSessionStart() {
-  in_immersive_session_ = true;
-
-  if (pending_execution_ && !callback_collection_->IsEmpty())
-    TryScheduleImmersiveXRSessionRaf();
-}
-
-void VideoFrameCallbackRequesterImpl::OnImmersiveSessionEnd() {
-  in_immersive_session_ = false;
-
-  if (pending_execution_ && !callback_collection_->IsEmpty())
-    ScheduleWindowRaf();
-}
-
-void VideoFrameCallbackRequesterImpl::OnImmersiveFrame() {
-  if (callback_collection_->IsEmpty())
-    return;
-
-  if (auto* player = GetSupplementable()->GetWebMediaPlayer())
-    player->UpdateFrameIfStale();
-}
-
-XRFrameProvider* VideoFrameCallbackRequesterImpl::GetXRFrameProvider() {
-  // Do not force the lazy creation of the XRSystem.
-  // If it doesn't exist already exist, the webpage isn't using XR.
-  auto* system = XRSystem::FromIfExists(GetSupplementable()->GetDocument());
-  return system ? system->frameProvider() : nullptr;
-}
-
-bool VideoFrameCallbackRequesterImpl::TryScheduleImmersiveXRSessionRaf() {
-  // Nothing to do here, we will be notified via OnImmersiveSessionStart() when
-  // a new immersive session starts.
-  if (observing_immersive_session_ && !in_immersive_session_)
-    return false;
-
-  auto* frame_provider = GetXRFrameProvider();
-
-  if (!frame_provider)
-    return false;
-
-  if (!observing_immersive_session_) {
-    frame_provider->AddImmersiveSessionObserver(this);
-    observing_immersive_session_ = true;
-  }
-
-  XRSession* session = frame_provider->immersive_session();
-
-  in_immersive_session_ = session && !session->ended();
-
-  if (!in_immersive_session_)
-    return false;
-
-  session->ScheduleVideoFrameCallbacksExecution(
-      BindOnce(&VideoFrameCallbackRequesterImpl::OnExecution,
-               WrapPersistent(weak_factory_.GetWeakCell())));
-
-  return true;
 }
 
 void VideoFrameCallbackRequesterImpl::OnRequestVideoFrameCallback() {

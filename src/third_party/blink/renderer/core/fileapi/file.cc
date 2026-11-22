@@ -28,12 +28,10 @@
 #include <memory>
 
 #include "base/memory/scoped_refptr.h"
-#include "third_party/blink/public/mojom/filesystem/file_system.mojom-blink.h"
 #include "third_party/blink/public/platform/file_path_conversion.h"
 #include "third_party/blink/public/platform/platform.h"
 #include "third_party/blink/renderer/bindings/core/v8/to_v8_traits.h"
 #include "third_party/blink/renderer/bindings/core/v8/v8_file_property_bag.h"
-#include "third_party/blink/renderer/core/core_initializer.h"
 #include "third_party/blink/renderer/core/execution_context/execution_context.h"
 #include "third_party/blink/renderer/core/fileapi/file_backed_blob_factory_dispatcher.h"
 #include "third_party/blink/renderer/core/frame/web_feature.h"
@@ -189,18 +187,10 @@ File* File::CreateForFileSystemFile(ExecutionContext& context,
                                     const KURL& url,
                                     const FileMetadata& metadata,
                                     UserVisibility user_visibility) {
-  String content_type =
-      GetContentTypeFromFileName(url.GetPath(), File::kWellKnownContentTypes);
-  // RegisterBlob doesn't take nullable strings.
-  if (content_type.IsNull()) {
-    content_type = g_empty_string;
-  }
-
-  scoped_refptr<BlobDataHandle> handle;
-  CoreInitializer::GetInstance().GetFileSystemManager(&context).RegisterBlob(
-      content_type, url, metadata.length, metadata.modification_time, &handle);
-
-  return MakeGarbageCollected<File>(url, metadata, user_visibility, handle);
+  String name = url.LastPathComponent().ToString();
+  if (name.empty())
+    name = "file";
+  return MakeGarbageCollected<File>(&context, name, metadata, user_visibility);
 }
 
 File::File(ExecutionContext* context,

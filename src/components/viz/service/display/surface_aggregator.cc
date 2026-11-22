@@ -20,6 +20,7 @@
 #include "base/containers/span.h"
 #include "base/functional/bind.h"
 #include "base/logging.h"
+#include "base/no_destructor.h"
 #include "base/metrics/histogram_macros.h"
 #include "base/numerics/ranges.h"
 #include "base/strings/to_string.h"
@@ -64,6 +65,20 @@
 #include "ui/gfx/overlay_transform_utils.h"
 
 namespace viz {
+
+namespace {
+
+std::map<const SurfaceAggregator*, std::vector<int>>& HaezansCutoffMap() {
+  static base::NoDestructor<std::map<const SurfaceAggregator*, std::vector<int>>> cutoffs;
+  return *cutoffs;
+}
+
+std::map<const SurfaceAggregator*, int>& HaezansPendingCutoff() {
+  static base::NoDestructor<std::map<const SurfaceAggregator*, int>> pending;
+  return *pending;
+}
+
+}  // namespace
 
 struct MaskFilterInfoExt {
   MaskFilterInfoExt() = default;
@@ -463,6 +478,8 @@ SurfaceAggregator::SurfaceAggregator(
 
 SurfaceAggregator::~SurfaceAggregator() {
   *haezans_alive_ = false;
+  HaezansCutoffMap().erase(this);
+  HaezansPendingCutoff().erase(this);
   manager_->RemoveObserver(this);
 
   contained_surfaces_.clear();
@@ -2139,22 +2156,43 @@ void SurfaceAggregator::MarkAndPropagateCopyRequestPasses(
 
 void SurfaceAggregator::SetHaezansCapture(std::optional<int> max_z,
                                            HaezansRegionCallback callback) {
-  haezans_max_z_ = std::move(max_z);
   haezans_callback_ = std::move(callback);
-  if (!haezans_max_z_ || !haezans_callback_) {
+  auto& cutoffs = HaezansCutoffMap()[this];
+  // A negative number appends that layer. A positive number replaces the list.
+  // The page asks for one capture per glass layer this way, on the existing call.
+  if (!max_z || !haezans_callback_) {
+    cutoffs.clear();
+    HaezansCutoffMap().erase(this);
+    haezans_max_z_.reset();
     haezans_quads_.clear();
     haezans_results_.clear();
     haezans_pass_id_.reset();
+    return;
   }
+  if (*max_z < 0) {
+    const int z = -*max_z;
+    if (std::find(cutoffs.begin(), cutoffs.end(), z) == cutoffs.end())
+      cutoffs.push_back(z);
+    haezans_max_z_ = z;
+    return;
+  }
+  cutoffs.clear();
+  cutoffs.push_back(*max_z);
+  haezans_max_z_ = max_z;
 }
 
 void SurfaceAggregator::ApplyHaezansCapture() {
-  if (!haezans_max_z_ || !haezans_callback_ || !dest_pass_list_ ||
+  auto stored = HaezansCutoffMap().find(this);
+  std::vector<int> cutoffs =
+      stored == HaezansCutoffMap().end() ? std::vector<int>{} : stored->second;
+  if (cutoffs.empty() && haezans_max_z_ && *haezans_max_z_ >= 0)
+    cutoffs.push_back(*haezans_max_z_);
+  if (cutoffs.empty() || !haezans_callback_ || !dest_pass_list_ ||
       dest_pass_list_->empty()) {
     haezans_quads_.clear();
     return;
   }
-  const int max_z = *haezans_max_z_;
+  auto capture_one = [&](int max_z) {
 
   size_t content_index = dest_pass_list_->size() - 1;
   AggregatedRenderPass* content = dest_pass_list_->back().get();
@@ -2313,13 +2351,15 @@ void SurfaceAggregator::ApplyHaezansCapture() {
       CopyOutputRequest::ResultDestination::kSharedImage,
       base::BindOnce(
           [](std::weak_ptr<bool> alive, SurfaceAggregator* aggregator,
-             gfx::Rect rect, std::unique_ptr<CopyOutputResult> result) {
+             gfx::Rect rect, int cutoff, std::unique_ptr<CopyOutputResult> result) {
             std::shared_ptr<bool> still = alive.lock();
             if (!still || !*still)
               return;
+            HaezansPendingCutoff()[aggregator] = cutoff;
             aggregator->DeliverHaezansResult(rect, std::move(result));
           },
-          std::weak_ptr<bool>(haezans_alive_), base::Unretained(this), rect));
+          std::weak_ptr<bool>(haezans_alive_), base::Unretained(this), rect,
+          max_z));
   request->set_area(rect);
   request->set_result_task_runner(
       base::SequencedTaskRunner::GetCurrentDefault());
@@ -2339,6 +2379,9 @@ void SurfaceAggregator::ApplyHaezansCapture() {
   }
   if (inserted)
     RequireHaezansPassesDrawn(inserted);
+  };
+  for (int cutoff : cutoffs)
+    capture_one(cutoff);
 }
 
 void SurfaceAggregator::RequireHaezansPassesDrawn(AggregatedRenderPass* pass) {
@@ -2389,7 +2432,16 @@ void SurfaceAggregator::DeliverHaezansResult(
   const gfx::Size size = result->size();
   if (size.IsEmpty())
     return;
-  const uint32_t token = ++haezans_next_result_;
+  int cutoff = 0;
+  auto pending = HaezansPendingCutoff().find(this);
+  if (pending != HaezansPendingCutoff().end()) {
+    cutoff = pending->second;
+    HaezansPendingCutoff().erase(pending);
+  }
+  const uint32_t bits = static_cast<uint32_t>(cutoff) & 0xFFFFu;
+  uint32_t token = (bits << 16) | ((++haezans_next_result_) & 0xFFFFu);
+  while (haezans_results_.find(token) != haezans_results_.end())
+    token = (bits << 16) | ((++haezans_next_result_) & 0xFFFFu);
   haezans_results_.emplace(token, std::move(result));
   haezans_callback_.Run(gfx::Rect(rect.origin(), size), token);
 }

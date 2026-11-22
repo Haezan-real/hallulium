@@ -24,7 +24,8 @@ void ClipPathPaintImageGenerator::Init(
 
 ClipPathPaintImageGenerator* ClipPathPaintImageGenerator::Create(
     LocalFrame& local_root) {
-  DCHECK(g_create_function);
+  if (!g_create_function)
+    return nullptr;
   DCHECK(local_root.IsLocalRoot());
   return g_create_function(local_root);
 }

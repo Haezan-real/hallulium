@@ -15,33 +15,17 @@
 
 namespace blink {
 
-class ScreenDetailed;
-class ScreenDetails;
-
-// TODO(crbug.com/1334583): Implement or disable transferbility of screen
-// capture tracks.
+// Screen-details metadata lived in the deleted screen_details module. Capture
+// tracks still exist so getDisplayMedia / getAllScreensMedia can return a
+// MediaStreamTrack.
 class MODULES_EXPORT ScreenCaptureMediaStreamTrack final
     : public MediaStreamTrackImpl {
   DEFINE_WRAPPERTYPEINFO();
 
  public:
   ScreenCaptureMediaStreamTrack(ExecutionContext* context,
-                                MediaStreamComponent* component,
-                                ScreenDetails* screen_details,
-                                ScreenDetailed* screen_detailed);
+                                MediaStreamComponent* component);
   ~ScreenCaptureMediaStreamTrack() override = default;
-
-  ScreenDetailed* screenDetailed(ScriptState* script_state,
-                                 ExceptionState& exception_state);
-
-  void Trace(Visitor*) const override;
-
- private:
-  // |screen_details_| needs to be stored here as it is the controlling object
-  // of |screen_detailed_|, i.e. it updates the |screen_detailed_| object with
-  // new screen metadata if the setup changes.
-  const Member<ScreenDetails> screen_details_;
-  const Member<ScreenDetailed> screen_detailed_;
 };
 
 }  // namespace blink

@@ -7,8 +7,6 @@ interface StorageAccessHandle {
     [LogActivity=GetterOnly, RaisesException=Getter] readonly attribute Storage localStorage;
     [LogActivity=GetterOnly, RaisesException=Getter] readonly attribute IDBFactory indexedDB;
     [LogActivity=GetterOnly, RaisesException=Getter] readonly attribute LockManager locks;
-    [LogActivity=GetterOnly, RaisesException=Getter] readonly attribute CacheStorage caches;
-    [CallWith=ScriptState, LogActivity, RaisesException] Promise<FileSystemDirectoryHandle> getDirectory();
     [CallWith=ScriptState, LogActivity, RaisesException] Promise<StorageEstimate> estimate();
     [LogActivity, RaisesException] DOMString createObjectURL(Blob blob);
     [LogActivity, RaisesException] void revokeObjectURL(DOMString url);

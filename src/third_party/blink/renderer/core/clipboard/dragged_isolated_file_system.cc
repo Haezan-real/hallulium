@@ -18,7 +18,8 @@ void DraggedIsolatedFileSystem::Init(
 }
 
 void DraggedIsolatedFileSystem::PrepareForDataObject(DataObject* data_object) {
-  DCHECK(prepare_callback_);
+  if (!prepare_callback_)
+    return;
   (*prepare_callback_)(data_object);
 }
 

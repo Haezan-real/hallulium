@@ -30,8 +30,6 @@ namespace blink {
 class AudioServiceAudioProcessorProxy;
 class LocalFrame;
 class MediaStreamAudioProcessor;
-class PeerConnectionDependencyFactory;
-
 // Represents a local source of audio data that is routed through the WebRTC
 // audio pipeline for post-processing (e.g., for echo cancellation during a
 // video conferencing call). Owns a media::AudioCapturerSource and the
@@ -128,7 +126,6 @@ class MODULES_EXPORT ProcessedLocalAudioSource final
   // TODO(crbug.com/704136): Consider moving ProcessedLocalAudioSource to
   // Oilpan and use Member<> here.
   WeakPersistent<LocalFrame> consumer_frame_;
-  WeakPersistent<PeerConnectionDependencyFactory> dependency_factory_;
 
   blink::MediaStreamAudioProcessingLayout processing_layout_;
 

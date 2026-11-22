@@ -24,8 +24,4 @@
   [SameObject, Measure] readonly attribute IDBFactory indexedDB;
 
   [SameObject, RuntimeEnabled=StorageBucketsLocks, Measure] readonly attribute LockManager locks;
-
-  [SameObject, RaisesException, Measure] readonly attribute CacheStorage caches;
-
-  [CallWith=ScriptState, RaisesException, Measure] Promise<FileSystemDirectoryHandle> getDirectory();
 };

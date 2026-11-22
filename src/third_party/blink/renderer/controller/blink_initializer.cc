@@ -60,7 +60,6 @@
 #include "third_party/blink/renderer/core/frame/display_cutout_client_impl.h"
 #include "third_party/blink/renderer/core/frame/local_frame.h"
 #include "third_party/blink/renderer/core/loader/loader_factory_for_frame.h"
-#include "third_party/blink/renderer/modules/ml/webnn/webnn_introspection_impl.h"
 #include "third_party/blink/renderer/platform/bindings/v8_per_isolate_data.h"
 #include "third_party/blink/renderer/platform/disk_data_allocator.h"
 #include "third_party/blink/renderer/platform/heap/garbage_collected.h"
@@ -287,11 +286,6 @@ void BlinkInitializer::RegisterInterfaces(mojo::BinderMap& binders) {
       ConvertToBaseRepeatingCallback(
           CrossThreadBindRepeating(&JavaScriptCallStackGenerator::Bind)),
       Platform::Current()->GetIOTaskRunner());
-
-  binders.Add<mojom::blink::WebNNIntrospection>(
-      ConvertToBaseRepeatingCallback(
-          CrossThreadBindRepeating(&WebNNIntrospectionImpl::BindReceiver)),
-      main_thread_task_runner);
 }
 
 void BlinkInitializer::RegisterMemoryWatchers(Platform* platform) {

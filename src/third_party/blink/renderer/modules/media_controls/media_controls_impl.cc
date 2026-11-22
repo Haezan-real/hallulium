@@ -103,7 +103,6 @@
 #include "third_party/blink/renderer/modules/media_controls/media_controls_rotate_to_fullscreen_delegate.h"
 #include "third_party/blink/renderer/modules/media_controls/media_controls_shared_helper.h"
 #include "third_party/blink/renderer/modules/media_controls/media_controls_text_track_manager.h"
-#include "third_party/blink/renderer/modules/remoteplayback/remote_playback.h"
 #include "third_party/blink/renderer/platform/bindings/exception_state.h"
 #include "third_party/blink/renderer/platform/instrumentation/use_counter.h"
 #include "third_party/blink/renderer/platform/runtime_enabled_features.h"
@@ -223,7 +222,7 @@ bool ShouldShowCastButton(HTMLMediaElement& media_element) {
     return false;
   }
 
-  return RemotePlayback::From(media_element).RemotePlaybackAvailable();
+  return false;
 }
 
 bool ShouldShowCastOverlayButton(HTMLMediaElement& media_element) {
@@ -1164,11 +1163,6 @@ bool MediaControlsImpl::ShouldHideMediaControls(unsigned behavior_flags) const {
   auto* video_element = DynamicTo<HTMLVideoElement>(MediaElement());
   if (!video_element || !MediaElement().HasVideo() ||
       video_element->IsRemotingInterstitialVisible()) {
-    return false;
-  }
-
-  if (RemotePlayback::From(MediaElement()).GetState() !=
-      mojom::blink::PresentationConnectionState::CLOSED) {
     return false;
   }
 

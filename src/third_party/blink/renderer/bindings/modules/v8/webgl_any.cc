@@ -68,12 +68,6 @@ ScriptValue WebGLAny(ScriptState* script_state, String value) {
                      V8String(script_state->GetIsolate(), value));
 }
 
-ScriptValue WebGLAny(ScriptState* script_state, WebGLObject* value) {
-  return ScriptValue(
-      script_state->GetIsolate(),
-      ToV8Traits<IDLNullable<WebGLObject>>::ToV8(script_state, value));
-}
-
 ScriptValue WebGLAny(ScriptState* script_state, DOMFloat32Array* value) {
   return ScriptValue(script_state->GetIsolate(),
                      ToV8Traits<DOMFloat32Array>::ToV8(script_state, value));

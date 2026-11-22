@@ -8,6 +8,8 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <map>
+#include <vector>
 #include <deque>
 #include <limits>
 #include <memory>
@@ -20,6 +22,7 @@
 #include "base/containers/flat_set.h"
 #include "base/debug/dump_without_crashing.h"
 #include "base/logging.h"
+#include "base/no_destructor.h"
 #include "base/metrics/histogram_macros.h"
 #include "base/observer_list.h"
 #include "base/strings/string_number_conversions.h"
@@ -329,7 +332,49 @@ Display::Display(
     scheduler_->SetClient(this);
 }
 
+namespace {
+
+std::map<const Display*, std::vector<int>>& DisplayCutoffs() {
+  static base::NoDestructor<std::map<const Display*, std::vector<int>>> cutoffs;
+  return *cutoffs;
+}
+
+void RememberDisplayCutoffs(const Display* display, const std::optional<int>& max_z) {
+  if (!max_z) {
+    DisplayCutoffs().erase(display);
+    return;
+  }
+  auto& list = DisplayCutoffs()[display];
+  if (*max_z < 0) {
+    const int z = -*max_z;
+    if (std::find(list.begin(), list.end(), z) == list.end())
+      list.push_back(z);
+    return;
+  }
+  list.clear();
+  list.push_back(*max_z);
+}
+
+void ApplyDisplayCutoffs(SurfaceAggregator* aggregator,
+                         const SurfaceAggregator::HaezansRegionCallback& callback,
+                         const Display* display) {
+  if (!aggregator)
+    return;
+  auto found = DisplayCutoffs().find(display);
+  if (found == DisplayCutoffs().end() || found->second.empty() || !callback) {
+    aggregator->SetHaezansCapture(std::nullopt, {});
+    return;
+  }
+  const std::vector<int>& list = found->second;
+  aggregator->SetHaezansCapture(list[0], callback);
+  for (size_t i = 1; i < list.size(); ++i)
+    aggregator->SetHaezansCapture(-list[i], callback);
+}
+
+}  // namespace
+
 Display::~Display() {
+  DisplayCutoffs().erase(this);
 #if DCHECK_IS_ON()
   allow_schedule_gpu_task_during_destruction_.reset(
       new gpu::ScopedAllowScheduleGpuTask);
@@ -422,10 +467,10 @@ void Display::SetLocalSurfaceId(const LocalSurfaceId& id,
 void Display::SetHaezansDomCapture(
     std::optional<int> max_z,
     SurfaceAggregator::HaezansRegionCallback callback) {
+  RememberDisplayCutoffs(this, max_z);
   haezans_max_z_ = std::move(max_z);
   haezans_callback_ = std::move(callback);
-  if (aggregator_)
-    aggregator_->SetHaezansCapture(haezans_max_z_, haezans_callback_);
+  ApplyDisplayCutoffs(aggregator_.get(), haezans_callback_, this);
 }
 
 std::unique_ptr<CopyOutputResult> Display::TakeHaezansResult(uint32_t token) {
@@ -596,7 +641,7 @@ void Display::InitializeRenderer() {
       prevent_merging_surfaces_to_root_pass);
 
   aggregator_->set_output_is_secure(output_is_secure_);
-  aggregator_->SetHaezansCapture(haezans_max_z_, haezans_callback_);
+  ApplyDisplayCutoffs(aggregator_.get(), haezans_callback_, this);
   aggregator_->SetDisplayColorSpaces(display_color_spaces_);
   aggregator_->SetMaxRenderTargetSize(
       output_surface_->capabilities().max_render_target_size);

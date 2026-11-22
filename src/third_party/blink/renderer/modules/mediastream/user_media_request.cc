@@ -54,7 +54,6 @@
 #include "third_party/blink/renderer/modules/mediastream/overconstrained_error.h"
 #include "third_party/blink/renderer/modules/mediastream/transferred_media_stream_track.h"
 #include "third_party/blink/renderer/modules/mediastream/user_media_client.h"
-#include "third_party/blink/renderer/modules/peerconnection/peer_connection_tracker.h"
 #include "third_party/blink/renderer/platform/bindings/exception_state.h"
 #include "third_party/blink/renderer/platform/heap/garbage_collected.h"
 #include "third_party/blink/renderer/platform/mediastream/media_stream_descriptor.h"
@@ -881,18 +880,6 @@ void UserMediaRequest::OnMediaStreamsInitialized(MediaStreamVector streams) {
     for (const auto& video_track : video_tracks)
       video_track->SetInitialConstraints(video_);
 
-    if (auto* window = GetWindow()) {
-      if (media_type_ == UserMediaRequestType::kUserMedia) {
-        PeerConnectionTracker::From(*window).TrackGetUserMediaSuccess(this,
-                                                                      stream);
-      } else if (media_type_ == UserMediaRequestType::kDisplayMedia ||
-                 media_type_ == UserMediaRequestType::kAllScreensMedia) {
-        PeerConnectionTracker::From(*window).TrackGetDisplayMediaSuccess(
-            this, stream);
-      } else {
-        NOTREACHED();
-      }
-    }
   }
   // After this call, the execution context may be invalid.
   callbacks_->OnSuccess(streams, capture_controller_);
@@ -905,18 +892,6 @@ void UserMediaRequest::FailConstraint(const String& constraint_name,
   DCHECK(!is_resolved_);
   if (!GetExecutionContext())
     return;
-  if (auto* window = GetWindow()) {
-    if (media_type_ == UserMediaRequestType::kUserMedia) {
-      PeerConnectionTracker::From(*window).TrackGetUserMediaFailure(
-          this, "OverConstrainedError", message);
-    } else if (media_type_ == UserMediaRequestType::kDisplayMedia ||
-               media_type_ == UserMediaRequestType::kAllScreensMedia) {
-      PeerConnectionTracker::From(*window).TrackGetDisplayMediaFailure(
-          this, "OverConstrainedError", message);
-    } else {
-      NOTREACHED();
-    }
-  }
   // After this call, the execution context may be invalid.
   callbacks_->OnError(
       nullptr,
@@ -1019,19 +994,6 @@ void UserMediaRequest::Fail(Result error, const String& message) {
   }
   CHECK(exception_code.has_value());
   CHECK(result_enum.has_value());
-
-  if (auto* window = GetWindow()) {
-    if (media_type_ == UserMediaRequestType::kUserMedia) {
-      PeerConnectionTracker::From(*window).TrackGetUserMediaFailure(
-          this, DOMException::GetErrorName(*exception_code), message);
-    } else if (media_type_ == UserMediaRequestType::kDisplayMedia ||
-               media_type_ == UserMediaRequestType::kAllScreensMedia) {
-      PeerConnectionTracker::From(*window).TrackGetDisplayMediaFailure(
-          this, DOMException::GetErrorName(*exception_code), message);
-    } else {
-      NOTREACHED();
-    }
-  }
 
   // After this call, the execution context may be invalid.
   callbacks_->OnError(

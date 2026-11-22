@@ -13,11 +13,7 @@
 #include "third_party/blink/renderer/bindings/modules/v8/v8_storage_usage_details.h"
 #include "third_party/blink/renderer/core/dom/dom_exception.h"
 #include "third_party/blink/renderer/core/dom/dom_high_res_time_stamp.h"
-#include "third_party/blink/renderer/core/fetch/global_fetch.h"
 #include "third_party/blink/renderer/core/frame/navigator.h"
-#include "third_party/blink/renderer/modules/cache_storage/cache_storage.h"
-#include "third_party/blink/renderer/modules/cache_storage/global_cache_storage.h"
-#include "third_party/blink/renderer/modules/file_system_access/storage_manager_file_system_access.h"
 #include "third_party/blink/renderer/modules/indexeddb/idb_factory.h"
 #include "third_party/blink/renderer/modules/locks/lock_manager.h"
 #include "third_party/blink/renderer/platform/heap/persistent.h"
@@ -182,47 +178,11 @@ LockManager* StorageBucket::locks() {
   return lock_manager_.Get();
 }
 
-CacheStorage* StorageBucket::caches(ExceptionState& exception_state) {
-  if (!caches_ && GlobalCacheStorage::CanCreateCacheStorage(
-                      GetExecutionContext(), exception_state)) {
-    mojo::PendingRemote<mojom::blink::CacheStorage> cache_storage;
-    remote_->GetCaches(cache_storage.InitWithNewPipeAndPassReceiver());
-    caches_ = MakeGarbageCollected<CacheStorage>(
-        GetExecutionContext(),
-        GlobalFetch::ScopedFetcher::From(*GetExecutionContext()),
-        std::move(cache_storage));
-  }
-
-  return caches_.Get();
-}
-
-ScriptPromise<FileSystemDirectoryHandle> StorageBucket::getDirectory(
-    ScriptState* script_state,
-    ExceptionState& exception_state) {
-  return StorageManagerFileSystemAccess::CheckStorageAccessIsAllowed(
-      script_state, exception_state,
-      BindOnce(&StorageBucket::GetSandboxedFileSystem,
-               WrapWeakPersistent(this)));
-}
-
-void StorageBucket::GetDirectoryForDevTools(
-    ExecutionContext* context,
-    Vector<String> directory_path_components,
-    base::OnceCallback<void(mojom::blink::FileSystemAccessErrorPtr,
-                            FileSystemDirectoryHandle*)> callback) {
-  StorageManagerFileSystemAccess::CheckStorageAccessIsAllowed(
-      context, blink::BindOnce(
-                   &StorageBucket::GetSandboxedFileSystemForDevtools,
-                   WrapWeakPersistent(this), WrapWeakPersistent(context),
-                   std::move(directory_path_components), std::move(callback)));
-}
-
 void StorageBucket::Trace(Visitor* visitor) const {
   visitor->Trace(remote_);
   visitor->Trace(idb_factory_);
   visitor->Trace(lock_manager_);
   visitor->Trace(navigator_base_);
-  visitor->Trace(caches_);
   ScriptWrappable::Trace(visitor);
   ExecutionContextClient::Trace(visitor);
 }
@@ -316,47 +276,5 @@ void StorageBucket::DidGetExpires(
   } else {
     resolver->Resolve(expires);
   }
-}
-
-void StorageBucket::GetSandboxedFileSystem(
-    ScriptPromiseResolver<FileSystemDirectoryHandle>* resolver) {
-  // The context may be destroyed and the mojo connection unbound. However the
-  // object may live on, reject any requests after the context is destroyed.
-  if (!remote_.is_bound()) {
-    resolver->Reject(MakeGarbageCollected<DOMException>(
-        DOMExceptionCode::kInvalidStateError));
-    return;
-  }
-
-  remote_->GetDirectory(
-      BindOnce(&StorageManagerFileSystemAccess::DidGetSandboxedFileSystem,
-               WrapPersistent(resolver)));
-}
-
-void StorageBucket::GetSandboxedFileSystemForDevtools(
-    ExecutionContext* context,
-    const Vector<String>& directory_path_components,
-    base::OnceCallback<void(mojom::blink::FileSystemAccessErrorPtr,
-                            FileSystemDirectoryHandle*)> callback,
-    mojom::blink::FileSystemAccessErrorPtr result) {
-  if (result->status != mojom::blink::FileSystemAccessStatus::kOk) {
-    std::move(callback).Run(std::move(result), nullptr);
-    return;
-  }
-
-  if (!remote_.is_bound()) {
-    std::move(callback).Run(
-        mojom::blink::FileSystemAccessError::New(
-            mojom::blink::FileSystemAccessStatus::kInvalidState,
-            base::File::Error::FILE_ERROR_FAILED, "Invalid state Error."),
-        nullptr);
-    return;
-  }
-
-  remote_->GetDirectoryForDevtools(
-      directory_path_components,
-      blink::BindOnce(
-          &StorageManagerFileSystemAccess::DidGetSandboxedFileSystemForDevtools,
-          WrapWeakPersistent(context), std::move(callback)));
 }
 }  // namespace blink

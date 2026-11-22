@@ -6,9 +6,6 @@
 
 #include "base/feature_list.h"
 #include "third_party/blink/public/common/features.h"
-#include "third_party/blink/public/mojom/file_system_access/file_system_access_manager.mojom-blink.h"
-#include "third_party/blink/public/mojom/file_system_access/file_system_access_transfer_token.mojom-blink.h"
-#include "third_party/blink/public/mojom/filesystem/file_system.mojom-blink.h"
 #include "third_party/blink/public/platform/browser_interface_broker_proxy.h"
 #include "third_party/blink/public/platform/platform.h"
 #include "third_party/blink/public/platform/web_crypto.h"
@@ -19,39 +16,21 @@
 #include "third_party/blink/renderer/bindings/modules/v8/v8_audio_data.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_crop_target.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_crypto_key.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_dom_file_system.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_encoded_audio_chunk.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_encoded_video_chunk.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_file_system_directory_handle.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_file_system_file_handle.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_media_source_handle.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_media_stream_track.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_restriction_target.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_certificate.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_data_channel.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_encoded_audio_frame.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_encoded_video_frame.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_video_frame.h"
 #include "third_party/blink/renderer/core/execution_context/execution_context.h"
 #include "third_party/blink/renderer/core/frame/local_dom_window.h"
 #include "third_party/blink/renderer/modules/crypto/crypto_key.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_directory_handle.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_file_handle.h"
-#include "third_party/blink/renderer/modules/filesystem/dom_file_system.h"
 #include "third_party/blink/renderer/modules/mediasource/media_source_attachment_supplement.h"
 #include "third_party/blink/renderer/modules/mediasource/media_source_handle_attachment.h"
 #include "third_party/blink/renderer/modules/mediasource/media_source_handle_impl.h"
 #include "third_party/blink/renderer/modules/mediastream/crop_target.h"
 #include "third_party/blink/renderer/modules/mediastream/media_stream_track.h"
 #include "third_party/blink/renderer/modules/mediastream/restriction_target.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_certificate.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_certificate_generator.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_data_channel.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_data_channel_attachment.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_audio_frame.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_audio_frame_delegate.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_video_frame.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_video_frame_delegate.h"
 #include "third_party/blink/renderer/modules/webcodecs/audio_data.h"
 #include "third_party/blink/renderer/modules/webcodecs/audio_data_attachment.h"
 #include "third_party/blink/renderer/modules/webcodecs/decoder_buffer_attachment.h"
@@ -78,44 +57,14 @@ ScriptWrappable* V8ScriptValueDeserializerForModules::ReadDOMObject(
   switch (tag) {
     case kCryptoKeyTag:
       return ReadCryptoKey();
-    case kDOMFileSystemTag: {
-      uint32_t raw_type;
-      String name;
-      String root_url;
-      if (!ReadUint32(&raw_type) ||
-          raw_type >
-              static_cast<int32_t>(mojom::blink::FileSystemType::kMaxValue) ||
-          !ReadUTF8String(&name) || !ReadUTF8String(&root_url))
-        return nullptr;
-      return MakeGarbageCollected<DOMFileSystem>(
-          ExecutionContext::From(GetScriptState()), name,
-          static_cast<mojom::blink::FileSystemType>(raw_type), KURL(root_url));
-    }
+    case kDOMFileSystemTag:
     case kFileSystemFileHandleTag:
     case kFileSystemDirectoryHandleTag:
-      return ReadFileSystemHandle(tag);
-    case kRTCCertificateTag: {
-      String pem_private_key;
-      String pem_certificate;
-      if (!ReadUTF8String(&pem_private_key) ||
-          !ReadUTF8String(&pem_certificate))
-        return nullptr;
-      std::unique_ptr<RTCCertificateGenerator> certificate_generator =
-          std::make_unique<RTCCertificateGenerator>();
-      if (!certificate_generator)
-        return nullptr;
-      webrtc::scoped_refptr<webrtc::RTCCertificate> certificate =
-          certificate_generator->FromPEM(pem_private_key, pem_certificate);
-      if (!certificate)
-        return nullptr;
-      return MakeGarbageCollected<RTCCertificate>(std::move(certificate));
-    }
+    case kRTCCertificateTag:
     case kRTCDataChannel:
-      return ReadRTCDataChannel();
     case kRTCEncodedAudioFrameTag:
-      return ReadRTCEncodedAudioFrame();
     case kRTCEncodedVideoFrameTag:
-      return ReadRTCEncodedVideoFrame();
+      return nullptr;
     case kAudioDataTag:
       return ReadAudioData();
     case kVideoFrameTag:
@@ -418,141 +367,22 @@ CryptoKey* V8ScriptValueDeserializerForModules::ReadCryptoKey() {
 }
 
 FileSystemHandle* V8ScriptValueDeserializerForModules::ReadFileSystemHandle(
-    SerializationTag tag) {
-  if (!RuntimeEnabledFeatures::FileSystemAccessEnabled(
-          ExecutionContext::From(GetScriptState()))) {
-    return nullptr;
-  }
-
-  String name;
-  uint32_t token_index;
-  if (!ReadUTF8String(&name) || !ReadUint32(&token_index)) {
-    return nullptr;
-  }
-
-  // Find the FileSystemHandle's token.
-  SerializedScriptValue::FileSystemAccessTokensArray& tokens_array =
-      GetSerializedScriptValue()->FileSystemAccessTokens();
-  if (token_index >= tokens_array.size()) {
-    return nullptr;
-  }
-
-  // IndexedDB code assumes that deserializing a SSV is non-destructive. So
-  // rather than consuming the token here instead we clone it.
-  mojo::Remote<mojom::blink::FileSystemAccessTransferToken> token(
-      std::move(tokens_array[token_index]));
-  if (!token) {
-    return nullptr;
-  }
-
-  mojo::PendingRemote<mojom::blink::FileSystemAccessTransferToken> token_clone;
-  token->Clone(token_clone.InitWithNewPipeAndPassReceiver());
-  tokens_array[token_index] = std::move(token_clone);
-
-  // Use the FileSystemAccessManager to redeem the token to clone the
-  // FileSystemHandle.
-  ExecutionContext* execution_context =
-      ExecutionContext::From(GetScriptState());
-  mojo::Remote<mojom::blink::FileSystemAccessManager>
-      file_system_access_manager;
-  execution_context->GetBrowserInterfaceBroker().GetInterface(
-      file_system_access_manager.BindNewPipeAndPassReceiver());
-
-  // Clone the FileSystemHandle object.
-  switch (tag) {
-    case kFileSystemFileHandleTag: {
-      mojo::PendingRemote<mojom::blink::FileSystemAccessFileHandle> file_handle;
-
-      file_system_access_manager->GetFileHandleFromToken(
-          token.Unbind(), file_handle.InitWithNewPipeAndPassReceiver());
-
-      return MakeGarbageCollected<FileSystemFileHandle>(execution_context, name,
-                                                        std::move(file_handle));
-    }
-    case kFileSystemDirectoryHandleTag: {
-      mojo::PendingRemote<mojom::blink::FileSystemAccessDirectoryHandle>
-          directory_handle;
-
-      file_system_access_manager->GetDirectoryHandleFromToken(
-          token.Unbind(), directory_handle.InitWithNewPipeAndPassReceiver());
-
-      return MakeGarbageCollected<FileSystemDirectoryHandle>(
-          execution_context, name, std::move(directory_handle));
-    }
-    default: {
-      NOTREACHED();
-    }
-  }
+    SerializationTag) {
+  return nullptr;
 }
 
 RTCDataChannel* V8ScriptValueDeserializerForModules::ReadRTCDataChannel() {
-  if (!RuntimeEnabledFeatures::TransferableRTCDataChannelEnabled(
-          ExecutionContext::From(GetScriptState()))) {
-    return nullptr;
-  }
-
-  uint32_t index;
-  if (!ReadUint32(&index)) {
-    return nullptr;
-  }
-
-  const auto* attachment =
-      GetSerializedScriptValue()
-          ->GetAttachmentIfExists<RTCDataChannelAttachment>();
-  if (!attachment) {
-    return nullptr;
-  }
-
-  using NativeDataChannelVector =
-      Vector<webrtc::scoped_refptr<webrtc::DataChannelInterface>>;
-
-  const NativeDataChannelVector& channels = attachment->DataChannels();
-  if (index >= attachment->size() || !channels[index]) {
-    return nullptr;
-  }
-
-  RTCDataChannel::EnsureThreadWrappersForWorkerThread();
-
-  return MakeGarbageCollected<RTCDataChannel>(
-      ExecutionContext::From(GetScriptState()), std::move(channels[index]));
+  return nullptr;
 }
 
 RTCEncodedAudioFrame*
 V8ScriptValueDeserializerForModules::ReadRTCEncodedAudioFrame() {
-  uint32_t index;
-  if (!ReadUint32(&index))
-    return nullptr;
-
-  const auto* attachment =
-      GetSerializedScriptValue()
-          ->GetAttachmentIfExists<RTCEncodedAudioFramesAttachment>();
-  if (!attachment)
-    return nullptr;
-
-  const auto& frames = attachment->EncodedAudioFrames();
-  if (index >= frames.size())
-    return nullptr;
-
-  return MakeGarbageCollected<RTCEncodedAudioFrame>(frames[index]);
+  return nullptr;
 }
 
 RTCEncodedVideoFrame*
 V8ScriptValueDeserializerForModules::ReadRTCEncodedVideoFrame() {
-  uint32_t index;
-  if (!ReadUint32(&index))
-    return nullptr;
-
-  const auto* attachment =
-      GetSerializedScriptValue()
-          ->GetAttachmentIfExists<RTCEncodedVideoFramesAttachment>();
-  if (!attachment)
-    return nullptr;
-
-  const auto& frames = attachment->EncodedVideoFrames();
-  if (index >= frames.size())
-    return nullptr;
-
-  return MakeGarbageCollected<RTCEncodedVideoFrame>(frames[index]);
+  return nullptr;
 }
 
 AudioData* V8ScriptValueDeserializerForModules::ReadAudioData() {
@@ -753,24 +583,13 @@ bool V8ScriptValueDeserializerForModules::ExecutionContextExposesInterface(
     case kCryptoKeyTag:
       return V8CryptoKey::IsExposed(execution_context);
     case kDOMFileSystemTag:
-      // TODO(crbug.com/1366065): In theory this should be the result of
-      // V8DOMFileSystem::IsExposed, but that's actually _nowhere_ right now.
-      // This is an attempt to preserve things that might be working while
-      // someone with actual file system API expertise looks into it.
-      return execution_context->IsWindow() ||
-             execution_context->IsWorkerGlobalScope();
     case kFileSystemFileHandleTag:
-      return V8FileSystemFileHandle::IsExposed(execution_context);
     case kFileSystemDirectoryHandleTag:
-      return V8FileSystemDirectoryHandle::IsExposed(execution_context);
     case kRTCCertificateTag:
-      return V8RTCCertificate::IsExposed(execution_context);
     case kRTCEncodedAudioFrameTag:
-      return V8RTCEncodedAudioFrame::IsExposed(execution_context);
     case kRTCEncodedVideoFrameTag:
-      return V8RTCEncodedVideoFrame::IsExposed(execution_context);
     case kRTCDataChannel:
-      return V8RTCDataChannel::IsExposed(execution_context);
+      return false;
     case kAudioDataTag:
       return V8AudioData::IsExposed(execution_context);
     case kVideoFrameTag:

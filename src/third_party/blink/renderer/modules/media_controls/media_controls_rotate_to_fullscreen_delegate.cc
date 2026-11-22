@@ -17,8 +17,6 @@
 #include "third_party/blink/renderer/core/intersection_observer/intersection_observer.h"
 #include "third_party/blink/renderer/core/intersection_observer/intersection_observer_entry.h"
 #include "third_party/blink/renderer/core/page/chrome_client.h"
-#include "third_party/blink/renderer/modules/device_orientation/device_orientation_data.h"
-#include "third_party/blink/renderer/modules/device_orientation/device_orientation_event.h"
 #include "third_party/blink/renderer/modules/media_controls/media_controls_impl.h"
 #include "third_party/blink/renderer/platform/wtf/functional.h"
 #include "ui/display/mojom/screen_orientation.mojom-blink.h"
@@ -104,11 +102,7 @@ void MediaControlsRotateToFullscreenDelegate::Invoke(
     return;
   }
   if (event->type() == event_type_names::kDeviceorientation) {
-    if (event->isTrusted() &&
-        event->InterfaceName() ==
-            event_interface_names::kDeviceOrientationEvent) {
-      OnDeviceOrientationAvailable(To<DeviceOrientationEvent>(event));
-    }
+    OnDeviceOrientationAvailable(nullptr);
     return;
   }
   if (event->type() == event_type_names::kOrientationchange) {
@@ -152,26 +146,8 @@ void MediaControlsRotateToFullscreenDelegate::OnIntersectionChange(
 }
 
 void MediaControlsRotateToFullscreenDelegate::OnDeviceOrientationAvailable(
-    DeviceOrientationEvent* event) {
-  LocalDOMWindow* dom_window = video_element_->GetDocument().domWindow();
-  if (!dom_window)
-    return;
-  // Stop listening after the first event. Just need to know if it's available.
-  dom_window->removeEventListener(event_type_names::kDeviceorientation, this,
-                                  false);
-
-  // MediaControlsOrientationLockDelegate needs Device Orientation events with
-  // beta and gamma in order to unlock screen orientation and exit fullscreen
-  // when the device is rotated. Some devices cannot provide beta and/or gamma
-  // values and must be excluded. Unfortunately, some other devices incorrectly
-  // return true for both CanProvideBeta() and CanProvideGamma() but their
-  // Beta() and Gamma() values are permanently stuck on zero (crbug/760737); so
-  // we have to also exclude devices where both of these values are exactly
-  // zero, even though that's a valid (albeit unlikely) device orientation.
-  DeviceOrientationData* data = event->Orientation();
-  device_orientation_supported_ =
-      std::make_optional(data->CanProvideBeta() && data->CanProvideGamma() &&
-                         (data->Beta() != 0.0 || data->Gamma() != 0.0));
+    DeviceOrientationEvent*) {
+  device_orientation_supported_ = false;
 }
 
 void MediaControlsRotateToFullscreenDelegate::OnScreenOrientationChange() {

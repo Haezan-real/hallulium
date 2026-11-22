@@ -15,8 +15,6 @@
 #include "third_party/blink/renderer/core/input_type_names.h"
 #include "third_party/blink/renderer/modules/media_controls/elements/media_control_elements_helper.h"
 #include "third_party/blink/renderer/modules/media_controls/media_controls_impl.h"
-#include "third_party/blink/renderer/modules/remoteplayback/remote_playback.h"
-#include "third_party/blink/renderer/modules/remoteplayback/remote_playback_metrics.h"
 #include "third_party/blink/renderer/platform/text/platform_locale.h"
 #include "ui/strings/grit/ax_strings.h"
 
@@ -101,9 +99,6 @@ void MediaControlCastButtonElement::DefaultEventHandler(Event& event) {
           UserMetricsAction("Media.Controls.Cast"));
     }
 
-    RemotePlayback::From(MediaElement()).PromptInternal();
-    RemotePlaybackMetrics::RecordRemotePlaybackLocation(
-        RemotePlaybackInitiationLocation::kHTMLMediaElement);
   }
   MediaControlInputElement::DefaultEventHandler(event);
 }
@@ -113,8 +108,7 @@ bool MediaControlCastButtonElement::KeepEventInNode(const Event& event) const {
 }
 
 bool MediaControlCastButtonElement::IsPlayingRemotely() const {
-  return RemotePlayback::From(MediaElement()).GetState() !=
-         mojom::blink::PresentationConnectionState::CLOSED;
+  return false;
 }
 
 }  // namespace blink

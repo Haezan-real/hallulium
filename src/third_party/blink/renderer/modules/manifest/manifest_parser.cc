@@ -39,7 +39,6 @@
 #include "third_party/blink/renderer/core/frame/web_feature.h"
 #include "third_party/blink/renderer/core/permissions_policy/permissions_policy_parser.h"
 #include "third_party/blink/renderer/core/permissions_policy/policy_helper.h"
-#include "third_party/blink/renderer/modules/navigatorcontentutils/navigator_content_utils.h"
 #include "third_party/blink/renderer/platform/graphics/color.h"
 #include "third_party/blink/renderer/platform/instrumentation/use_counter.h"
 #include "third_party/blink/renderer/platform/json/json_parser.h"
@@ -1855,6 +1854,70 @@ ManifestParser::ParseProtocolHandlers(const JSONObject* from) {
 
   return protocols;
 }
+
+namespace {
+
+bool IsAsciiProtocolToken(const String& protocol) {
+  if (protocol.empty())
+    return false;
+  for (unsigned i = 0; i < protocol.length(); ++i) {
+    const UChar c = protocol[i];
+    const bool ok = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ||
+                    c == '+' || c == '.' || c == '-';
+    if (!ok)
+      return false;
+  }
+  return true;
+}
+
+bool VerifyCustomHandlerScheme(const String& protocol,
+                               String& error_message,
+                               ProtocolHandlerSecurityLevel security_level) {
+  if (!IsAsciiProtocolToken(protocol)) {
+    error_message = "The scheme is not valid.";
+    return false;
+  }
+  if (security_level == ProtocolHandlerSecurityLevel::kIsolatedAppFeatures ||
+      security_level == ProtocolHandlerSecurityLevel::kExtensionFeatures) {
+    return true;
+  }
+  if (protocol.starts_with("web+") && protocol.length() > 4)
+    return true;
+  static constexpr const char* kAllowed[] = {
+      "bitcoin", "geo",     "im",   "irc",          "ircs", "magnet",
+      "mailto",  "matrix",  "mms",  "news",         "nntp", "openpgp4fpr",
+      "sip",     "sms",     "smsto","ssh",          "tel",  "urn",
+      "webcal",  "wtai",    "xmpp"};
+  for (const char* allowed : kAllowed) {
+    if (protocol == allowed)
+      return true;
+  }
+  error_message = "The scheme is not allowed.";
+  return false;
+}
+
+bool VerifyCustomHandlerURLSyntax(const KURL& full_url,
+                                  const KURL&,
+                                  const String& user_url,
+                                  ProtocolHandlerSecurityLevel security_level,
+                                  String& error_message) {
+  if (!full_url.IsValid() || user_url.find("%s") == String::npos) {
+    error_message = "The url is not valid.";
+    return false;
+  }
+  const bool allow_non_http =
+      security_level == ProtocolHandlerSecurityLevel::kSameOrigin ||
+      security_level == ProtocolHandlerSecurityLevel::kUntrustedOrigins ||
+      security_level == ProtocolHandlerSecurityLevel::kExtensionFeatures ||
+      security_level == ProtocolHandlerSecurityLevel::kIsolatedAppFeatures;
+  if (!allow_non_http && !full_url.ProtocolIsInHttpFamily()) {
+    error_message = "The url must be http or https.";
+    return false;
+  }
+  return true;
+}
+
+}  // namespace
 
 std::optional<mojom::blink::ManifestProtocolHandlerPtr>
 ManifestParser::ParseProtocolHandler(const JSONObject* object) {

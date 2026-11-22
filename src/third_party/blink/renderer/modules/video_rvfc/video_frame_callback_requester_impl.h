@@ -9,7 +9,6 @@
 #include "third_party/blink/renderer/core/html/media/video_frame_callback_requester.h"
 #include "third_party/blink/renderer/modules/modules_export.h"
 #include "third_party/blink/renderer/modules/video_rvfc/video_frame_request_callback_collection.h"
-#include "third_party/blink/renderer/modules/xr/xr_frame_provider.h"
 #include "third_party/blink/renderer/platform/heap/garbage_collected.h"
 #include "third_party/blink/renderer/platform/heap/weak_cell.h"
 #include "third_party/blink/renderer/platform/supplementable.h"
@@ -21,8 +20,7 @@ class HTMLVideoElement;
 // Implementation of the <video>.requestVideoFrameCallback() API.
 // Extends HTMLVideoElement via the VideoFrameCallbackRequester interface.
 class MODULES_EXPORT VideoFrameCallbackRequesterImpl final
-    : public VideoFrameCallbackRequester,
-      public XRFrameProvider::ImmersiveSessionObserver {
+    : public VideoFrameCallbackRequester {
  public:
   static VideoFrameCallbackRequesterImpl& From(HTMLVideoElement&);
 
@@ -50,13 +48,8 @@ class MODULES_EXPORT VideoFrameCallbackRequesterImpl final
   void OnRequestVideoFrameCallback() override;
 
   // Called by ScriptedAnimationController as part of the rendering steps,
-  // right before executing window.rAF callbacks. Also called by OnXRFrame().
+  // right before executing window.rAF callbacks.
   void OnExecution(double high_res_now_ms);
-
-  // XRFrameProvider::ImmersiveSessionObserver implementation.
-  void OnImmersiveSessionStart() override;
-  void OnImmersiveSessionEnd() override;
-  void OnImmersiveFrame() override;
 
  private:
   friend class VideoFrameCallbackRequesterImplTest;
@@ -76,23 +69,13 @@ class MODULES_EXPORT VideoFrameCallbackRequesterImpl final
   void RegisterCallbackForTest(
       VideoFrameRequestCallbackCollection::VideoFrameCallback*);
 
-  // Queues up |callback_collection_| to be run before the next window.rAF, or
-  // xr_session.rAF if we are an immersive XR session.
+  // Queues up |callback_collection_| to be run before the next window.rAF.
   void ScheduleExecution();
 
   // Adds |this| to the ScriptedAnimationController's queue of video.rVFC
   // callbacks that should be executed during the next rendering steps.
   // Also causes rendering steps to be scheduled if needed.
   void ScheduleWindowRaf();
-
-  // Check whether there is an immersive XR session, and adds |this| to the list
-  // of video.rVFC callbacks that should be run the next time there is an XR
-  // frame. Requests a new XR frame if needed.
-  // Returns true if we scheduled ourselves, false if there is no immersive XR
-  // session.
-  bool TryScheduleImmersiveXRSessionRaf();
-
-  XRFrameProvider* GetXRFrameProvider();
 
   // Used to keep track of whether or not we have already scheduled a call to
   // ExecuteFrameCallbacks() in the next rendering steps.
@@ -109,13 +92,6 @@ class MODULES_EXPORT VideoFrameCallbackRequesterImpl final
   // new frame. Used to abort auto-rescheduling if we aren't consistently
   // getting new frames.
   int consecutive_stale_frames_ = 0;
-
-  // Indicates whether or not we have registered ourselves with the XR Frame
-  // provider to be notified of immersive XR session events.
-  bool observing_immersive_session_ = false;
-
-  // Indicates if we are currently in an XR session.
-  bool in_immersive_session_ = false;
 
   // Indicates we are cross-origin isolated.
   bool cross_origin_isolated_capability_ = false;

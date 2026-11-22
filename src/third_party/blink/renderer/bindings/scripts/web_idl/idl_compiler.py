@@ -1046,6 +1046,22 @@ class IdlCompiler(object):
             if interface.async_iterable:
                 for arg in interface.async_iterable.arguments:
                     visit_type(arg.idl_type, inputs)
+                if interface.async_iterable.key_type:
+                    visit_type(interface.async_iterable.key_type, outputs)
+                visit_type(interface.async_iterable.value_type, outputs)
+            for member in (interface.iterable, interface.maplike,
+                           interface.setlike):
+                if not member:
+                    continue
+                if getattr(member, "key_type", None):
+                    visit_type(member.key_type, outputs)
+                if getattr(member, "value_type", None):
+                    visit_type(member.value_type, outputs)
+                for op in member.operations or ():
+                    visit_func(op, outputs, inputs)
+                for attr in getattr(member, "attributes", None) or ():
+                    visit_type(attr.idl_type, inputs)
+                    visit_type(attr.idl_type, outputs)
             for attr in interface.attributes:
                 visit_type(attr.idl_type, inputs)
                 visit_type(attr.idl_type, outputs)

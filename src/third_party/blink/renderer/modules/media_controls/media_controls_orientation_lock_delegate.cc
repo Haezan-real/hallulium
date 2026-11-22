@@ -16,8 +16,6 @@
 #include "third_party/blink/renderer/core/frame/screen.h"
 #include "third_party/blink/renderer/core/html/media/html_video_element.h"
 #include "third_party/blink/renderer/core/page/chrome_client.h"
-#include "third_party/blink/renderer/modules/device_orientation/device_orientation_data.h"
-#include "third_party/blink/renderer/modules/device_orientation/device_orientation_event.h"
 #include "third_party/blink/renderer/modules/screen_orientation/screen_orientation.h"
 #include "third_party/blink/renderer/modules/screen_orientation/screen_orientation_controller.h"
 #include "third_party/blink/renderer/modules/screen_orientation/screen_screen_orientation.h"
@@ -234,13 +232,6 @@ void MediaControlsOrientationLockDelegate::Invoke(
   }
 
   if (event->type() == event_type_names::kDeviceorientation) {
-    if (event->isTrusted() &&
-        event->InterfaceName() ==
-            event_interface_names::kDeviceOrientationEvent) {
-      MaybeLockToAnyIfDeviceOrientationMatchesVideo(
-          To<DeviceOrientationEvent>(event));
-    }
-
     return;
   }
 
@@ -286,7 +277,9 @@ MediaControlsOrientationLockDelegate::ComputeOrientationLock() const {
 
 MediaControlsOrientationLockDelegate::DeviceOrientationType
 MediaControlsOrientationLockDelegate::ComputeDeviceOrientation(
-    DeviceOrientationData* data) const {
+    DeviceOrientationData*) const {
+  return DeviceOrientationType::kUnknown;
+#if 0
   LocalDOMWindow* dom_window = GetDocument().domWindow();
   if (!dom_window)
     return DeviceOrientationType::kUnknown;
@@ -362,67 +355,11 @@ MediaControlsOrientationLockDelegate::ComputeDeviceOrientation(
   return device_orientation_angle90 % 180 == portrait_angle_mod_180
              ? DeviceOrientationType::kPortrait
              : DeviceOrientationType::kLandscape;
+#endif
 }
 
 void MediaControlsOrientationLockDelegate::
-    MaybeLockToAnyIfDeviceOrientationMatchesVideo(
-        DeviceOrientationEvent* event) {
-  DCHECK_EQ(state_, State::kMaybeLockedFullscreen);
-  DCHECK(locked_orientation_ ==
-             device::mojom::blink::ScreenOrientationLockType::PORTRAIT ||
-         locked_orientation_ ==
-             device::mojom::blink::ScreenOrientationLockType::LANDSCAPE);
-
-  DeviceOrientationType device_orientation =
-      ComputeDeviceOrientation(event->Orientation());
-
-  DeviceOrientationType video_orientation =
-      locked_orientation_ ==
-              device::mojom::blink::ScreenOrientationLockType::PORTRAIT
-          ? DeviceOrientationType::kPortrait
-          : DeviceOrientationType::kLandscape;
-
-  if (device_orientation != video_orientation)
-    return;
-
-  // Job done: the user rotated their device to match the orientation of the
-  // video that we locked to, so now we can stop listening.
-  if (LocalDOMWindow* dom_window = GetDocument().domWindow()) {
-    dom_window->removeEventListener(event_type_names::kDeviceorientation, this,
-                                    false);
-  }
-  // Delay before changing lock, as a workaround for the case where the device
-  // is initially portrait-primary, then fullscreen orientation lock locks it to
-  // landscape and the screen orientation changes to landscape-primary, but the
-  // user actually rotates the device to landscape-secondary. In that case, if
-  // this delegate unlocks the orientation before Android has detected the
-  // rotation to landscape-secondary (which is slow due to low-pass filtering),
-  // Android would change the screen orientation back to portrait-primary. This
-  // is avoided by delaying unlocking long enough to ensure that Android has
-  // detected the orientation change.
-  lock_to_any_task_ = PostDelayedCancellableTask(
-      *GetDocument().GetTaskRunner(TaskType::kMediaElementEvent), FROM_HERE,
-      // Conceptually, this callback will unlock the screen orientation,
-      // so that the user can now rotate their device to the opposite
-      // orientation in order to exit fullscreen. But unlocking
-      // corresponds to
-      // device::mojom::blink::ScreenOrientationLockType::DEFAULT, which is
-      // sometimes a specific orientation. For example in a webapp added to
-      // homescreen that has set its orientation to portrait using the manifest,
-      // unlocking actually locks to portrait, which would immediately exit
-      // fullscreen if we're watching a landscape video in landscape
-      // orientation! So instead, this locks to
-      // device::mojom::blink::ScreenOrientationLockType::ANY which will
-      // auto-rotate according to the accelerometer, and only exit
-      // fullscreen once the user actually rotates their device. We only
-      // fully unlock to
-      // device::mojom::blink::ScreenOrientationLockType::DEFAULT once
-      // fullscreen is exited.
-      BindOnce(
-          &MediaControlsOrientationLockDelegate::ChangeLockToAnyOrientation,
-          WrapPersistent(this)),
-      kLockToAnyDelay);
-}
+    MaybeLockToAnyIfDeviceOrientationMatchesVideo(DeviceOrientationEvent*) {}
 
 void MediaControlsOrientationLockDelegate::Trace(Visitor* visitor) const {
   NativeEventListener::Trace(visitor);

@@ -6,10 +6,4 @@
 // interface.
 [Exposed=Window, RuntimeEnabled=GetAllScreensMedia]
 interface ScreenCaptureMediaStreamTrack : MediaStreamTrack {
-    [
-      ImplementedAs=screenDetailed,
-      CallWith=ScriptState,
-      RaisesException,
-      SecureContext
-    ] ScreenDetailed screenDetailed();
 };

@@ -11,8 +11,6 @@
 #include "third_party/blink/renderer/core/html/media/html_video_element.h"
 #include "third_party/blink/renderer/core/html/track/text_track_list.h"
 #include "third_party/blink/renderer/modules/media_controls/media_controls_impl.h"
-#include "third_party/blink/renderer/modules/remoteplayback/availability_callback_wrapper.h"
-#include "third_party/blink/renderer/modules/remoteplayback/remote_playback.h"
 #include "third_party/blink/renderer/platform/wtf/functional.h"
 
 namespace blink {
@@ -102,24 +100,6 @@ void MediaControlsMediaEventListener::Attach() {
         event_type_names::kKeypress, this, false);
   }
 
-  RemotePlayback& remote = RemotePlayback::From(GetMediaElement());
-  remote.addEventListener(event_type_names::kConnect, this,
-                          /*use_capture=*/false);
-  remote.addEventListener(event_type_names::kConnecting, this,
-                          /*use_capture=*/false);
-  remote.addEventListener(event_type_names::kDisconnect, this,
-                          /*use_capture=*/false);
-
-  // TODO(avayvod, mlamouri): Attach can be called twice. See
-  // https://crbug.com/713275.
-  if (!remote_playback_availability_callback_id_.has_value()) {
-    remote_playback_availability_callback_id_ =
-        std::make_optional(remote.WatchAvailabilityInternal(
-            MakeGarbageCollected<AvailabilityCallbackWrapper>(
-                BindRepeating(&MediaControlsMediaEventListener::
-                                  OnRemotePlaybackAvailabilityChanged,
-                              WrapWeakPersistent(this)))));
-  }
 }
 
 void MediaControlsMediaEventListener::Detach() {
@@ -141,23 +121,6 @@ void MediaControlsMediaEventListener::Detach() {
         event_type_names::kKeypress, this, /*use_capture=*/false);
   }
 
-  RemotePlayback& remote = RemotePlayback::From(GetMediaElement());
-  remote.removeEventListener(event_type_names::kConnect, this,
-                             /*use_capture=*/false);
-  remote.removeEventListener(event_type_names::kConnecting, this,
-                             /*use_capture=*/false);
-  remote.removeEventListener(event_type_names::kDisconnect, this,
-                             /*use_capture=*/false);
-
-  // TODO(avayvod): apparently Detach() can be called without a previous
-  // Attach() call. See https://crbug.com/713275 for more details.
-  if (remote_playback_availability_callback_id_.has_value() &&
-      remote_playback_availability_callback_id_.value() !=
-          RemotePlayback::kWatchAvailabilityNotSupported) {
-    remote.CancelWatchAvailabilityInternal(
-        remote_playback_availability_callback_id_.value());
-    remote_playback_availability_callback_id_.reset();
-  }
 }
 
 HTMLMediaElement& MediaControlsMediaEventListener::GetMediaElement() {

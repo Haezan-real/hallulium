@@ -17,27 +17,14 @@
 #include "third_party/blink/renderer/bindings/modules/v8/v8_audio_data.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_crop_target.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_crypto_key.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_dom_file_system.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_encoded_audio_chunk.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_encoded_video_chunk.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_file_system_directory_handle.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_file_system_file_handle.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_landmark.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_media_source_handle.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_media_stream_track.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_point_2d.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_restriction_target.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_certificate.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_data_channel.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_encoded_audio_frame.h"
-#include "third_party/blink/renderer/bindings/modules/v8/v8_rtc_encoded_video_frame.h"
 #include "third_party/blink/renderer/bindings/modules/v8/v8_video_frame.h"
 #include "third_party/blink/renderer/core/dom/dom_exception.h"
 #include "third_party/blink/renderer/modules/crypto/crypto_key.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_directory_handle.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_file_handle.h"
-#include "third_party/blink/renderer/modules/file_system_access/file_system_handle.h"
-#include "third_party/blink/renderer/modules/filesystem/dom_file_system.h"
 #include "third_party/blink/renderer/modules/mediasource/media_source_attachment_supplement.h"
 #include "third_party/blink/renderer/modules/mediasource/media_source_handle_attachment.h"
 #include "third_party/blink/renderer/modules/mediasource/media_source_handle_impl.h"
@@ -46,14 +33,6 @@
 #include "third_party/blink/renderer/modules/mediastream/media_stream_track.h"
 #include "third_party/blink/renderer/modules/mediastream/media_stream_utils.h"
 #include "third_party/blink/renderer/modules/mediastream/restriction_target.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_certificate.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_data_channel.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_data_channel_attachment.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_data_channel_transfer_list.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_audio_frame.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_audio_frame_delegate.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_video_frame.h"
-#include "third_party/blink/renderer/modules/peerconnection/rtc_encoded_video_frame_delegate.h"
 #include "third_party/blink/renderer/modules/webcodecs/audio_data.h"
 #include "third_party/blink/renderer/modules/webcodecs/audio_data_attachment.h"
 #include "third_party/blink/renderer/modules/webcodecs/audio_data_transfer_list.h"
@@ -109,26 +88,6 @@ bool V8ScriptValueSerializerForModules::ExtractTransferable(
     }
     transfer_list->audio_data_collection.push_back(audio_data);
     return true;
-  }
-
-  if (RTCDataChannel* channel =
-          V8RTCDataChannel::ToWrappable(isolate, object)) {
-    if (RuntimeEnabledFeatures::TransferableRTCDataChannelEnabled(
-            CurrentExecutionContext(isolate))) {
-      RTCDataChannelTransferList* transfer_list =
-          transferables.GetOrCreateTransferList<RTCDataChannelTransferList>();
-
-      if (transfer_list->data_channel_collection.Contains(channel)) {
-        exception_state.ThrowDOMException(
-            DOMExceptionCode::kDataCloneError,
-            StrCat({"RTCDataChannel at index ", String::Number(object_index),
-                    " is a duplicate of an earlier RTCDataChannel."}));
-        return false;
-      }
-
-      transfer_list->data_channel_collection.push_back(channel);
-      return true;
-    }
   }
 
   if (MediaStreamTrack* track =
@@ -194,60 +153,6 @@ bool V8ScriptValueSerializerForModules::WriteDOMObject(
   if (auto* crypto_key = dispatcher.ToMostDerived<CryptoKey>()) {
     return WriteCryptoKey(crypto_key->Key(), exception_state);
   }
-  if (auto* fs = dispatcher.ToMostDerived<DOMFileSystem>()) {
-    if (!fs->Clonable()) {
-      exception_state.ThrowDOMException(
-          DOMExceptionCode::kDataCloneError,
-          "A FileSystem object could not be cloned.");
-      return false;
-    }
-    WriteAndRequireInterfaceTag(kDOMFileSystemTag);
-    // This locks in the values of the FileSystemType enumerators.
-    WriteUint32(static_cast<uint32_t>(fs->GetType()));
-    WriteUTF8String(fs->name());
-    WriteUTF8String(fs->RootURL().GetString());
-    return true;
-  }
-  if (auto* file_handle = dispatcher.ToMostDerived<FileSystemFileHandle>()) {
-    if (!RuntimeEnabledFeatures::FileSystemAccessEnabled(
-            ExecutionContext::From(GetScriptState()))) {
-      return false;
-    }
-    return WriteFileSystemHandle(kFileSystemFileHandleTag, file_handle);
-  }
-  if (auto* dir_handle =
-          dispatcher.ToMostDerived<FileSystemDirectoryHandle>()) {
-    if (!RuntimeEnabledFeatures::FileSystemAccessEnabled(
-            ExecutionContext::From(GetScriptState()))) {
-      return false;
-    }
-    return WriteFileSystemHandle(kFileSystemDirectoryHandleTag, dir_handle);
-  }
-  if (auto* certificate = dispatcher.ToMostDerived<RTCCertificate>()) {
-    webrtc::RTCCertificatePEM pem = certificate->Certificate()->ToPEM();
-    WriteAndRequireInterfaceTag(kRTCCertificateTag);
-    WriteUTF8String(pem.private_key().c_str());
-    WriteUTF8String(pem.certificate().c_str());
-    return true;
-  }
-  if (auto* audio_frame = dispatcher.ToMostDerived<RTCEncodedAudioFrame>()) {
-    if (IsForStorage()) {
-      exception_state.ThrowDOMException(DOMExceptionCode::kDataCloneError,
-                                        "An RTCEncodedAudioFrame cannot be "
-                                        "serialized for storage.");
-      return false;
-    }
-    return WriteRTCEncodedAudioFrame(audio_frame);
-  }
-  if (auto* video_frame = dispatcher.ToMostDerived<RTCEncodedVideoFrame>()) {
-    if (IsForStorage()) {
-      exception_state.ThrowDOMException(DOMExceptionCode::kDataCloneError,
-                                        "An RTCEncodedVideoFrame cannot be "
-                                        "serialized for storage.");
-      return false;
-    }
-    return WriteRTCEncodedVideoFrame(video_frame);
-  }
   if (auto* video_frame = dispatcher.ToMostDerived<VideoFrame>()) {
     if (IsForStorage()) {
       exception_state.ThrowDOMException(DOMExceptionCode::kDataCloneError,
@@ -310,26 +215,6 @@ bool V8ScriptValueSerializerForModules::WriteDOMObject(
       return false;
     }
     return WriteMediaStreamTrack(track, dispatcher, exception_state);
-  }
-  if (auto* channel = dispatcher.DowncastTo<RTCDataChannel>()) {
-    if (!RuntimeEnabledFeatures::TransferableRTCDataChannelEnabled(
-            ExecutionContext::From(GetScriptState()))) {
-      return false;
-    }
-    if (IsForStorage()) {
-      exception_state.ThrowDOMException(
-          DOMExceptionCode::kDataCloneError,
-          "An RTCDataChannel cannot be serialized for storage.");
-      return false;
-    }
-    if (!channel->IsTransferable()) {
-      exception_state.ThrowDOMException(
-          DOMExceptionCode::kDataCloneError,
-          "RTCDataChannel at index is no longer transferable. Transfers must "
-          "occur on creation, and before any calls to send().");
-      return false;
-    }
-    return WriteRTCDataChannel(channel);
   }
   if (auto* crop_target = dispatcher.ToMostDerived<CropTarget>()) {
     if (!RuntimeEnabledFeatures::RegionCaptureEnabled(
@@ -598,49 +483,19 @@ bool V8ScriptValueSerializerForModules::WriteCryptoKey(
 }
 
 bool V8ScriptValueSerializerForModules::WriteFileSystemHandle(
-    SerializationTag tag,
-    FileSystemHandle* file_system_handle) {
-  mojo::PendingRemote<mojom::blink::FileSystemAccessTransferToken> token =
-      file_system_handle->Transfer();
-
-  SerializedScriptValue::FileSystemAccessTokensArray& tokens_array =
-      GetSerializedScriptValue()->FileSystemAccessTokens();
-
-  tokens_array.push_back(std::move(token));
-  const uint32_t token_index = static_cast<uint32_t>(tokens_array.size() - 1);
-
-  WriteAndRequireInterfaceTag(tag);
-  WriteUTF8String(file_system_handle->name());
-  WriteUint32(token_index);
-  return true;
+    SerializationTag,
+    FileSystemHandle*) {
+  return false;
 }
 
 bool V8ScriptValueSerializerForModules::WriteRTCEncodedAudioFrame(
-    RTCEncodedAudioFrame* audio_frame) {
-  auto* attachment =
-      GetSerializedScriptValue()
-          ->GetOrCreateAttachment<RTCEncodedAudioFramesAttachment>();
-  auto& frames = attachment->EncodedAudioFrames();
-  frames.push_back(audio_frame->Delegate());
-  const uint32_t index = static_cast<uint32_t>(frames.size() - 1);
-
-  WriteAndRequireInterfaceTag(kRTCEncodedAudioFrameTag);
-  WriteUint32(index);
-  return true;
+    RTCEncodedAudioFrame*) {
+  return false;
 }
 
 bool V8ScriptValueSerializerForModules::WriteRTCEncodedVideoFrame(
-    RTCEncodedVideoFrame* video_frame) {
-  auto* attachment =
-      GetSerializedScriptValue()
-          ->GetOrCreateAttachment<RTCEncodedVideoFramesAttachment>();
-  auto& frames = attachment->EncodedVideoFrames();
-  frames.push_back(video_frame->Delegate());
-  const uint32_t index = static_cast<uint32_t>(frames.size() - 1);
-
-  WriteAndRequireInterfaceTag(kRTCEncodedVideoFrameTag);
-  WriteUint32(index);
-  return true;
+    RTCEncodedVideoFrame*) {
+  return false;
 }
 
 bool V8ScriptValueSerializerForModules::WriteVideoFrameHandle(
@@ -741,24 +596,8 @@ bool V8ScriptValueSerializerForModules::WriteMediaStreamTrack(
   return true;
 }
 
-bool V8ScriptValueSerializerForModules::WriteRTCDataChannel(
-    RTCDataChannel* channel) {
-  if (!RuntimeEnabledFeatures::TransferableRTCDataChannelEnabled()) {
-    return false;
-  }
-
-  auto* attachment = GetSerializedScriptValue()
-                         ->GetOrCreateAttachment<RTCDataChannelAttachment>();
-  using NativeDataChannelVector =
-      Vector<webrtc::scoped_refptr<webrtc::DataChannelInterface>>;
-  NativeDataChannelVector& channels = attachment->DataChannels();
-  channels.push_back(channel->TransferUnderlyingChannel());
-  const uint32_t index = static_cast<uint32_t>(channels.size() - 1);
-
-  WriteAndRequireInterfaceTag(kRTCDataChannel);
-  WriteUint32(index);
-
-  return true;
+bool V8ScriptValueSerializerForModules::WriteRTCDataChannel(RTCDataChannel*) {
+  return false;
 }
 
 bool V8ScriptValueSerializerForModules::WriteCropTarget(

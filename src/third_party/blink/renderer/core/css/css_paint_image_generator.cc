@@ -24,7 +24,8 @@ void CSSPaintImageGenerator::Init(
 CSSPaintImageGenerator* CSSPaintImageGenerator::Create(const String& name,
                                                        const Document& document,
                                                        Observer* observer) {
-  DCHECK(g_create_function);
+  if (!g_create_function)
+    return nullptr;
   return g_create_function(name, document, observer);
 }
 

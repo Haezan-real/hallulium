@@ -194,7 +194,6 @@ group("telemetry_chrome_test_without_chrome") {
   ]
   data_deps = [
     "//testing:test_scripts_shared",
-    "//third_party/catapult:telemetry_chrome_test_support",
     "//tools/metrics:metrics_python_tests",
   ]
 
@@ -247,6 +246,5 @@ group("telemetry_chrome_test_without_chrome") {
       "//build/android:stack_tools",
     ]
   } else if (!is_fuchsia) {
-    data_deps += [ "//third_party/catapult/telemetry:bitmaptools" ]
   }
 }

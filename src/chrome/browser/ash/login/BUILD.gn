@@ -4,7 +4,7 @@
 
 import("//build/chromeos/crosier_tests.gni")
 import("//media/media_options.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz = false
 
 assert(is_chromeos)
 

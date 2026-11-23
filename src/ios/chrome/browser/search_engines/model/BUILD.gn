@@ -4,7 +4,7 @@
 
 import("//ios/build/chrome_build.gni")
 import("//ios/web/public/js_messaging/optimize_ts.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz = false
 
 source_set("model") {
   sources = [

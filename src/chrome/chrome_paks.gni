@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//ash/ambient/resources/resources.gni")
+include_ash_ambient_animation_resources = false
 import("//build/config/chrome_build.gni")
 import("//build/config/locales.gni")
 import("//chrome/browser/buildflags.gni")

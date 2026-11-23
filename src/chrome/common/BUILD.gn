@@ -493,7 +493,6 @@ component("chrome_features") {
     "//media:media_buildflags",
     "//net:buildflags",
     "//pdf:buildflags",
-    "//rlz/buildflags",
   ]
 
   public_deps = [ "//ui/base:buildflags" ]
@@ -560,7 +559,6 @@ static_library("constants") {
     "//content/public/common:buildflags",
     "//content/public/common:result_codes",
     "//pdf:buildflags",
-    "//rlz/buildflags",
     "//third_party/widevine/cdm:buildflags",
   ]
 

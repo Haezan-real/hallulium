@@ -98,7 +98,6 @@ group("gn_all") {
       "//base:base_perftests",
       "//base:base_unittests",
       "//build/modules",
-      "//codelabs",
       "//components:components_unittests",
       "//components/gwp_asan:gwp_asan_unittests",
       "//infra/orchestrator:orchestrator_all",
@@ -109,9 +108,6 @@ group("gn_all") {
       "//skia:skia_unittests",
       "//sql:sql_unittests",
       "//testing/libfuzzer/tests",
-      "//third_party/angle/src/tests:angle_end2end_tests",
-      "//third_party/angle/src/tests:angle_unittests",
-      "//third_party/angle/src/tests:angle_white_box_tests",
       "//third_party/flatbuffers:flatbuffers_unittests",
       "//third_party/highway:highway_tests",
       "//third_party/liburlpattern:liburlpattern_unittests",
@@ -249,7 +245,6 @@ group("gn_all") {
     if (!is_ios) {
       deps += [
         "//google_apis/gcm:mcs_probe",
-        "//third_party/catapult/telemetry:bitmaptools($host_toolchain)",
       ]
       if (!is_android) {
         if (!is_castos && !is_fuchsia) {
@@ -458,9 +453,6 @@ group("gn_all") {
 
     if (is_chromeos || is_mac || is_win) {
       deps += [
-        "//rlz:rlz_id",
-        "//rlz:rlz_lib",
-        "//rlz:rlz_unittests",
       ]
     }
 
@@ -1175,7 +1167,6 @@ if (use_blink && !is_cronet_build) {
       data_deps = [
         ":blink_web_tests_support_data",
         "//chrome/test/chromedriver:chromedriver_server",
-        "//headless:headless_shell",
         "//third_party/blink/tools:wpt_tests_isolate",
         "//third_party/blink/web_tests:wpt_tests",
       ]
@@ -1567,7 +1558,6 @@ group("chromium_builder_perf") {
     data_deps += [
       "//chrome/installer/mini_installer",
       "//components:components_perftests",
-      "//third_party/angle/src/tests:angle_perftests",
     ]
   }
 }

@@ -7,7 +7,7 @@ import("//build/config/chrome_build.gni")
 import("//build/config/ui.gni")
 import("//components/signin/features.gni")
 import("//extensions/buildflags/buildflags.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz = false
 
 # Allow browser tests that startup with --gcpw-signin flag only on
 # non-Google Chrome builds.
@@ -194,7 +194,6 @@ source_set("impl") {
     ]
     deps += [
       ":startup_tab",
-      "//apps",
       "//base:i18n",
       "//build:branding_buildflags",
       "//build:buildflag_header_h",

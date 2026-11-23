@@ -17,7 +17,7 @@ import("//extensions/buildflags/buildflags.gni")
 import("//mojo/public/tools/bindings/mojom.gni")
 import("//pdf/features.gni")
 import("//printing/buildflags/buildflags.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz_support = false
 import("//services/screen_ai/buildflags/features.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
 import("//third_party/protobuf/proto_library.gni")
@@ -874,7 +874,6 @@ source_set("extensions") {
       "//mojo/public/cpp/bindings",
     ]
     deps += [
-      "//apps",
       "//build:branding_buildflags",
       "//build:chromeos_buildflags",
       "//build/config/chromebox_for_meetings:buildflags",
@@ -1042,7 +1041,6 @@ source_set("extensions") {
       "//media:media_buildflags",
       "//pdf:buildflags",
       "//printing/buildflags",
-      "//rlz/buildflags",
       "//services/audio/public/cpp",
       "//services/data_decoder/public/cpp",
       "//services/device/public/mojom",

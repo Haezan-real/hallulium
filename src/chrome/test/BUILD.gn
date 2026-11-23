@@ -41,7 +41,7 @@ import("//net/features.gni")
 import("//pdf/features.gni")
 import("//printing/buildflags/buildflags.gni")
 import("//remoting/remoting_enable.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz = false
 import("//services/screen_ai/buildflags/features.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
 import("//testing/test.gni")
@@ -479,7 +479,6 @@ static_library("test_support") {
     ]
 
     public_deps += [
-      "//apps:test_support",
       "//chrome/browser/extensions:test_support",
       "//chrome/browser/preloading:test_support",
       "//chrome/browser/ui/autofill:test_support",
@@ -3216,7 +3215,6 @@ if (!is_android) {
       "//net:test_support",
       "//pdf:buildflags",
       "//printing/buildflags",
-      "//rlz/buildflags",
       "//services/audio/public/cpp:test_support",
       "//services/device/public/cpp:test_support",
       "//services/device/public/mojom",
@@ -10665,7 +10663,6 @@ test("unit_tests") {
     ]
 
     if (!is_mac && enable_extensions) {
-      deps += [ "//apps/ui/views" ]
     }
 
     sources += [

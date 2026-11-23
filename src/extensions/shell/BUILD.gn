@@ -34,7 +34,6 @@ source_set("app_shell_lib") {
   deps = [
     ":resources",
     ":version_header",
-    "//apps",
     "//base",
     "//build:chromeos_buildflags",
     "//components/custom_handlers:test_support",
@@ -289,7 +288,6 @@ test("app_shell_unittests") {
 
   deps = [
     ":app_shell_lib",
-    "//apps",
     "//base",
     "//base/test:test_support",
     "//build:android_buildflags",

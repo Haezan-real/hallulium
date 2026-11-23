@@ -46,7 +46,6 @@ source_set("platform_apps") {
   configs += [ "//build/config/compiler:wexit_time_destructors" ]
 
   public_deps = [
-    "//apps",
     "//chrome/browser:browser_public_dependencies",
     "//chrome/browser/apps/platform_apps/api:api_registration",
     "//chrome/browser/profiles:profile_util",

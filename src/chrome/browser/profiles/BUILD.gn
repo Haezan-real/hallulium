@@ -615,7 +615,6 @@ source_set("profiles_extra_parts_impl") {
 
   if (enable_extensions) {
     deps += [
-      "//apps",
       "//chrome/browser/apps/platform_apps",
       "//chrome/browser/apps/platform_apps/api",
       "//chrome/browser/extensions",

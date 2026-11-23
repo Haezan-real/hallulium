@@ -12,7 +12,6 @@
 #include <memory>
 #include <utility>
 
-#include "ash/constants/ash_switches.h"
 #include "base/base64.h"
 #include "base/base_switches.h"
 #include "base/command_line.h"
@@ -322,8 +321,6 @@ static const char* const kSwitchNames[] = {
     switches::kDisableAdpf,
 #endif
 #if BUILDFLAG(IS_CHROMEOS)
-    // TODO(crbug.com/371609830): Remove reven switch on experiment end.
-    ash::switches::kRevenBranding,
     switches::kSchedulerBoostUrgent,
 #endif
 #if BUILDFLAG(USE_V4L2_CODEC)

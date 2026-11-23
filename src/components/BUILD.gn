@@ -20,7 +20,7 @@ import("//extensions/buildflags/buildflags.gni")
 import("//media/media_options.gni")
 import("//pdf/features.gni")
 import("//printing/buildflags/buildflags.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz_support = false
 import("//services/screen_ai/buildflags/features.gni")
 import("//testing/test.gni")
 import("//third_party/widevine/cdm/widevine.gni")

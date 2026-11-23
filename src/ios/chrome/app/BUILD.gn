@@ -16,7 +16,7 @@ import("//ios/chrome/app/chrome_app.gni")
 import("//ios/chrome/features.gni")
 import("//ios/features.gni")
 import("//ios/public/provider/chrome/browser/build_config.gni")
-import("//rlz/buildflags/buildflags.gni")
+enable_rlz = false
 
 declare_args() {
   # Path to a PrivacyInfo.xcprivacy file to be included in the application.

@@ -1,4 +1,7 @@
-# Build products. This repo is a source snapshot, not out/ or host exes.
+# Build products. This repo is a source snapshot, not host exes.
+/out/
+/src/out/
+out/
 src/out/
 runtime/*.exe
 *.pdb

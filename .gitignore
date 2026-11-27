@@ -3,6 +3,8 @@
 /src/out/
 out/
 src/out/
+/.cipd/
+.cipd/
 runtime/*.exe
 *.pdb
 # Chromium gitignores /electron as a gclient overlay. Track it here.

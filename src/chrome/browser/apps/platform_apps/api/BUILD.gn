@@ -80,7 +80,6 @@ source_set("api") {
       "//chrome/browser/ash/login/demo_mode",
       "//chrome/browser/ash/remote_apps",
       "//chrome/services/media_gallery_util/public/cpp",
-      "//chromeos/components/remote_apps/mojom",
       "//components/storage_monitor",
       "//ui/events:event_constants",
     ]

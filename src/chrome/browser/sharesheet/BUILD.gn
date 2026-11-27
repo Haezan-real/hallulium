@@ -16,7 +16,6 @@ source_set("sharesheet") {
   public_deps = [
     "//base",
     "//chrome/browser/profiles:profile",
-    "//chromeos/components/sharesheet:constants",
     "//components/keyed_service/core",
     "//components/services/app_service",
     "//ui/gfx",

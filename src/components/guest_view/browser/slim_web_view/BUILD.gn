@@ -82,7 +82,6 @@ source_set("unit_tests") {
     "//components/guest_view/browser",
     "//components/guest_view/browser:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

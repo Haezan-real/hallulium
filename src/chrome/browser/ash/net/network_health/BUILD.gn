@@ -17,10 +17,6 @@ static_library("network_health") {
   deps = [
     "//base",
     "//chrome/browser/ash/net/network_diagnostics",
-    "//chromeos/ash/components/dbus/debug_daemon",
-    "//chromeos/ash/services/network_health",
-    "//chromeos/ash/services/network_health:in_process_instance",
-    "//chromeos/ash/services/network_health/public/cpp",
     "//dbus",
     "//mojo/public/cpp/bindings",
   ]

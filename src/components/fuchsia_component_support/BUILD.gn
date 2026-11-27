@@ -12,10 +12,6 @@ source_set("fuchsia_component_support") {
   visibility += [
     ":unit_tests",
     "//chrome/browser",
-    "//chromecast/internal/*",
-    "//fuchsia_web/runners/*",
-    "//fuchsia_web/webengine/*",
-    "//fuchsia_web/webinstance_host/*",
   ]
   public = [
     "append_arguments_from_file.h",
@@ -81,7 +77,6 @@ source_set("test_support") {
   # Only for use by Fuchsia Components.
   visibility += [
     ":unit_tests",
-    "//fuchsia_web/*",
   ]
   public = [ "mock_realm.h" ]
   sources = [ "mock_realm.cc" ]

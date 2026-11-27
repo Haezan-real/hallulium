@@ -46,7 +46,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/printing/history:test_support",
     "//chrome/browser/extensions",
     "//chrome/common/extensions/api",
-    "//chrome/test:test_support",
     "//content/public/browser",
     "//extensions:test_support",
     "//extensions/common",

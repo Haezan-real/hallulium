@@ -327,6 +327,12 @@ is_win = current_os == "win" || current_os == "winuwp"
 is_apple = is_ios || is_mac || is_watchos
 is_posix = !is_win && !is_fuchsia
 
+# Android's config.gni defined Java-debug. This host does not build Android Java.
+if (!is_android) {
+  is_java_debug = false
+}
+import("//build/config/cronet/config.gni")
+
 # =============================================================================
 # TARGET DEFAULTS
 # =============================================================================

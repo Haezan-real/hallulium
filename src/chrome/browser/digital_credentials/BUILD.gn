@@ -70,9 +70,7 @@ source_set("unit_tests") {
     ":digital_credentials",
     "//chrome/browser/optimization_guide",
     "//chrome/browser/optimization_guide:test_support",
-    "//chrome/test:test_support",
     "//components/optimization_guide/core",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

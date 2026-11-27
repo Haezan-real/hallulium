@@ -68,7 +68,6 @@ source_set("test_support") {
     ":new_tab_footer",
     "//base/test:test_support",
     "//chrome/browser/ui:ui_features",
-    "//chrome/test:test_support",
   ]
 }
 

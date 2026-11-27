@@ -9,9 +9,6 @@ if (is_android) {
   android_library("java") {
     visibility = [
       ":*",
-      "//chrome/android:*",
-      "//chrome/android/javatests:*",
-      "//chrome/android/junit:*",
       "//chrome/browser/feed/android:*",
       "//chrome/browser/ui/android/omnibox:*",
       "//chrome/browser/ui/android/signin:*",
@@ -55,8 +52,6 @@ if (is_android) {
   android_library("privacy_preference_manager_java") {
     visibility = [
       ":*",
-      "//chrome/android:*",
-      "//chrome/android/junit:*",
       "//chrome/browser/feed/android:*",
       "//chrome/browser/ui/android/hats:*",
       "//chrome/browser/ui/android/hats/*",
@@ -94,7 +89,6 @@ if (is_android) {
   generate_jni("jni_headers") {
     visibility = [
       ":*",
-      "//chrome/android:jni_headers",
       "//chrome/browser",
     ]
     sources = [ "java/src/org/chromium/chrome/browser/privacy/secure_dns/SecureDnsBridge.java" ]

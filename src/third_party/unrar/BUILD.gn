@@ -121,7 +121,6 @@ fuzzer_test("unrar_fuzzer") {
     ":unrar",
     "//base",
   ]
-  seed_corpus = "//chrome/test/data/safe_browsing/rar"
 
   # Increase the memory limit because unpacking files can result in large
   # allocations.

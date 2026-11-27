@@ -58,9 +58,6 @@ static_library("child_accounts") {
   public_deps = [
     "//base",
     "//chrome/browser/ash/app_list/arc",
-    "//chromeos/ash/components/dbus/system_clock",
-    "//chromeos/dbus/power",
-    "//chromeos/dbus/power:power_manager_proto",
     "//components/keyed_service/core",
     "//components/policy/core/common",
     "//components/prefs",
@@ -85,11 +82,6 @@ static_library("child_accounts") {
     "//chrome/browser/profiles",
     "//chrome/browser/profiles:profile",
     "//chrome/common:constants",  # included for chrome/common/pref_names.h
-    "//chromeos/ash/components/dbus",
-    "//chromeos/ash/components/dbus/session_manager",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/components/system",
-    "//chromeos/ui/vector_icons",
     "//components/app_constants",
     "//components/pref_registry",
     "//components/supervised_user/core/browser",
@@ -97,7 +89,6 @@ static_library("child_accounts") {
     "//content/public/browser",
     "//extensions/browser",
     "//extensions/common",
-    "//ui/chromeos",
     "//ui/message_center",
   ]
 }
@@ -148,17 +139,11 @@ source_set("unit_tests") {
     "//chrome/browser/prefs",
     "//chrome/browser/ui",
     "//chrome/browser/web_applications:web_applications_test_support",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc:arc_test_support",
-    "//chromeos/ash/experiences/arc/mojom",
     "//components/account_id:test_support",
     "//components/app_constants",
     "//components/services/app_service/public/cpp:test_support",
     "//components/session_manager/core",
     "//components/session_manager/core:test_support",
-    "//content/test:test_support",
     "//extensions/common",
     "//testing/gtest",
 
@@ -198,11 +183,6 @@ source_set("browser_tests") {
     "//chrome/browser/ui",
     "//chrome/common:chrome_features",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_ui",
-    "//chromeos/ash/experiences/arc:arc_test_support",
-    "//chromeos/ash/experiences/arc:notification_test_support",
-    "//chromeos/ash/experiences/arc/mojom",
     "//components/account_id",
     "//components/policy/proto",
     "//components/prefs",
@@ -210,7 +190,6 @@ source_set("browser_tests") {
     "//components/session_manager/core",
     "//components/user_manager",
     "//components/user_manager:common",
-    "//content/test:test_support",
     "//net:test_support",
     "//testing/gtest",
 
@@ -232,10 +211,6 @@ if (is_chromeos_device) {
 
     deps = [
       "//chrome/browser/ash/login/test:test_support",
-      "//chrome/test:ash_integration_test_support",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
-      "//chrome/test/base/ash/interactive:test_support",
       "//ui/aura",
     ]
   }
@@ -261,9 +236,6 @@ if (is_chromeos_device) {
       "//chrome/browser/ash/child_accounts/time_limits:test_support",
       "//chrome/browser/ash/login/test:test_support",
       "//chrome/browser/ui/ash/shelf",
-      "//chrome/test:test_support",
-      "//chrome/test/base/ash/interactive:test_support",
-      "//chrome/test/supervised_user:test_support",
       "//ui/aura",
       "//url",
     ]

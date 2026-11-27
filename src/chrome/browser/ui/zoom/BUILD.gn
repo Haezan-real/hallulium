@@ -30,7 +30,6 @@ if (!is_android) {
     sources = [ "zoom_controller_unittest.cc" ]
     deps = [
       ":zoom",
-      "//chrome/test:test_support",
       "//components/prefs",
       "//components/zoom:test_support",
     ]
@@ -44,7 +43,6 @@ if (!is_android) {
       ":zoom",
       "//base/test:test_support",
       "//chrome/browser/ui/webui/signin:test_support_ui",
-      "//chrome/test:test_support",
       "//components/prefs",
       "//components/zoom",
     ]

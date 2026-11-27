@@ -42,7 +42,6 @@ source_set("unit_tests") {
     "//base",
     "//components/history/core/browser",
     "//components/history/core/test",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

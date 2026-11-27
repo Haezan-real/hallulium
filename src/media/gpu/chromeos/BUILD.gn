@@ -49,10 +49,6 @@ source_set("chromeos") {
     deps += [ "//media/gpu/v4l2" ]
   }
 
-  if (is_chromeos) {
-    deps +=
-        [ "//chromeos/components/cdm_factory_daemon:cdm_factory_daemon_gpu" ]
-  }
 }
 
 # This target can be depended by targets in //media/gpu/{v4l2,vaapi}.
@@ -148,7 +144,6 @@ source_set("common") {
     ]
     deps += [
       ":cdm-oemcrypto-proto",
-      "//chromeos/components/cdm_factory_daemon:cdm_factory_daemon_gpu",
     ]
   }
 }
@@ -269,11 +264,6 @@ source_set("unit_tests") {
     "video_decoder_pipeline_unittest.cc",
     "video_frame_resource_unittest.cc",
   ]
-  if (is_chromeos) {
-    deps +=
-        [ "//chromeos/components/cdm_factory_daemon:cdm_factory_daemon_gpu" ]
-  }
-
   # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and
   # enable the diagnostic by removing this line.
   configs += [ "//build/config/compiler:no_exit_time_destructors" ]

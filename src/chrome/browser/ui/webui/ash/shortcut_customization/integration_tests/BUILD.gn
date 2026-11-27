@@ -23,7 +23,6 @@ source_set("interactive_ui_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/ui",
-    "//chrome/test/base/ash/interactive:test_support",
     "//device/udev_linux:test_support",
     "//ui/base",
     "//ui/base:test_support",

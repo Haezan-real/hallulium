@@ -25,7 +25,6 @@ source_set("common") {
     "//chrome/browser/extensions",
     "//chrome/browser/profiles:profile",
     "//chrome/common/chromeos/extensions",
-    "//chromeos/ash/components/browser_context_helper",
     "//components/account_id",
     "//components/user_manager",
     "//content/public/browser",
@@ -49,7 +48,6 @@ source_set("util") {
     "//chrome/browser/ui/browser_window",
     "//chrome/browser/ui/tabs:tab_strip",
     "//chrome/common",
-    "//chromeos/constants",
     "//components/security_state/content",
     "//components/security_state/core",
     "//extensions/common",
@@ -68,8 +66,6 @@ source_set("remote_probe_strategy") {
 
   deps = [
     "//chrome/browser/ash/crosapi",
-    "//chromeos/ash/components/telemetry_extension/telemetry",
-    "//chromeos/crosapi/mojom",
     "//mojo/public/cpp/bindings",
   ]
 }
@@ -83,7 +79,6 @@ source_set("hardware_info_delegate") {
   deps = [
     ":remote_probe_strategy",
     "//base",
-    "//chromeos/crosapi/mojom",
   ]
 }
 
@@ -101,8 +96,6 @@ source_set("test_support") {
     ":common",
     ":remote_probe_strategy",
     "//base",
-    "//chrome/test:test_support",
-    "//chromeos/crosapi/cpp/telemetry:test_support",
     "//content/public/browser",
     "//extensions:test_support",
     "//net",
@@ -131,11 +124,8 @@ source_set("browser_tests") {
     "//chrome/browser/ash/login/users:test_support",
     "//chrome/browser/ash/test:test_support",
     "//chrome/common/chromeos/extensions",
-    "//chrome/test:test_support_ui",
-    "//chromeos/crosapi/cpp/telemetry:test_support",
     "//components/user_manager",
     "//content/public/browser",
-    "//content/test:test_support",
     "//extensions:test_support",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
@@ -145,7 +135,6 @@ source_set("browser_tests") {
     "//url",
   ]
 
-  data = [ "//chrome/test/data" ]
 }
 
 source_set("unit_tests") {
@@ -165,9 +154,6 @@ source_set("unit_tests") {
     "//chrome/browser/extensions:test_support",
     "//chrome/browser/web_applications:web_applications_test_support",
     "//chrome/common/chromeos/extensions",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/crosapi/cpp/telemetry:test_support",
     "//components/sync_preferences:test_support",
     "//components/user_manager",
     "//content/public/browser",

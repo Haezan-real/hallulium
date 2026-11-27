@@ -34,7 +34,6 @@ component("account_manager_core") {
 
   deps = [
     "//base",
-    "//chromeos/crosapi/mojom",
     "//components/prefs",
     "//google_apis",
     "//mojo/public/cpp/bindings",
@@ -84,7 +83,6 @@ source_set("unit_tests") {
     ":account_manager_core",
     ":test_support",
     "//base/test:test_support",
-    "//chromeos/crosapi/mojom",
     "//components/prefs:test_support",
     "//google_apis",
     "//services/network:test_support",

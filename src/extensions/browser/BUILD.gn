@@ -671,7 +671,6 @@ source_set("browser_sources") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/constants",
       "//extensions/browser/api/clipboard:clipboard_types",
     ]
   }
@@ -820,7 +819,6 @@ source_set("browser_sources") {
     deps += [ "//services/device/public/cpp/hid" ]
 
     if (is_chromeos) {
-      deps += [ "//chromeos/dbus/permission_broker" ]
     }
   }
 
@@ -830,7 +828,6 @@ source_set("browser_sources") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/constants" ]
   }
 
   if (enable_pdf) {
@@ -962,7 +959,6 @@ source_set("test_support") {
     "//components/update_client",
     "//components/value_store:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//extensions/browser",
     "//extensions/browser/api/system_display:display_info_provider",
     "//extensions/browser/updater",
@@ -1133,7 +1129,6 @@ source_set("unit_tests") {
     "//components/user_prefs",
     "//components/value_store:test_support",
     "//components/version_info",
-    "//content/test:test_support",
     "//device/bluetooth:mocks",
     "//extensions:extensions_browser_resources",
     "//extensions:test_support",
@@ -1205,20 +1200,6 @@ source_set("unit_tests") {
     deps += [
       "//ash/constants",
       "//chrome/common:constants",
-      "//chromeos:test_support",
-      "//chromeos/ash/components/dbus:test_support",
-      "//chromeos/ash/components/dbus/audio",
-      "//chromeos/ash/components/dbus/debug_daemon",
-      "//chromeos/ash/components/dbus/media_analytics",
-      "//chromeos/ash/components/dbus/media_analytics:media_perception_proto",
-      "//chromeos/ash/components/dbus/shill",
-      "//chromeos/ash/components/dbus/upstart",
-      "//chromeos/ash/components/login/login_state",
-      "//chromeos/ash/components/network:test_support",
-      "//chromeos/constants",
-      "//chromeos/crosapi/mojom",
-      "//chromeos/dbus/permission_broker",
-      "//chromeos/dbus/power",
       "//components/account_id",
       "//components/feedback",
       "//components/prefs",
@@ -1314,7 +1295,6 @@ if (enable_extensions) {
       "//ui/display:test_support",
     ]
 
-    public_deps = [ "//content/test:test_support" ]
 
     if (is_chromeos) {
       sources += [
@@ -1325,18 +1305,6 @@ if (enable_extensions) {
       ]
 
       deps += [
-        "//chromeos/ash/components/audio",
-        "//chromeos/ash/components/dbus:test_support",
-        "//chromeos/ash/components/dbus/audio",
-        "//chromeos/ash/components/dbus/cec_service",
-        "//chromeos/ash/components/dbus/media_analytics",
-        "//chromeos/ash/components/dbus/media_analytics:media_perception_proto",
-        "//chromeos/ash/components/dbus/upstart",
-        "//chromeos/ash/components/login/login_state",
-        "//chromeos/ash/components/network",
-        "//chromeos/dbus/permission_broker",
-        "//chromeos/dbus/power",
-        "//chromeos/dbus/power:power_manager_proto",
         "//components/crash/content/browser/error_reporting:mock_crash_endpoint",
         "//extensions/common:mojom",
       ]

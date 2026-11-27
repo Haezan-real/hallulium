@@ -59,6 +59,5 @@ compiled_action("generate_chrome_colors_info") {
     "//chrome/browser/ui/profiles:unit_tests",
     "//chrome/browser/ui/webui/cr_components/theme_color_picker",
     "//chrome/browser/ui/webui/signin:profile_impl",
-    "//chrome/test:*",
   ]
 }

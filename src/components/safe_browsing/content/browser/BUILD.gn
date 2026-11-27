@@ -194,7 +194,6 @@ source_set("unit_tests") {
     "//components/unified_consent",
     "//components/variations",
     "//components/version_info",
-    "//content/test:test_support",
     "//services/network:test_support",
     "//testing/gmock",
     "//testing/gtest",

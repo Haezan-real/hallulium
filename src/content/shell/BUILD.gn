@@ -357,8 +357,6 @@ static_library("content_shell_lib") {
     "//content:content_resources",
     "//content/common:main_frame_counter",
     "//content/public/common",
-    "//content/test:content_test_mojo_bindings",
-    "//content/test:test_support",
     "//device/bluetooth",
     "//media",
     "//media/mojo:buildflags",
@@ -493,7 +491,6 @@ static_library("content_shell_lib") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/dbus" ]
   }
 
   if (use_ozone) {
@@ -549,7 +546,6 @@ repack("pak") {
     "$root_gen_dir/content/quota_internals_resources.pak",
     "$root_gen_dir/content/service_worker_resources.pak",
     "$root_gen_dir/content/shell/shell_resources.pak",
-    "$root_gen_dir/content/test/web_ui_mojo_test_resources.pak",
     "$root_gen_dir/mojo/public/js/mojo_bindings_resources.pak",
     "$root_gen_dir/net/net_resources.pak",
     "$root_gen_dir/third_party/blink/public/resources/blink_resources.pak",
@@ -575,7 +571,6 @@ repack("pak") {
     "//content/browser/resources",
     "//content/browser/resources/media:resources",
     "//content/browser/webrtc/resources",
-    "//content/test:web_ui_mojo_test_resources",
     "//mojo/public/js:resources",
     "//net:net_resources",
     "//third_party/blink/public:devtools_inspector_resources",

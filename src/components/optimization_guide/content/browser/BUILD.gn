@@ -106,7 +106,6 @@ source_set("unit_tests") {
     ":page_context_eligibility",
     ":test_support",
     "//components/optimization_guide/core:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//third_party/tflite",

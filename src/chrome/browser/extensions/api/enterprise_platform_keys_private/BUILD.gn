@@ -18,8 +18,6 @@ source_set("enterprise_platform_keys_private") {
 
   public_deps = [
     "//chrome/browser/ash/attestation",
-    "//chromeos/ash/components/dbus/attestation:attestation_proto",
-    "//chromeos/ash/components/dbus/constants",
     "//extensions/browser",
     "//extensions/common",
   ]

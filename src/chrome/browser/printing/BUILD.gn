@@ -55,8 +55,6 @@ if (enable_printing) {
     if (is_chromeos) {
       public += [ "local_printer_utils_chromeos.h" ]
       public_deps += [
-        "//chromeos/crosapi/mojom",
-        "//chromeos/printing",
       ]
     }
 

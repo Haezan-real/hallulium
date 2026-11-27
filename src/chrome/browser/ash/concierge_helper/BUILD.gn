@@ -19,9 +19,6 @@ static_library("concierge_helper") {
   ]
 
   deps = [
-    "//chromeos/ash/components/dbus/concierge",
-    "//chromeos/ash/components/dbus/concierge:concierge_proto",
-    "//chromeos/ash/components/dbus/debug_daemon",
     "//content/public/browser",
   ]
 }
@@ -34,10 +31,6 @@ source_set("unit_tests") {
   deps = [
     ":concierge_helper",
     "//base",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/concierge",
-    "//chromeos/ash/components/dbus/concierge:concierge_proto",
-    "//content/test:test_support",
     "//dbus",
     "//testing/gtest",
   ]

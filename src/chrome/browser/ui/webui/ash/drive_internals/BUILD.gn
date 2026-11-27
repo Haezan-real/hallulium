@@ -20,7 +20,6 @@ static_library("drive_internals") {
     "//chrome/browser/profiles:profile",
     "//chrome/common",
     "//chrome/services/file_util/public/cpp",
-    "//chromeos/ash/components/drivefs",
     "//components/drive",
     "//components/prefs",
     "//content/public/browser",

@@ -13,8 +13,6 @@ static_library("external_display") {
   ]
 
   deps = [
-    "//chromeos/ash/services/cros_healthd/public/cpp",
-    "//chromeos/ash/services/cros_healthd/public/mojom",
     "//components/reporting/proto:metric_data_proto",
   ]
 }
@@ -28,9 +26,6 @@ source_set("unit_tests") {
     ":external_display",
     "//base/test:test_support",
     "//chrome/browser/ash/policy/reporting/metrics_reporting:test_support",
-    "//chromeos/ash/components/mojo_service_manager:test_support",
-    "//chromeos/ash/services/cros_healthd/public/cpp:fakes",
-    "//chromeos/ash/services/cros_healthd/public/mojom",
     "//components/reporting/proto:metric_data_proto",
     "//components/reporting/util:test_callbacks_support",
     "//testing/gmock",
@@ -55,18 +50,11 @@ source_set("browser_tests") {
     "//chrome/browser/ash/settings",
     "//chrome/browser/ash/settings:test_support",
     "//chrome/browser/chromeos/reporting",
-    "//chrome/test:test_support_ui",
-    "//chromeos/ash/components/policy/device_policy:test_support",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/services/cros_healthd/public/cpp:fakes",
-    "//chromeos/ash/services/cros_healthd/public/mojom",
-    "//chromeos/dbus/missive:test_support",
     "//components/account_id",
     "//components/reporting/proto:metric_data_proto",
     "//components/reporting/proto:record_constants",
     "//components/reporting/proto:record_proto",
     "//components/signin/public/identity_manager:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

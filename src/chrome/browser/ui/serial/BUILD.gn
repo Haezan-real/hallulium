@@ -47,7 +47,6 @@ source_set("test_support") {
     "mock_serial_chooser_controller.cc",
     "mock_serial_chooser_controller.h",
   ]
-  deps = [ "//chrome/test:test_support" ]
 }
 
 source_set("unit_tests") {
@@ -57,7 +56,6 @@ source_set("unit_tests") {
     ":serial",
     "//base/test:test_support",
     "//chrome/browser/serial",
-    "//chrome/test:test_support",
     "//components/permissions:test_support",
     "//device/bluetooth",
     "//device/bluetooth:mocks",

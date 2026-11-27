@@ -96,7 +96,6 @@ source_set("unit_tests") {
     "//components/os_crypt/async/browser:test_support",
     "//components/page_content_annotations/core:features",
     "//components/passage_embeddings/core:passage_embeddings_types",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

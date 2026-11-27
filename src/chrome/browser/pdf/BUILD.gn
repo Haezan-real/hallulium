@@ -56,7 +56,6 @@ source_set("pdf") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/browser_context_helper" ]
   }
 
   if (enable_print_preview) {
@@ -102,7 +101,6 @@ source_set("pdf_extension_test_utils") {
     "//chrome/browser/ui/tabs:tab_strip",
     "//components/pdf/common:util",
     "//content/public/browser",
-    "//content/test:test_support",
     "//extensions/browser",
     "//pdf:features",
     "//testing/gtest",

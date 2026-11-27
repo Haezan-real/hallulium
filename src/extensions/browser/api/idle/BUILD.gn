@@ -38,6 +38,5 @@ source_set("idle") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/dbus/power" ]
   }
 }

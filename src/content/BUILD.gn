@@ -49,9 +49,7 @@ assert(use_blink, "Chromium without blink shouldn't use anything in //content")
 # prevent external-to-content targets from depending on private headers,
 # the non-public content/browser target is not a public dep of the content
 # component. But this means there is also no public path for the content
-# tests and no way to restrict that just to //content/test/* if we added one.
 #
-# As a result, we check deps for //content/test/* only in non-component builds
 # (which should verify the dependencies are correct for both component and
 # non-component cases equally). There are targets like
 # //content/browser:for_content_tests that allow content/test to depend on the

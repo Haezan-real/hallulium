@@ -43,6 +43,5 @@ source_set("on_device_internals") {
     "//ui/webui",
   ]
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/mojo_service_manager" ]
   }
 }

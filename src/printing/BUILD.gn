@@ -100,7 +100,6 @@ component("settings") {
   defines = [ "IS_PRINTING_SETTINGS_IMPL" ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/crosapi/mojom" ]
   }
 }
 
@@ -305,7 +304,6 @@ component("printing") {
     ]
 
     deps += [
-      "//chromeos/crosapi/mojom",
       "//third_party/re2",
     ]
   }

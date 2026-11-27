@@ -64,7 +64,6 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//components/no_state_prefetch/browser",
-    "//content/test:test_support",
     "//google_apis",
     "//testing/gtest",
     "//url",

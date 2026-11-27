@@ -254,7 +254,6 @@ if (!is_android) {
     if (is_chromeos) {
       sources += [ "existing_window_sub_menu_model_chromeos.cc" ]
 
-      deps += [ "//chromeos/ui/wm" ]
     }
   }
 
@@ -663,7 +662,6 @@ if (!is_android) {
       "//chrome/browser/profiles:profile",
       "//chrome/browser/ui/tab_contents",
       "//content/public/browser",
-      "//content/test:test_support",
       "//services/metrics/public/cpp:metrics_cpp",
       "//services/metrics/public/mojom",
       "//testing/gtest",
@@ -724,8 +722,6 @@ if (!is_android) {
       "//chrome/browser/web_applications:prevent_close_test_support",
       "//chrome/browser/web_applications:web_applications_test_support",
       "//chrome/common:chrome_features",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//components/commerce/core:account_checker_test_support",
       "//components/commerce/core:feature_list",
       "//components/commerce/core:shopping_service",
@@ -740,7 +736,6 @@ if (!is_android) {
       "//components/tab_groups",
       "//components/webapps/common",
       "//content/public/browser",
-      "//content/test:test_support",
       "//ui/base:features",
       "//ui/base:types",
       "//url",
@@ -759,10 +754,7 @@ if (!is_android) {
       ":test_support",
       "//base",
       "//chrome/browser/ui:ui_features",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//content/public/browser",
-      "//content/test:test_support",
       "//testing/gtest",
       "//ui/base:types",
       "//ui/views",
@@ -830,7 +822,6 @@ if (!is_android) {
       "//chrome/browser/ui/thumbnails",
       "//chrome/browser/user_education",
       "//chrome/common:non_code_constants",
-      "//chrome/test:test_support",
       "//components/commerce/core:account_checker_test_support",
       "//components/commerce/core:feature_list",
       "//components/commerce/core:shopping_service",
@@ -850,7 +841,6 @@ if (!is_android) {
       "//components/tabs:test_support",
       "//components/web_modal",
       "//content/public/browser",
-      "//content/test:test_support",
       "//skia",
       "//testing/gmock",
       "//testing/gtest",

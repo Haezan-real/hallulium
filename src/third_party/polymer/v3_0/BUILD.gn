@@ -126,13 +126,6 @@ ts_library("library") {
     "//chrome/browser/resources/settings_shared:build_ts",
     "//chrome/browser/resources/side_panel/bookmarks:build_ts",
     "//chrome/browser/resources/side_panel/shared:build_ts",
-    "//chrome/test/data/webui:build_ts",
-    "//chrome/test/data/webui/cr_components/help_bubble:build_ts",
-    "//chrome/test/data/webui/cr_elements:build_ts",
-    "//chrome/test/data/webui/password_manager:build_ts",
-    "//chrome/test/data/webui/print_preview:build_ts",
-    "//chrome/test/data/webui/settings:build_ts",
-    "//chrome/test/data/webui/side_panel:build_ts",
     "//ui/webui/resources/cr_components/help_bubble:build_ts",
     "//ui/webui/resources/cr_elements:build_ts",
   ]
@@ -146,10 +139,6 @@ ts_library("library") {
       "//ash/webui/*",
       "//chrome/browser/resources/ash/*",
       "//chrome/browser/resources/chromeos/*",
-      "//chrome/test/data/webui/chromeos/*",
-      "//chrome/test/data/webui/cr_components/chromeos:build_ts",
-      "//chromeos/ash/components/*",
-      "//ui/file_manager/*",
     ]
   }
 

@@ -30,6 +30,5 @@ source_set("browser_tests") {
   deps = [
     ":smart_card_provider_private",
     "//chrome/browser",
-    "//chrome/test:test_support",
   ]
 }

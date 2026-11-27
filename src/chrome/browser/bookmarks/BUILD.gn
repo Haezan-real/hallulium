@@ -135,7 +135,6 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser",
-    "//chrome/test:test_support",
     "//components/bookmarks/browser",
     "//components/bookmarks/common",
     "//components/bookmarks/managed",
@@ -145,7 +144,6 @@ source_set("unit_tests") {
     "//components/strings",
     "//components/sync/base",
     "//components/sync_preferences:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//ui/base",
@@ -179,12 +177,9 @@ source_set("browser_tests") {
     "//chrome/browser:test_support",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/sync",
-    "//chrome/test:test_support",
     "//components/bookmarks/browser",
     "//components/bookmarks/test",
     "//components/sync_bookmarks",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//testing/gmock",
   ]
 }

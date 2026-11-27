@@ -256,8 +256,6 @@ source_set("impl") {
         "//chrome/browser/ash/floating_workspace",
         "//chrome/browser/ash/floating_workspace:utils",
         "//chrome/browser/ash/profiles",
-        "//chromeos/ash/components/browser_context_helper",
-        "//chromeos/ash/components/cryptohome",
         "//components/user_manager",
       ]
     }
@@ -372,7 +370,6 @@ if (!is_android) {
         "//chrome/browser/ui",
         "//chrome/common:constants",
         "//chrome/common:non_code_constants",
-        "//chrome/test:test_support_ui",
         "//components/prefs",
         "//testing/gtest",
       ]
@@ -406,9 +403,7 @@ source_set("unit_tests") {
       "//chrome/common",
       "//chrome/common:non_code_constants",
       "//chrome/common:version_header",
-      "//chrome/test:test_support",
       "//components/signin/public/base",
-      "//content/test:test_support",
       "//extensions:test_support",
       "//extensions/browser",
       "//testing/gmock",
@@ -468,8 +463,6 @@ if (!is_android) {
       "//chrome/common:constants",
       "//chrome/common:non_code_constants",
       "//chrome/common:version_header",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//components/infobars/content",
       "//components/infobars/core",
       "//components/keep_alive_registry",
@@ -485,7 +478,6 @@ if (!is_android) {
       "//components/webapps/browser:constants",
       "//content/public/browser",
       "//content/public/common",
-      "//content/test:test_support",
       "//extensions:test_support",
       "//extensions/browser",
       "//google_apis",
@@ -536,9 +528,6 @@ if (!is_android && !is_chromeos_device) {
       "//chrome/browser/ui/browser_window",
       "//chrome/browser/ui/tabs:tab_strip",
       "//chrome/common:constants",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
-      "//content/test:test_support",
       "//testing/gtest",
       "//url",
     ]

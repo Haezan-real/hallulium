@@ -150,7 +150,6 @@ template("generate_chromeos_sdk_deps") {
 
       # The LKGM file controls what version of the VM image to download. Add it
       # as data here so that changes to it will trigger analyze.
-      "//chromeos/CHROMEOS_LKGM",
     ]
     if (cros_boards_with_qemu_images != "") {
       data += [ "//build/cros_cache/cipd/" ]
@@ -167,7 +166,6 @@ template("generate_chromeos_sdk_deps") {
 #   tast_disabled_tests: Names of tests to disable in tast. All other tests that
 #       match the tast expression will still run.
 #   tast_control: gni file with collections of tests to be used for specific
-#       filters (e.g. "//chromeos/tast_control.gni"). Any lists of strings in
 #       this file will be used to generate additional tast expressions with
 #       those strings expanded into tests to disable (i.e. as && !"name:test").
 #       The name of those lists are then intended to be used to specify in
@@ -494,7 +492,6 @@ template("cros_test_wrapper_script_test") {
       executable_args += invoker.args
     }
 
-    data_deps = [ "//chromeos:cros_test_wrapper" ]
     if (defined(invoker.data_deps)) {
       data_deps += invoker.data_deps
     }
@@ -527,7 +524,6 @@ template("tast_test") {
 
   _data_deps = [
     "//:chromiumos_preflight_minimal",  # Builds the browser.
-    "//chromeos:cros_chrome_deploy",  # Adds additional browser run-time deps.
 
     # Tools used to symbolize Chrome crash dumps.
     # TODO(crbug.com/40160552): Remove these if/when all tests pick them up by
@@ -538,8 +534,6 @@ template("tast_test") {
   ]
   _data = [
     "//components/crash/content/tools/generate_breakpad_symbols.py",
-    "//chromeos/tast_control_disabled_tests_public_builders.txt",
-    "//chromeos/tast_control_disabled_tests.txt",
   ]
 
   if (is_skylab) {
@@ -550,7 +544,6 @@ template("tast_test") {
 
       # To disable a test on specific milestones, add it to the appropriate
       # collection in the following file
-      tast_control = "//chromeos/tast_control.gni"
     }
   } else {
     # Append any disabled tests to the expression.

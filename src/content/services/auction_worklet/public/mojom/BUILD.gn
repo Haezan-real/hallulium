@@ -48,7 +48,6 @@ mojom("mojom") {
 group("for_content_tests") {
   visibility = [
     "//content/services/auction_worklet/public/cpp:test_support",
-    "//content/test/*",
   ]
   if (!is_component_build) {
     public_deps = [ ":mojom" ]

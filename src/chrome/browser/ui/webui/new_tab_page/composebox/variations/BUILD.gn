@@ -34,8 +34,6 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//chrome/browser/autocomplete:aim_eligibility_service",
     "//chrome/browser/search_engines",
-    "//chrome/test:test_support",
     "//components/omnibox/browser:test_support",
-    "//content/test:test_support",
   ]
 }

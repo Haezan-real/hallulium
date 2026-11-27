@@ -31,7 +31,6 @@ source_set("unittests") {
     ":browser",
     "//base",
     "//base/test:test_support",
-    "//content/test:test_support",
     "//media/cast:test_support",
     "//media/mojo/mojom:remoting",
     "//mojo/public/cpp/bindings",

@@ -63,7 +63,6 @@ source_set("unit_tests") {
   deps = [
     ":keyboard",
     "//base",
-    "//chrome/test:test_support",
     "//content/public/browser",
     "//url",
   ]
@@ -88,7 +87,6 @@ source_set("browser_tests") {
     "//chrome/browser/ash/input_method:test_support",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
     "//extensions/browser",
     "//extensions/common",
     "//ui/events:test_support",

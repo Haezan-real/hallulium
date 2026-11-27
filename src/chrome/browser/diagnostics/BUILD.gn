@@ -64,7 +64,6 @@ source_set("unit_tests") {
     ":impl",
     "//base",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
     "//testing/gtest",
   ]
 }

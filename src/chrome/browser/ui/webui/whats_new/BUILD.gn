@@ -117,12 +117,10 @@ if (is_linux || is_mac || is_win) {
       "//chrome/common:chrome_features",
       "//chrome/common:constants",
       "//chrome/common:version_header",
-      "//chrome/test:test_support",
       "//components/feature_engagement/public",
       "//components/user_education/common",
       "//components/user_education/webui",
       "//components/user_education/webui:test_support",
-      "//content/test:test_support",
       "//mojo/public/cpp/bindings",
       "//testing/gmock",
       "//testing/gtest",
@@ -143,10 +141,8 @@ if (!is_android && !is_chromeos) {
       "//chrome/browser:global_features",
       "//chrome/browser/ui:ui_features",
       "//chrome/common:version_header",
-      "//chrome/test:test_support_ui",
       "//components/user_education/common",
       "//components/user_education/webui",
-      "//content/test:test_support",
       "//testing/gtest",
     ]
   }
@@ -166,10 +162,8 @@ source_set("interactive_ui_tests") {
       "//chrome/browser/ui",
       "//chrome/browser/ui:ui_features",
       "//chrome/common:version_header",
-      "//chrome/test:test_support_ui",
       "//components/user_education/common",
       "//components/user_education/webui",
-      "//content/test:test_support",
       "//testing/gtest",
     ]
     if (use_ozone) {

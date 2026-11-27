@@ -2192,8 +2192,6 @@ void SurfaceAggregator::ApplyHaezansCapture() {
     haezans_quads_.clear();
     return;
   }
-  auto capture_one = [&](int max_z) {
-
   size_t content_index = dest_pass_list_->size() - 1;
   AggregatedRenderPass* content = dest_pass_list_->back().get();
   if (content->quad_list.size() == 1) {
@@ -2209,6 +2207,11 @@ void SurfaceAggregator::ApplyHaezansCapture() {
       }
     }
   }
+  // Extra capture trees are inserted after every cutoff is built, so a later
+  // cutoff does not walk a tree that was made for an earlier one.
+  std::vector<std::unique_ptr<AggregatedRenderPass>> extra_passes;
+  std::vector<AggregatedRenderPassId> capture_ids;
+  auto capture_one = [&](int max_z) {
 
   // A render-pass quad's own stacking_z is not the z of what it contains.
   // Rebuild a capture tree that keeps only quads at or below the cutoff, and
@@ -2269,7 +2272,7 @@ void SurfaceAggregator::ApplyHaezansCapture() {
       filtered->SetAll(id, src->output_rect, src->output_rect,
                        src->transform_to_root_target, src->content_color_usage,
                        /*has_transparent_background=*/true,
-                       /*cache_render_pass=*/true,
+                       /*cache_render_pass=*/false,
                        /*has_damage_from_contributing_content=*/true,
                        /*generate_mipmap=*/false);
 
@@ -2364,24 +2367,29 @@ void SurfaceAggregator::ApplyHaezansCapture() {
   request->set_result_task_runner(
       base::SequencedTaskRunner::GetCurrentDefault());
   capture->copy_requests.push_back(std::move(request));
-
-  if (!filter.made.empty()) {
-    dest_pass_list_->insert(dest_pass_list_->begin() + content_index,
-                            std::make_move_iterator(filter.made.begin()),
-                            std::make_move_iterator(filter.made.end()));
-  }
-  AggregatedRenderPass* inserted = nullptr;
-  for (const auto& candidate : *dest_pass_list_) {
-    if (candidate->id == *capture_id) {
-      inserted = candidate.get();
-      break;
-    }
-  }
-  if (inserted)
-    RequireHaezansPassesDrawn(inserted);
+  capture_ids.push_back(*capture_id);
+  extra_passes.insert(extra_passes.end(),
+                      std::make_move_iterator(filter.made.begin()),
+                      std::make_move_iterator(filter.made.end()));
   };
   for (int cutoff : cutoffs)
     capture_one(cutoff);
+  if (!extra_passes.empty()) {
+    dest_pass_list_->insert(dest_pass_list_->begin() + content_index,
+                            std::make_move_iterator(extra_passes.begin()),
+                            std::make_move_iterator(extra_passes.end()));
+  }
+  for (AggregatedRenderPassId id : capture_ids) {
+    AggregatedRenderPass* inserted = nullptr;
+    for (const auto& candidate : *dest_pass_list_) {
+      if (candidate->id == id) {
+        inserted = candidate.get();
+        break;
+      }
+    }
+    if (inserted)
+      RequireHaezansPassesDrawn(inserted);
+  }
 }
 
 void SurfaceAggregator::RequireHaezansPassesDrawn(AggregatedRenderPass* pass) {

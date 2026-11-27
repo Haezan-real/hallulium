@@ -90,12 +90,8 @@ source_set("utility") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/ash/components/assistant:buildflags",
-      "//chromeos/ash/services/ime:sandbox_hook",
-      "//chromeos/services/tts:sandbox_hook",
     ]
     if (use_linux_video_acceleration) {
-      deps += [ "//chromeos/ash/experiences/arc/video_accelerator" ]
     }
   }
 
@@ -164,7 +160,6 @@ if (is_win) {
 
 # See comment at the top of //content/BUILD.gn for how this works.
 group("for_content_tests") {
-  visibility = [ "//content/test/*" ]
   if (!is_component_build) {
     public_deps = [ ":utility" ]
   }

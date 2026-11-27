@@ -64,14 +64,6 @@ static_library("system_logs") {
     "//chrome/browser/feedback",
     "//chrome/browser/profiles:profile",
     "//chrome/common",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/cryptohome",
-    "//chromeos/ash/components/dbus/debug_daemon",
-    "//chromeos/ash/components/dbus/shill",
-    "//chromeos/ash/components/login/login_state",
-    "//chromeos/ash/components/network",
-    "//chromeos/ash/services/cros_healthd/public/cpp",
-    "//chromeos/components/onc",
     "//components/user_manager",
     "//content/public/browser",
     "//device/bluetooth",
@@ -81,7 +73,6 @@ static_library("system_logs") {
   ]
 
   public_deps = [
-    "//chromeos/ash/services/cros_healthd/public/mojom",
     "//components/feedback",
     "//components/feedback/redaction_tool",
   ]
@@ -108,12 +99,6 @@ source_set("unit_tests") {
     "//chrome/browser/apps/app_service:test_support",
     "//chrome/browser/apps/app_service/publishers",
     "//chrome/browser/ash/login/users:test_support",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_unit",
-    "//chromeos/ash/components/dbus/debug_daemon",
-    "//chromeos/ash/components/dbus/shill",
-    "//chromeos/ash/components/mojo_service_manager:test_support",
-    "//chromeos/ash/services/cros_healthd/public/cpp:test_support",
     "//ui/events/devices:test_support",
     "//ui/events/ozone/evdev:event_device_info",
     "//ui/events/ozone/evdev:event_device_info_test_utils",

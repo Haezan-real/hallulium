@@ -201,11 +201,9 @@ source_set("unit_tests") {
     ":test_support",
     "//base/test:test_support",
     "//base/version_info",
-    "//chrome/test:test_support",
     "//components/prefs",
     "//components/prefs:test_support",
     "//components/privacy_sandbox:features",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]
@@ -229,14 +227,11 @@ source_set("browser_tests") {
     ":test_support",
     "//chrome/browser",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]
 
   if (is_android) {
-    deps += [ "//chrome/test:test_support_ui_android" ]
   }
 
   if (!is_android) {
@@ -245,7 +240,6 @@ source_set("browser_tests") {
       "//chrome/browser/sync",
       "//chrome/browser/ui/browser_window",
       "//chrome/browser/ui/signin",
-      "//chrome/test:test_support_ui",
     ]
   }
 }

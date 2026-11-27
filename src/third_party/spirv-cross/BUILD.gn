@@ -1,3 +1,0 @@
-# Hallulium stub
-group("spirv-cross") {}
-group("stub") {}

@@ -79,7 +79,6 @@ source_set("unit_tests") {
     "//components/user_prefs",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//third_party/blink/public:test_headers",

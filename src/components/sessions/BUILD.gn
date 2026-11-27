@@ -236,7 +236,6 @@ source_set("unit_tests") {
   if (!is_ios) {
     deps += [
       "//content/public/common",
-      "//content/test:test_support",
     ]
   } else {
     deps += [

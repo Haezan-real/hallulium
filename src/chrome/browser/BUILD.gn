@@ -52,7 +52,6 @@ assert(enable_supervised_users)
 # produces a conflict for the "grit" template so we have to only include one.
 if (is_android) {
   import("//build/config/android/rules.gni")
-  import("//chrome/android/features/dev_ui/dev_ui_module.gni")
 }
 
 if (is_win) {
@@ -2146,7 +2145,6 @@ static_library("browser") {
     "//components/sessions",
     "//components/shared_highlighting/core/common",
     "//components/sharing_message:buildflags",
-    "//components/sharing_message/ios_push",
     "//components/sharing_message/proto",
     "//components/sharing_message/shared_clipboard",
     "//components/signin/core/browser",
@@ -3026,7 +3024,6 @@ static_library("browser") {
       ":sensitivity_data_proto",
       ":usage_stats_proto",
       "//cc/slim",
-      "//chrome/android:jni_headers",
       "//chrome/browser/accessibility/settings",
       "//chrome/browser/android:tabs_impl",
       "//chrome/browser/android:tabs_public",
@@ -3382,7 +3379,6 @@ static_library("browser") {
         "dev_ui/android/dev_ui_loader_throttle.cc",
         "dev_ui/android/dev_ui_loader_throttle.h",
       ]
-      deps += [ "//chrome/android/modules/dev_ui/provider:native" ]
     }
   } else {
     #!is_android
@@ -5221,123 +5217,6 @@ static_library("browser") {
       "//chrome/services/sharing/public/cpp",
       "//chrome/services/sharing/public/proto",
       "//chrome/services/speech:lib",
-      "//chromeos/ash/components/account_manager",
-      "//chromeos/ash/components/assistant:buildflags",
-      "//chromeos/ash/components/audio",
-      "//chromeos/ash/components/audio/public/mojom",
-      "//chromeos/ash/components/auto_sign_out",
-      "//chromeos/ash/components/boca",
-      "//chromeos/ash/components/boca/on_task",
-      "//chromeos/ash/components/browser_context_helper",
-      "//chromeos/ash/components/carrier_lock",
-      "//chromeos/ash/components/channel",
-      "//chromeos/ash/components/dbus",
-      "//chromeos/ash/components/dbus/attestation",
-      "//chromeos/ash/components/dbus/attestation:attestation_proto",
-      "//chromeos/ash/components/dbus/concierge",
-      "//chromeos/ash/components/dbus/cros_disks",
-      "//chromeos/ash/components/dbus/cryptohome",
-      "//chromeos/ash/components/dbus/debug_daemon",
-      "//chromeos/ash/components/dbus/device_management",
-      "//chromeos/ash/components/dbus/device_management:device_management_proto",
-      "//chromeos/ash/components/dbus/image_loader",
-      "//chromeos/ash/components/dbus/session_manager",
-      "//chromeos/ash/components/dbus/shill",
-      "//chromeos/ash/components/dbus/spaced",
-      "//chromeos/ash/components/dbus/update_engine",
-      "//chromeos/ash/components/dbus/userdataauth",
-      "//chromeos/ash/components/dbus/userdataauth:userdataauth_proto",
-      "//chromeos/ash/components/demo_mode",
-      "//chromeos/ash/components/emoji:mojo_bindings",
-      "//chromeos/ash/components/feature_usage",
-      "//chromeos/ash/components/file_manager:constants",
-      "//chromeos/ash/components/geolocation",
-      "//chromeos/ash/components/growth:config_provider",
-      "//chromeos/ash/components/install_attributes",
-      "//chromeos/ash/components/kcer",
-      "//chromeos/ash/components/local_search_service",
-      "//chromeos/ash/components/local_search_service/public/cpp",
-      "//chromeos/ash/components/local_search_service/public/mojom",
-      "//chromeos/ash/components/login/login_state",
-      "//chromeos/ash/components/login/session",
-      "//chromeos/ash/components/memory",
-      "//chromeos/ash/components/nearby/common/client",
-      "//chromeos/ash/components/network",
-      "//chromeos/ash/components/policy",
-      "//chromeos/ash/components/policy/policy_blocklist_service",
-      "//chromeos/ash/components/quickoffice",
-      "//chromeos/ash/components/report",
-      "//chromeos/ash/components/settings",
-      "//chromeos/ash/components/sync_wifi",
-      "//chromeos/ash/components/system",
-      "//chromeos/ash/components/timezone",
-      "//chromeos/ash/components/tpm",
-      "//chromeos/ash/experiences/arc",
-      "//chromeos/ash/experiences/arc:arc_base",
-      "//chromeos/ash/experiences/arc:arc_base_utils",
-      "//chromeos/ash/experiences/arc/intent_helper",
-      "//chromeos/ash/experiences/arc/intent_helper:arc_intent_helper_constants",
-      "//chromeos/ash/experiences/arc/mojom",
-      "//chromeos/ash/experiences/arc/process",
-      "//chromeos/ash/experiences/guest_os/borealis/motd",
-      "//chromeos/ash/experiences/guest_os/borealis/motd:mojo_bindings",
-      "//chromeos/ash/experiences/isolated_web_app",
-      "//chromeos/ash/experiences/system_web_apps/types",
-      "//chromeos/ash/services/assistant/public/cpp",
-      "//chromeos/ash/services/auth_factor_config",
-      "//chromeos/ash/services/bluetooth_config",
-      "//chromeos/ash/services/bluetooth_config/public/mojom",
-      "//chromeos/ash/services/cellular_setup",
-      "//chromeos/ash/services/cros_healthd/public/cpp",
-      "//chromeos/ash/services/cros_healthd/public/mojom",
-      "//chromeos/ash/services/cros_safety",
-      "//chromeos/ash/services/device_sync/public/cpp:prefs",
-      "//chromeos/ash/services/device_sync/public/mojom",
-      "//chromeos/ash/services/hotspot_config",
-      "//chromeos/ash/services/hotspot_config/public/mojom",
-      "//chromeos/ash/services/ime/public/mojom",
-      "//chromeos/ash/services/multidevice_setup",
-      "//chromeos/ash/services/multidevice_setup/public/cpp",
-      "//chromeos/ash/services/multidevice_setup/public/cpp:first_run_field_trial",
-      "//chromeos/ash/services/multidevice_setup/public/cpp:prefs",
-      "//chromeos/ash/services/multidevice_setup/public/mojom",
-      "//chromeos/ash/services/nearby/public/cpp",
-      "//chromeos/ash/services/nearby/public/cpp:tcp_server_socket_port",
-      "//chromeos/ash/services/nearby/public/mojom:nearby_share_settings",
-      "//chromeos/ash/services/network_config",
-      "//chromeos/ash/services/network_config:in_process_instance",
-      "//chromeos/ash/services/network_health/public/cpp",
-      "//chromeos/ash/services/secure_channel/public/mojom",
-      "//chromeos/components/cdm_factory_daemon:cdm_factory_daemon_browser",
-      "//chromeos/components/certificate_provider",
-      "//chromeos/components/disks:prefs",
-      "//chromeos/components/firewall_hole",
-      "//chromeos/components/kiosk",
-      "//chromeos/components/magic_boost/public/cpp",
-      "//chromeos/components/mahi/public/cpp",
-      "//chromeos/components/mgs",
-      "//chromeos/components/onc",
-      "//chromeos/components/print_management/mojom",
-      "//chromeos/components/quick_answers/public/cpp:prefs",
-      "//chromeos/components/security_token_pin",
-      "//chromeos/components/webauthn",
-      "//chromeos/constants",
-      "//chromeos/crosapi/cpp:crosapi_constants",
-      "//chromeos/crosapi/mojom",
-      "//chromeos/dbus/constants",
-      "//chromeos/dbus/power",
-      "//chromeos/dbus/regmon",
-      "//chromeos/dbus/regmon:regmon_proto",
-      "//chromeos/dbus/tpm_manager",
-      "//chromeos/dbus/tpm_manager:tpm_manager_proto",
-      "//chromeos/services/network_config/public/mojom",
-      "//chromeos/services/network_health/public/mojom",
-      "//chromeos/strings",
-      "//chromeos/ui/base",
-      "//chromeos/ui/clipboard_history",
-      "//chromeos/ui/vector_icons",
-      "//chromeos/ui/wm",
-      "//chromeos/version",
       "//components/account_manager_core",
       "//components/app_constants",
       "//components/app_restore",
@@ -5348,8 +5227,6 @@ static_library("browser") {
       "//components/device_signals/core/browser/ash",
       "//components/digital_goods/mojom",
       "//components/drive",
-      "//components/exo",
-      "//components/exo/server",
       "//components/memory_pressure",
       "//components/metrics",
       "//components/metrics/structured",
@@ -5377,16 +5254,10 @@ static_library("browser") {
       # Required for adding browser_interop to allow_circular_includes_from.
       # TODO: crbug.com/395179599 - Remove once //chrome/browser/net has its own
       # build target.
-      "//remoting/host/chromeos:browser_interop",
-      "//remoting/host/chromeos:features",
       "//services/device/public/cpp/geolocation",
       "//services/screen_ai/public/cpp:metrics",
       "//third_party/nearby:rpc_resources_proto",
       "//third_party/nearby:wire_format_proto",
-      "//ui/chromeos",
-      "//ui/chromeos/resources",
-      "//ui/chromeos/strings",
-      "//ui/chromeos/styles:cros_tokens_color_mappings",
       "//ui/events/ozone",
       "//ui/ozone",
       "//ui/wm/public",
@@ -5714,7 +5585,6 @@ static_library("browser") {
       # c/b
       # TODO: crbug.com/395179599 - Remove once //chrome/browser/net has its own
       # build target.
-      "//remoting/host/chromeos:browser_interop",
 
       # TODO(crbug.com/353332589): Remove this circular dependency when:
       # - c/b/profiles/profile_manager.h"
@@ -7202,7 +7072,6 @@ static_library("browser") {
         "supervised_user/chromeos/parent_access_extension_approvals_manager.h",
       ]
       deps += [
-        "//chromeos/services/tts/public/mojom",
         "//services/accessibility:buildflags",
         "//services/accessibility/public/mojom",
         "//ui/events/ozone/layout",
@@ -7683,7 +7552,6 @@ group("browser_public_dependencies") {
   ]
   if (is_android) {
     public_deps += [
-      "//chrome/android/features/dev_ui:buildflags",
       "//chrome/browser/android:resource_mapper",
       "//components/image_fetcher/core",
     ]
@@ -7704,20 +7572,6 @@ group("browser_public_dependencies") {
       "//chrome/common/extensions/api",
       "//chrome/services/printing/public/mojom",
       "//chrome/services/sharing/public/proto",
-      "//chromeos/ash/components/dbus:vm_applications_apps_proto",
-      "//chromeos/ash/components/dbus:vm_launch_proto",
-      "//chromeos/ash/components/dbus/anomaly_detector:proto",
-      "//chromeos/ash/components/dbus/chunneld:proto",
-      "//chromeos/ash/components/dbus/concierge:concierge_proto_lib",
-      "//chromeos/ash/components/dbus/seneschal:seneschal_proto",
-      "//chromeos/ash/components/dbus/spaced:spaced_proto",
-      "//chromeos/ash/components/nearby/common/connections_manager",
-      "//chromeos/ash/components/nearby/presence",
-      "//chromeos/ash/components/trash_service/public/mojom",
-      "//chromeos/ash/experiences/arc/mojom",
-      "//chromeos/ash/services/auth_factor_config/public/mojom",
-      "//chromeos/ash/services/nearby/public/mojom",
-      "//chromeos/components/sharesheet:constants",
       "//components/enterprise/buildflags",
       "//components/lens:buildflags",
       "//components/webapps/common:mojo_bindings",
@@ -7888,7 +7742,6 @@ group("browser_generated_files") {
       "//chrome/browser/ui/webui/ash/vm:mojo_bindings",
       "//chrome/browser/ui/webui/nearby_share:mojom",
       "//chrome/browser/web_applications/proto",
-      "//chromeos/ash/components/mojo_service_manager:mojo_service_manager_connection",
     ]
   }
   if (is_win) {
@@ -8172,7 +8025,6 @@ static_library("test_support") {
     "//chrome/browser/extensions:test_support",
     "//chrome/browser/search_engine_choice:browser_tests",
     "//chrome/browser/ui/bookmarks:browser_tests",
-    "//chrome/test:test_support",
   ]
 
   sources = [
@@ -8277,7 +8129,6 @@ static_library("test_support") {
     "//components/sync_preferences:test_support",
     "//components/translate/content/browser:test_support",
     "//components/ukm:test_support",
-    "//content/test:test_support",
     "//google_apis:test_support",
     "//net:test_support",
     "//services/data_decoder/public/cpp:test_support",
@@ -8329,7 +8180,6 @@ static_library("test_support") {
       "//chrome/browser/hid",
       "//chrome/browser/privacy_sandbox:countries",
       "//chrome/browser/speech",
-      "//chrome/test:test_support_ui",
       "//components/privacy_sandbox:features",
       "//components/privacy_sandbox/privacy_sandbox_attestations:test_support",
       "//components/services/app_service",
@@ -8352,14 +8202,6 @@ static_library("test_support") {
     deps += [
       "//chrome/browser/ash/file_manager",
       "//chrome/browser/ash/login/oobe_quick_start",
-      "//chrome/test:test_support_ui",
-      "//chromeos:test_support",
-      "//chromeos/ash/components/attestation:test_support",
-      "//chromeos/ash/components/dbus",
-      "//chromeos/ash/components/dbus/cros_disks",
-      "//chromeos/ash/components/disks",
-      "//chromeos/ash/components/login/auth",
-      "//chromeos/components/kiosk",
       "//components/account_manager_core:test_support",
       "//components/crx_file",
       "//components/login",
@@ -8457,7 +8299,6 @@ if (!is_android) {
     configs += [ "//build/config:precompiled_headers" ]
 
     # Always include this via the main test support UI target.
-    visibility = [ "//chrome/test:test_support_ui" ]
 
     sources = [
       "signin/token_revoker_test_utils.cc",
@@ -8468,7 +8309,6 @@ if (!is_android) {
       ":browser",
       ":browser_process",
       "//chrome/browser/profiles:profile",
-      "//content/test:test_support",
     ]
 
     public_deps = [
@@ -8498,7 +8338,6 @@ if (is_chromeos) {
     deps = [
       ":browser",
       "//base",
-      "//components/exo/wayland:ui_controls_protocol_stub",
       "//third_party/protobuf:protobuf_lite",
     ]
   }

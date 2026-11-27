@@ -749,7 +749,6 @@ source_set("unit_tests") {
     "//build:android_buildflags",
     "//components/crx_file",
     "//components/version_info",
-    "//content/test:test_support",
     "//extensions:extensions_resources",
     "//extensions/common:mojom",
     "//extensions/common/api",
@@ -800,7 +799,6 @@ if (enable_extensions) {
       ":common",
       "//base",
       "//content/public/common",
-      "//content/test:test_support",
       "//extensions:test_support",
     ]
 

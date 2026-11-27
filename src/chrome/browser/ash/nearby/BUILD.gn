@@ -35,12 +35,6 @@ static_library("nearby") {
     "//chrome/browser/nearby_sharing/common",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/signin",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/nearby/common/connections_manager",
-    "//chromeos/ash/services/nearby/public/cpp",
-    "//chromeos/ash/services/nearby/public/mojom",
-    "//chromeos/ash/services/wifi_direct",
-    "//chromeos/services/network_config/public/mojom",
     "//components/cross_device/logging",
     "//components/cross_device/nearby",
     "//components/keyed_service/content",
@@ -66,7 +60,6 @@ static_library("bluetooth_adapter_manager") {
 
   deps = [
     "//base",
-    "//chromeos/ash/services/nearby/public/cpp",
     "//dbus",
     "//device/bluetooth",
     "//device/bluetooth:deprecated_experimental_mojo",
@@ -79,7 +72,6 @@ static_library("quick_start_connectivity_service") {
 
   deps = [
     "//base",
-    "//chromeos/ash/services/nearby/public/mojom",
     "//components/keyed_service/core",
     "//mojo/public/cpp/bindings",
   ]
@@ -96,12 +88,6 @@ static_library("test_support") {
   deps = [
     ":quick_start_connectivity_service",
     "//base",
-    "//chromeos/ash/components/nearby/common/connections_manager",
-    "//chromeos/ash/components/nearby/common/connections_manager:test_support",
-    "//chromeos/ash/components/quick_start",
-    "//chromeos/ash/components/quick_start:test_support",
-    "//chromeos/ash/services/nearby/public/cpp:test_support",
-    "//chromeos/ash/services/nearby/public/mojom",
     "//mojo/public/cpp/bindings",
   ]
 }
@@ -125,12 +111,8 @@ source_set("unit_tests") {
     "//chrome/browser/nearby_sharing/common",
     "//chrome/browser/profiles:profile_util",
     "//chrome/services/sharing/nearby/test_support",
-    "//chromeos/ash/services/nearby/public/cpp:test_support",
-    "//chromeos/ash/services/nearby/public/mojom",
-    "//chromeos/ash/services/network_config/public/cpp:test_support",
     "//components/account_id",
     "//components/prefs",
-    "//content/test:test_support",
     "//device/bluetooth",
     "//device/bluetooth:mocks",
     "//mojo/public/cpp/bindings",

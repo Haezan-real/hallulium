@@ -52,6 +52,5 @@ source_set("unit_tests") {
     ":ntp_promo",
     "//base/test:test_support",
     "//chrome/browser/ui/webui:webui_util",
-    "//chrome/test:test_support",
   ]
 }

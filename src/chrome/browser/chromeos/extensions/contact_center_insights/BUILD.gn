@@ -38,8 +38,6 @@ source_set("unit_tests") {
     "//chrome/browser/extensions",
     "//chrome/browser/profiles:profile",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]
@@ -61,7 +59,6 @@ source_set("browser_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/common",
     "//chrome/common:constants",
-    "//content/test:test_support",
     "//extensions/browser",
     "//testing/gtest",
   ]

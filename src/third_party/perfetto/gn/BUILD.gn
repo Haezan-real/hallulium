@@ -13,10 +13,10 @@
 # limitations under the License.
 
 import("perfetto.gni")
-import("perfetto_android_sdk.gni")
 import("perfetto_python.gni")
 import("pkg_config.gni")
 import("proto_library.gni")
+import("perfetto_android_sdk.gni")
 
 if (perfetto_root_path == "//") {
   import("//gn/standalone/sanitizers/vars.gni")

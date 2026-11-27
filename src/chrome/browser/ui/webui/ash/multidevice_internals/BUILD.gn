@@ -17,8 +17,6 @@ static_library("multidevice_internals") {
   public_deps = [
     "//base",
     "//chrome/common",
-    "//chromeos/ash/components/multidevice/logging",
-    "//chromeos/ash/components/phonehub",
     "//content/public/browser",
     "//content/public/common",
     "//ui/webui",
@@ -31,8 +29,6 @@ static_library("multidevice_internals") {
     "//chrome/browser/ash/phonehub",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/resources/chromeos/multidevice_internals:resources",
-    "//chromeos/ash/components/phonehub:debug",
-    "//chromeos/ash/components/phonehub/proto",
     "//components/prefs",
     "//skia:skia_core_public_headers",
     "//ui/base",

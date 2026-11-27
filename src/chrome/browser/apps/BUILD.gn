@@ -28,6 +28,5 @@ source_set("user_type_filter") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/components/mgs" ]
   }
 }

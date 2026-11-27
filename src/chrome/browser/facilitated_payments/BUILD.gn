@@ -37,7 +37,6 @@ source_set("unit_tests") {
   deps = [
     ":facilitated_payments",
     "//base",
-    "//chrome/test:test_support",
     "//components/facilitated_payments/core/browser",
     "//components/facilitated_payments/core/features",
     "//components/optimization_guide/core:test_support",

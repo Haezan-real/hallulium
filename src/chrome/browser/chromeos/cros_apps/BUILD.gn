@@ -12,7 +12,6 @@ source_set("cros_apps") {
 
   deps = [
     "//chrome/browser/chromeos/cros_apps/api",
-    "//chromeos/constants",
     "//content/public/browser",
     "//content/public/common",
   ]
@@ -25,7 +24,6 @@ source_set("test_support") {
     "cros_apps_test_utils.h",
   ]
 
-  public_deps = [ "//content/test:test_support" ]
 }
 
 group("all_browser_tests") {

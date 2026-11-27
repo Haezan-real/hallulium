@@ -131,7 +131,6 @@ if (use_blink) {
       "//components/privacy_sandbox/privacy_sandbox_attestations",
       "//components/privacy_sandbox/privacy_sandbox_attestations:test_support",
       "//components/sync_preferences:test_support",
-      "//content/test:test_support",
       "//net",
       "//testing/gmock",
       "//testing/gtest",
@@ -176,7 +175,6 @@ source_set("unit_tests") {
       "//components/privacy_sandbox/privacy_sandbox_attestations:test_support",
       "//components/strings:components_strings_grit",
       "//content/public/browser",
-      "//content/test:test_support",
       "//net",
     ]
   }

@@ -205,7 +205,6 @@ source_set("test_support") {
     ":browser",
     "//base",
     "//components/webapps/common:mojo_bindings",
-    "//content/test:test_support",
     "//skia",
     "//third_party/blink/public/common:headers",
     "//third_party/blink/public/mojom:mojom_platform_headers",
@@ -236,7 +235,6 @@ source_set("unit_tests") {
     "//components/user_prefs",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//testing/gtest",
     "//third_party/blink/public/mojom:mojom_platform_headers",
   ]

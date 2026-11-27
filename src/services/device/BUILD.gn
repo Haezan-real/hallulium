@@ -26,7 +26,6 @@ source_set("lib") {
     ":test_support",
     ":tests",
     "//content/browser",
-    "//content/test:test_support",
     "//services/device/public/cpp:test_support",
   ]
   sources = [
@@ -226,8 +225,6 @@ source_set("tests") {
       "generic_sensor/platform_sensor_provider_chromeos_unittest.cc",
     ]
     deps += [
-      "//chromeos/components/sensors",
-      "//chromeos/components/sensors:test_support",
     ]
   } else if (is_linux && use_udev) {
     sources +=
@@ -249,9 +246,6 @@ source_set("tests") {
       "geolocation/wifi_data_provider_chromeos_unittest.cc",
     ]
     deps += [
-      "//chromeos/ash/components/dbus/biod:test_support",
-      "//chromeos/ash/components/dbus/shill",
-      "//chromeos/ash/components/network:test_support",
       "//services/device/fingerprint",
       "//third_party/protobuf:protobuf_lite",
     ]

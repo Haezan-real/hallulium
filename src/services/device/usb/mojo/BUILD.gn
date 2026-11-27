@@ -26,6 +26,5 @@ source_set("mojo") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/dbus/permission_broker" ]
   }
 }

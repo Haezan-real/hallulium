@@ -20,11 +20,6 @@ static_library("report_controller_initializer") {
     "//chrome/browser/ash/policy/core",
     "//chrome/browser/ash/settings",
     "//chrome/common",
-    "//chromeos/ash/components/channel",
-    "//chromeos/ash/components/report",
-    "//chromeos/ash/components/report:fresnel_service_proto",
-    "//chromeos/ash/components/report:utils",
-    "//chromeos/ash/components/settings",
     "//components/policy/core/common",
     "//services/network/public/cpp",
   ]
@@ -40,8 +35,6 @@ source_set("unit_tests") {
     "//base",
     "//chrome/browser",
     "//chrome/browser/ash/settings",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/install_attributes:test_support",
     "//testing/gtest",
     "//third_party/private_membership",
   ]

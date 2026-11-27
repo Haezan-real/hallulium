@@ -167,7 +167,6 @@ static_library("test_support") {
     "//components/update_client:test_support",
     "//components/user_prefs",
     "//content/public/common",
-    "//content/test:test_support",
     "//crypto:test_support",
     "//extensions/browser",
     "//extensions/browser:test_support",
@@ -207,7 +206,6 @@ static_library("test_support") {
   # of the APIs and the extensions shell already do. We should try to avoid
   # expanding these dependencies.
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/login/login_state" ]
   }
 
   public_deps = [ "//content/public/browser" ]
@@ -280,7 +278,6 @@ test("extensions_unittests") {
 
   data = [
     "test/data/",
-    "//chrome/test/data/extensions/",
     "$root_out_dir/content_shell.pak",
     "$root_out_dir/extensions_shell_and_test.pak",
   ]
@@ -291,7 +288,6 @@ test("extensions_unittests") {
     "//base/test:test_support",
     "//build:android_buildflags",
     "//content/public/common",
-    "//content/test:test_support",
     "//extensions/browser:unit_tests",
     "//extensions/common",
     "//extensions/common:unit_tests",

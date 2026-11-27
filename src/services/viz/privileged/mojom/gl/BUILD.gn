@@ -30,8 +30,6 @@ mojom("gl") {
   ]
   if (is_chromeos) {
     public_deps += [
-      "//chromeos/ash/experiences/arc/mojom:media",
-      "//components/chromeos_camera/common",
     ]
   }
 

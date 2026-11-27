@@ -71,13 +71,10 @@ component("ash") {
     ":typing_session_manager",
     "//ash/constants",
     "//build:branding_buildflags",
-    "//chromeos/ash/components/system",
-    "//chromeos/ash/services/ime/public/mojom",
     "//services/metrics/public/cpp:ukm_builders",
     "//third_party/icu",
     "//ui/base",
     "//ui/base",
-    "//ui/chromeos/strings",
     "//ui/events:dom_keycode_converter",
     "//ui/ozone:ozone_base",
   ]

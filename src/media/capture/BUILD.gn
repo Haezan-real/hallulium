@@ -342,7 +342,6 @@ test("capture_unittests") {
   if (is_chromeos) {
     deps += [
       "video/chromeos:unit_tests",
-      "//chromeos/ash/components/mojo_service_manager",
     ]
   }
 }

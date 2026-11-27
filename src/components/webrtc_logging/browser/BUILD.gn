@@ -27,7 +27,6 @@ source_set("unit_tests") {
     ":browser",
     "//base",
     "//base/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

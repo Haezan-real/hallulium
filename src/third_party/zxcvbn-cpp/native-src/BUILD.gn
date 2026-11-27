@@ -1,3 +1,0 @@
-# Hallulium stub
-group("native-src") {}
-group("stub") {}

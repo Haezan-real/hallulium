@@ -13,7 +13,6 @@ static_library("internal") {
     ":*",
     "//chrome/browser",
     "//chrome/browser/data_sharing:*",
-    "//chrome/test:*",
     "//components/data_sharing:test_support",
     "//ios/chrome/browser/data_sharing/model",
   ]
@@ -169,8 +168,6 @@ if (is_android) {
   android_library("internal_java") {
     visibility = [
       ":*",
-      "//chrome/android:chrome_all_java",
-      "//chrome/android/javatests:chrome_test_java_org.chromium.chrome.browser.collaboration",
       "//components:*",
       "//components/data_sharing/internal:native_test_helper_java",
     ]

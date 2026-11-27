@@ -23,7 +23,6 @@ static_library("presence") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/push_notification",
     "//chrome/browser/signin",
-    "//chromeos/ash/components/nearby/presence",
     "//components/keyed_service/content",
     "//components/pref_registry",
     "//components/prefs",

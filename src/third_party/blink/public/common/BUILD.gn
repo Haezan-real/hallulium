@@ -110,7 +110,6 @@ source_set("headers") {
     ":*",
     "//android_webview/*",
     "//chrome/*",
-    "//chromecast/*",
     "//components/*",
     "//content/*",
     "//fuchsia/*",

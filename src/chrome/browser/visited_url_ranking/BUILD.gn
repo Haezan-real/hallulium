@@ -98,10 +98,8 @@ source_set("browser_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
     "//components/visited_url_ranking/public",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 
@@ -114,7 +112,6 @@ source_set("browser_tests") {
   } else {
     deps += [
       "//chrome/browser/ui/tabs:tab_strip",
-      "//chrome/test:test_support_ui",
       "//components/sessions",
     ]
   }
@@ -129,9 +126,7 @@ source_set("unit_tests") {
     ":visited_url_ranking",
     "//base",
     "//chrome/browser/search_engines",
-    "//chrome/test:test_support",
     "//components/search_engines",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//url",

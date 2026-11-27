@@ -43,7 +43,6 @@ source_set("browser_tests") {
     "//chrome/browser/nearby_sharing/common",
     "//chrome/browser/sharesheet",
     "//chrome/browser/ui",
-    "//chrome/test:test_support_ui",
   ]
 }
 
@@ -57,7 +56,6 @@ mojom("mojom") {
 
   public_deps = [
     ":share_type",
-    "//chromeos/ash/services/nearby/public/mojom:nearby_share_settings",
     "//mojo/public/mojom/base",
     "//url/mojom:url_mojom_gurl",
   ]

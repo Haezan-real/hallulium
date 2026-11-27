@@ -45,7 +45,6 @@ build_webui("build") {
 
   mojo_files_deps = [
     "//chrome/browser/ui/webui/ash/emoji:mojo_bindings_ts__generator",
-    "//chromeos/ash/components/emoji:mojo_bindings_ts__generator",
   ]
   mojo_files = [
     "$root_gen_dir/chrome/browser/ui/webui/ash/emoji/emoji_picker.mojom-webui.ts",
@@ -67,7 +66,6 @@ build_webui("build") {
     ":copy_fuse",
     ":copy_fuse_dts",
     "//ash/webui/common/resources:generate_definitions",
-    "//chromeos/ash/components/emoji:resources",
   ]
 
   extra_grdp_deps = [ ":build_fuse_grdp" ]

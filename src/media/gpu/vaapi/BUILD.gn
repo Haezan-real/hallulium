@@ -110,9 +110,6 @@ source_set("vaapi") {
     ]
 
     deps += [
-      "//chromeos/components/cdm_factory_daemon:cdm_factory_daemon_gpu",
-      "//components/chromeos_camera:jpeg_encode_accelerator",
-      "//components/chromeos_camera:mjpeg_decode_accelerator",
     ]
   }
 }
@@ -209,8 +206,6 @@ source_set("unit_test") {
   ]
   if (is_chromeos) {
     sources += [ "vaapi_video_decoder_unittest.cc" ]
-    deps +=
-        [ "//chromeos/components/cdm_factory_daemon:cdm_factory_daemon_gpu" ]
   }
 }
 

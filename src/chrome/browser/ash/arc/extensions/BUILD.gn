@@ -21,7 +21,6 @@ static_library("extensions") {
 
     # TODO(b/354839582): Use targets having headers included from
     # chrome/browser/ash/arc/extensions/arc_support_message_host.cc.
-    "//chromeos/ash/components/dbus/concierge:concierge_proto_lib",
   ]
 }
 
@@ -51,7 +50,6 @@ source_set("unit_tests") {
   deps = [
     ":extensions",
     "//base",
-    "//content/test:test_support",
     "//extensions/browser",
     "//testing/gtest",
   ]

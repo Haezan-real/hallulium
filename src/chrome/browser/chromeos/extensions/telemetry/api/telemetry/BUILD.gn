@@ -22,9 +22,6 @@ source_set("telemetry") {
     "//chrome/browser/chromeos/extensions/telemetry/api/common:remote_probe_strategy",
     "//chrome/browser/extensions",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/crosapi/mojom",
-    "//chromeos/services/network_config/public/mojom:network_types",
-    "//chromeos/services/network_health/public/mojom:types",
     "//extensions/browser",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
@@ -42,18 +39,11 @@ source_set("browser_tests") {
     "//base",
     "//chrome/browser/chromeos/extensions/telemetry/api/common:remote_probe_strategy",
     "//chrome/browser/chromeos/extensions/telemetry/api/common:test_support",
-    "//chromeos/ash/components/telemetry_extension/telemetry",
-    "//chromeos/crosapi/cpp/telemetry:test_support",
-    "//chromeos/crosapi/mojom",
-    "//chromeos/services/network_config/public/mojom:network_types",
-    "//chromeos/services/network_health/public/mojom:types",
-    "//content/test:test_support",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
     "//testing/gtest",
   ]
 
-  data = [ "//chrome/test/data" ]
 }
 
 source_set("unit_tests") {
@@ -63,9 +53,6 @@ source_set("unit_tests") {
   deps = [
     ":telemetry",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/crosapi/mojom",
-    "//chromeos/services/network_config/public/mojom:network_types",
-    "//chromeos/services/network_health/public/mojom:types",
     "//testing/gtest",
   ]
 }

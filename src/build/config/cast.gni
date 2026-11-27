@@ -4,7 +4,6 @@
 
 # The args declared in this file should be referenced by components outside of
 # //chromecast. Args needed only in //chromecast should be declared in
-# //chromecast/chromecast.gni.
 declare_args() {
   # Set this true for an audio-only Chromecast build.
   # TODO(crbug.com/41489655): Remove this arg as CastOS builds are no

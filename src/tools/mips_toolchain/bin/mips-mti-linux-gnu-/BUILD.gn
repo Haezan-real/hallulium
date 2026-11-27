@@ -1,3 +1,0 @@
-# Hallulium stub
-group("mips-mti-linux-gnu-") {}
-group("stub") {}

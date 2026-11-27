@@ -51,7 +51,6 @@ static_library("mako") {
 
   public_deps = [
     "//base",
-    "//chromeos/components/magic_boost/public/cpp",
     "//skia:skia_core_public_headers",
     "//third_party/abseil-cpp:absl",
     "//ui/base/cursor",
@@ -73,8 +72,6 @@ static_library("mako") {
     "//chrome/browser/resources/chromeos/mako:resources",
     "//chrome/browser/ui/webui/ash/lobster",
     "//chrome/common:mojo_bindings",
-    "//chromeos/ash/services/orca/public/mojom",
-    "//chromeos/constants",
     "//components/input",
     "//content/public/browser",
     "//content/public/common",
@@ -106,7 +103,6 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
     "//skia:skia_core_public_headers",
     "//testing/gmock",
     "//testing/gtest",

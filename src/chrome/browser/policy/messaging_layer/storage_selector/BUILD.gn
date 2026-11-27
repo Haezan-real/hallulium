@@ -21,7 +21,6 @@ static_library("storage_selector") {
   if (is_chromeos) {
     sources += [ "storage_selector_chromeos.cc" ]
     deps = [
-      "//chromeos/dbus/missive",
       "//components/reporting/proto:interface_proto",
     ]
   } else {

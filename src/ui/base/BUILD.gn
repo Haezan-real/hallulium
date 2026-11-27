@@ -48,7 +48,6 @@ build_ime = !is_ios
 component("ui_data_pack") {
   visibility = [
     ":base",
-    "//chromeos/crosapi/mojom",  # This target requires minimal dependencies.
     "//ios/chrome/tools/strings:generate_localizable_strings",
     "//third_party/blink/renderer/core",
     "//third_party/blink/renderer/platform",
@@ -1341,7 +1340,6 @@ test("ui_base_unittests") {
     sources += [ "accelerators/global_accelerator_listener/global_accelerator_listener_linux_unittest.cc" ]
     deps += [
       "//components/dbus",
-      "//content/test:test_support",
       "//dbus:test_support",
       "//ui/base/accelerators/global_accelerator_listener",
       "//ui/linux:linux_ui",

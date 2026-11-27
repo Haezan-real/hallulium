@@ -105,7 +105,6 @@ if (!is_android) {
       "//chrome/browser/ui/tab_contents",
       "//chrome/browser/ui/tabs:tab_enums",
       "//chrome/browser/ui/tabs:tab_strip",
-      "//chrome/test:test_support",
       "//components/lens:features",
       "//components/lens:lens_mojo",
       "//components/prefs",
@@ -115,7 +114,6 @@ if (!is_android) {
       "//components/sync_preferences",
       "//components/sync_preferences:test_support",
       "//content/public/common",
-      "//content/test:test_support",
       "//third_party/libwebp:libwebp_webp",
       "//ui/gfx:test_support",
       "//ui/gfx/codec",
@@ -144,13 +142,11 @@ if (!is_android) {
       "//chrome/browser/ui/tab_contents",
       "//chrome/browser/ui/tabs:tab_enums",
       "//chrome/browser/ui/tabs:tab_strip",
-      "//chrome/test:test_support",
       "//components/search_engines",
       "//components/sync_preferences",
       "//components/sync_preferences:test_support",
       "//content/public/browser",
       "//content/public/common",
-      "//content/test:test_support",
     ]
   }
 }

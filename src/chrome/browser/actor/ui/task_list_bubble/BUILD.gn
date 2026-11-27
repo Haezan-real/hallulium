@@ -81,7 +81,6 @@ source_set("unit_tests") {
     "//chrome/browser/actor/resources:grit_grit",
     "//chrome/browser/glic/test_support",
     "//chrome/browser/ui/tabs:glic",
-    "//chrome/test:test_support",
     "//testing/gtest",
   ]
 }
@@ -102,7 +101,6 @@ source_set("interactive_ui_tests") {
     "//chrome/browser/glic/test_support",
     "//chrome/browser/ui:ui_features",
     "//chrome/browser/ui/tabs:glic",
-    "//chrome/test:test_support",
     "//testing/gtest",
     "//ui/base/interaction:test_support",
     "//ui/events:test_support",

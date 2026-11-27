@@ -16,8 +16,6 @@ static_library("arc_power_control") {
     "//base",
     "//chrome/browser:browser_public_dependencies",
     "//chrome/common",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc/mojom",
     "//content/public/browser",
     "//content/public/common",
     "//ui/aura",
@@ -34,8 +32,6 @@ static_library("arc_power_control") {
     "//chrome/browser/ash/arc/tracing",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/profiles:profile_manager",
-    "//chromeos/ash/components/throttle",
-    "//chromeos/ash/experiences/arc/session",
     "//services/network/public/mojom:url_loader_base",
     "//ui/base",
   ]

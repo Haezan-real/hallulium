@@ -57,7 +57,6 @@ if (use_blink) {
 
     deps = [
       ":safety_check",
-      "//content/test:test_support",
       "//services/network:test_support",
       "//services/network/public/cpp",
       "//testing/gtest",

@@ -15,16 +15,9 @@ static_library("external_display_brightness") {
   ]
 
   public_deps = [
-    "//chromeos/ash/components/dbus/chromebox_for_meetings",
-    "//chromeos/services/chromebox_for_meetings/public/cpp",
-    "//chromeos/services/chromebox_for_meetings/public/mojom",
-    "//chromeos/services/chromebox_for_meetings/public/mojom:mojom_shared",
-    "//chromeos/services/chromebox_for_meetings/public/mojom:mojom_shared_cpp_sources",
     "//mojo/public/cpp/bindings",
   ]
 
   deps = [
-    "//chromeos/dbus/power",
-    "//chromeos/dbus/power:power_manager_proto",
   ]
 }

@@ -17,7 +17,6 @@ source_set("unit_tests") {
   deps = [
     ":visibility_timer",
     "//base/test:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

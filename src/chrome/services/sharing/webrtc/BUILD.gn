@@ -34,7 +34,6 @@ source_set("webrtc") {
   public_deps = [
     "//base",
     "//chrome/services/sharing/public/cpp",
-    "//chromeos/ash/services/nearby/public/mojom",
     "//mojo/public/cpp/bindings",
   ]
 }

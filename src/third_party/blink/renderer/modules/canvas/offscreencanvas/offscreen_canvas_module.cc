@@ -46,6 +46,7 @@ V8OffscreenRenderingContext* OffscreenCanvasModule::getContext(
           CanvasRenderingContext::CanvasRenderingAPI::kBitmaprenderer;
       break;
     case V8OffscreenRenderingContextType::Enum::kWebGPU:
+    case V8OffscreenRenderingContextType::Enum::kHaezangl:
       rendering_api = CanvasRenderingContext::CanvasRenderingAPI::kWebgpu;
       break;
     default:

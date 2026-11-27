@@ -1938,7 +1938,6 @@ source_set("unit_tests") {
 
   if (use_blink) {
     deps += [
-      "//content/test:test_support",
       "//third_party/blink/public/common",
     ]
   }
@@ -1988,7 +1987,6 @@ if (use_fuzzing_engine_with_lpm) {
     ]
 
     if (use_blink) {
-      deps += [ "//content/test:test_support" ]
     }
   }
 }

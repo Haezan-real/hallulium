@@ -15,7 +15,6 @@ source_set("dmg_common") {
     "//chrome/utility/safe_browsing:*",
 
     # Unit tests directly use some of the utilities in this target.
-    "//chrome/test:unit_tests",
   ]
 
   sources = [
@@ -65,7 +64,6 @@ fuzzer_test("safe_browsing_hfs_fuzzer") {
     "//testing/libfuzzer:libfuzzer_base_wrappers",
   ]
 
-  seed_corpus = rebase_path("//chrome/test/data/safe_browsing/dmg/data")
 
   libfuzzer_options = [ "max_len=1488576" ]
 }

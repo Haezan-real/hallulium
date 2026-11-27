@@ -1,3 +1,0 @@
-# Hallulium stub
-group("concat_dbus_conf_files.py") {}
-group("stub") {}

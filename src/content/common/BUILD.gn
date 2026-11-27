@@ -430,7 +430,6 @@ component("main_frame_counter") {
 group("for_content_tests") {
   visibility = [
     "//content/services/auction_worklet:tests",
-    "//content/test/*",
   ]
   if (!is_component_build) {
     public_deps = [ ":common" ]

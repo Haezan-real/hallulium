@@ -38,8 +38,6 @@ source_set("unit_tests") {
 
   deps = [
     ":bitmap_fetcher",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//skia",
     "//testing/gtest",
   ]
@@ -58,9 +56,7 @@ if (!is_android) {
       "//base",
       "//chrome/browser/profiles:profile",
       "//chrome/browser/ui",
-      "//chrome/test:test_support_ui",
       "//content/public/browser",
-      "//content/test:test_support",
       "//net",
       "//net:test_support",
       "//net/traffic_annotation:test_support",

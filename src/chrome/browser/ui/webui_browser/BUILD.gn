@@ -163,10 +163,8 @@ source_set("browser_tests") {
     "//base/test:test_support",
     "//chrome/browser/ui",
     "//chrome/common:chrome_features",
-    "//chrome/test:test_support",
     "//components/bookmarks/browser",
     "//components/surface_embed/buildflags",
-    "//content/test:test_support",
   ]
 
   if (enable_surface_embed) {

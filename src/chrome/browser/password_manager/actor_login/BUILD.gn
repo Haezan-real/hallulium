@@ -76,7 +76,6 @@ source_set("unit_tests") {
     ":service_impl",
     "//base/test:test_support",
     "//chrome/browser/password_manager/actor_login/internal",
-    "//chrome/test:test_support",
     "//components/language/core/browser",
     "//components/optimization_guide/core:model_execution_test_support",
     "//components/password_manager/core/browser/actor_login:common",
@@ -86,7 +85,6 @@ source_set("unit_tests") {
     "//components/tabs:test_support",
     "//components/translate/core/browser:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

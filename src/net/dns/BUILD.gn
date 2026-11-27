@@ -18,13 +18,11 @@ source_set("dns") {
   # Internals only intended for use inside network stack (and tests).
   friend = [
     "//chrome/browser:test_support",
-    "//chrome/test/*",
     "//components/certificate_transparency:unit_tests",
     "//components/cronet/*",
 
     # Needed for brokering system DNS resolution out of the network service.
     "//content/browser/system_dns_resolution",
-    "//content/test/*",
     "//net/*",
     "//services/network/*",
   ]
@@ -251,7 +249,6 @@ source_set("host_resolver") {
   friend = [
     # chromecast/browser/url_request_context_factory.cc
     # URLRequestContext creation for chromecast.
-    "//chromecast/browser",
 
     # URLRequestContext and HttpNetworkSession::Context creation for iOS.
     "//ios/components/io_thread",
@@ -260,9 +257,7 @@ source_set("host_resolver") {
 
     # Tests and test support.
     "//chrome/browser:test_support",
-    "//chrome/test/*",
     "//content/shell:content_shell_lib",
-    "//content/test:*",
 
     # Stand-alone tools.
     "//google_apis/gcm:mcs_probe",
@@ -312,7 +307,6 @@ source_set("host_resolver_manager") {
   friend = [
     # chromecast/browser/url_request_context_factory.cc
     # URLRequestContext creation for chromecast.
-    "//chromecast/browser",
 
     # Tests and test support.
     "//components/cronet:cronet_common_unittests",
@@ -361,7 +355,6 @@ source_set("dns_client") {
 
     # Tests and test support
     "//chrome/browser:test_support",
-    "//chrome/test/*",
 
     # Network stack/service
     "//components/certificate_transparency/*",

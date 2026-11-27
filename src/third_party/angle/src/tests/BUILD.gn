@@ -1,7 +1,0 @@
-# Hallulium stub
-group("angle_end2end_tests") {}
-group("angle_perftests") {}
-group("angle_unittests") {}
-group("angle_white_box_tests") {}
-group("stub") {}
-group("tests") {}

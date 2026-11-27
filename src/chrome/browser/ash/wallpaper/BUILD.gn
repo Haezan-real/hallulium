@@ -20,8 +20,6 @@ static_library("wallpaper") {
     "//chrome/browser/ash/drive",
     "//chrome/browser/ash/file_manager",
     "//chrome/browser/ash/profiles",
-    "//chromeos/ash/components/drivefs",
-    "//chromeos/ash/components/drivefs/mojom",
     "//google_apis/common",
   ]
 }
@@ -43,9 +41,6 @@ source_set("browser_tests") {
     "//chrome/browser/ash/profiles",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui",
-    "//chromeos/ash/components/drivefs:test_support",
-    "//chromeos/ash/components/drivefs/mojom",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//ui/gfx:test_support",

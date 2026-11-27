@@ -22,7 +22,6 @@ static_library("platform_keys") {
     "//base",
     "//chrome/browser/ash/profiles",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/components/platform_keys",
     "//components/keyed_service/core",
     "//components/policy:generated",
     "//components/policy/core/common",

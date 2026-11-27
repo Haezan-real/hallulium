@@ -147,7 +147,6 @@ source_set("unit_tests") {
     "//components/gcm_driver:test_support",
     "//components/send_tab_to_self",
     "//components/send_tab_to_self:test_support",
-    "//components/sharing_message/ios_push",
     "//components/sharing_message/proto",
     "//components/strings",
     "//components/sync:test_support",

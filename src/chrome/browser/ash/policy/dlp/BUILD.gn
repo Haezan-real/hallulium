@@ -32,7 +32,6 @@ static_library("dlp") {
 
   public_deps = [
     "//chrome/browser:browser_public_dependencies",
-    "//chromeos/ash/experiences/screenshot_area",
   ]
 
   deps = [
@@ -51,11 +50,7 @@ static_library("dlp") {
     "//chrome/browser/profiles:profile_manager",
     "//chrome/common",
     "//chrome/common:chrome_features",
-    "//chromeos/dbus/dlp",
-    "//chromeos/dbus/dlp:dlp_proto",
-    "//chromeos/ui/base",
     "//components/enterprise/data_controls/core/browser",
-    "//components/exo",
     "//components/keyed_service/content",
     "//components/keyed_service/core",
     "//components/services/app_service",
@@ -82,9 +77,6 @@ static_library("dlp") {
     # chrome/browser/ash/policy/dlp/files_policy_notification_manager.cc
     # instead after fixing cyclic dependency.
     "//chrome/app/vector_icons",
-    "//chromeos/ash/components/dbus:vm_applications_apps_proto",
-    "//chromeos/ash/components/drivefs",
-    "//chromeos/ash/experiences/arc/mojom",
     "//components/paint_preview/buildflags",
 
     # TODO(b/354095042): Use targets having headers directly included from
@@ -136,13 +128,6 @@ source_set("unit_tests") {
     "//chrome/browser/enterprise/data_controls:test_support",
     "//chrome/browser/ui",
     "//chrome/common:chrome_features",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/disks",
-    "//chromeos/ash/components/disks:test_support",
-    "//chromeos/ash/experiences/screenshot_area",
-    "//chromeos/dbus/dlp",
-    "//chromeos/dbus/dlp:dlp_proto",
-    "//chromeos/ui/base",
     "//components/drive",
     "//components/enterprise/common/proto:dlp_policy_event_proto",
     "//components/enterprise/data_controls/core/browser",
@@ -153,7 +138,6 @@ source_set("unit_tests") {
     "//components/strings:components_strings",
     "//components/user_manager",
     "//content/public/browser",
-    "//content/test:test_support",
     "//extensions/common:common_constants",
     "//storage/browser",
     "//storage/browser:test_support",
@@ -216,20 +200,14 @@ source_set("browser_tests") {
     "//chrome/common",
     "//chrome/common:chrome_features",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_ui",
-    "//chromeos/ash/experiences/screenshot_area",
     "//components/enterprise/common/proto:dlp_policy_event_proto",
     "//components/enterprise/data_controls/core/browser",
-    "//components/exo",
-    "//components/exo:test_support",
     "//components/policy:cloud_policy_proto_generated_compile",
     "//components/policy:generated",
     "//components/policy/core/common:common_constants",
     "//components/prefs",
     "//components/strings:components_strings",
     "//content/public/browser",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//storage/browser",
     "//testing/gmock",

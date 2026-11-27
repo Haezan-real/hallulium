@@ -15,7 +15,6 @@ mojom("mojom") {
   webui_module_path = "/"
 
   public_deps = [
-    "//chromeos/ash/components/drivefs/mojom:pinning_manager_types",
     "//mojo/public/mojom/base",
   ]
 }

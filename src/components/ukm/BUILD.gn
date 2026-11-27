@@ -104,8 +104,6 @@ static_library("observers") {
   ]
   if (is_chromeos) {
     deps += [
-      "//chromeos/components/kiosk",
-      "//chromeos/components/mgs",
     ]
   }
 
@@ -168,8 +166,6 @@ source_set("unit_tests") {
   ]
   if (is_chromeos) {
     deps += [
-      "//chromeos/components/kiosk:test_support",
-      "//chromeos/components/mgs:test_support",
       "//components/user_manager:test_support",
     ]
   }

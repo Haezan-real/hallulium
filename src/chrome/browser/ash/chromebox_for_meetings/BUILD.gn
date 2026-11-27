@@ -25,8 +25,6 @@ static_library("chromebox_for_meetings") {
     "//chrome/browser/ash/chromebox_for_meetings/logger",
     "//chrome/browser/ash/chromebox_for_meetings/meet_browser",
     "//chrome/browser/ash/chromebox_for_meetings/xu_camera",
-    "//chromeos/ash/components/chromebox_for_meetings",
-    "//chromeos/ash/components/dbus/chromebox_for_meetings",
   ]
 }
 

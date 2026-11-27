@@ -78,7 +78,6 @@ if (!is_android) {
       "//base",
     ]
     deps = [
-      "//content/test:test_support",
       "//testing/gtest",
     ]
   }
@@ -96,9 +95,7 @@ if (!is_android) {
         "//chrome/browser/profiles",
         "//chrome/browser/ui",
         "//chrome/common:constants",
-        "//chrome/test:test_support",
         "//components/prefs",
-        "//content/test:test_support",
       ]
     }
 
@@ -111,9 +108,7 @@ if (!is_android) {
         "//chrome/browser/profiles",
         "//chrome/browser/ui",
         "//chrome/common:constants",
-        "//chrome/test:test_support",
         "//components/prefs",
-        "//content/test:test_support",
         "//testing/gmock",
         "//testing/gtest",
       ]

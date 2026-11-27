@@ -24,7 +24,6 @@ source_set("unit_tests") {
   sources = [ "page_text_agent_unittest.cc" ]
   deps = [
     ":renderer",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

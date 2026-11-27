@@ -17,8 +17,6 @@ static_library("tts") {
   deps = [
     "//base",
     "//chrome/browser/speech",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc/mojom",
     "//components/keyed_service/core",
     "//content/public/browser",
   ]
@@ -34,12 +32,8 @@ source_set("unit_tests") {
     "//base",
     "//chrome/browser",
     "//chrome/browser/speech",
-    "//chrome/test:test_support",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc:arc_test_support",
     "//components/keyed_service/core",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

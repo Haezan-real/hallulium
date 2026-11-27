@@ -24,8 +24,6 @@ static_library("borealis") {
     "//chrome/browser/profiles:profile_manager",
     "//chrome/browser/ui/color:color_headers",
     "//chrome/browser/ui/dialogs:browser_dialogs",
-    "//chromeos/dbus/power",
-    "//ui/chromeos/styles:cros_tokens_color_mappings",
   ]
 
   allow_circular_includes_from = [ "//chrome/browser/ash/borealis" ]
@@ -46,7 +44,5 @@ source_set("browser_tests") {
     "//chrome/browser/ash/borealis:test_support",
     "//chrome/browser/ash/borealis/testing:test_support",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
   ]
 }

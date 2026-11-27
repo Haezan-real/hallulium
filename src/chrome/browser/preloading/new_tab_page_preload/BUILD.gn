@@ -42,7 +42,5 @@ source_set("unit_tests") {
     ":new_tab_page_preload",
     "//chrome/browser/preloading",
     "//chrome/browser/preloading/prerender",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
   ]
 }

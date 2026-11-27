@@ -22,11 +22,7 @@ source_set("browser_tests") {
     "//chrome/browser/ash/login/test:test_support",
     "//chrome/browser/ui",
     "//chrome/common",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/experiences/frozen_update",
     "//components/session_manager/core",
     "//components/user_manager",
-    "//content/test:test_support",
   ]
 }

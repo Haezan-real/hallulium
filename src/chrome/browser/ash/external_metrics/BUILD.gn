@@ -32,7 +32,6 @@ if (is_chromeos_device) {
       ":external_metrics",
       "//base",
       "//base/test:test_support",
-      "//chrome/test:ash_integration_test_support",
     ]
   }
 }
@@ -48,7 +47,6 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//components/metrics:serialization",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

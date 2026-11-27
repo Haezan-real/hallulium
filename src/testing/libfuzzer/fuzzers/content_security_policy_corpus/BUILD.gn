@@ -1,3 +1,0 @@
-# Hallulium stub
-group("content_security_policy_corpus") {}
-group("stub") {}

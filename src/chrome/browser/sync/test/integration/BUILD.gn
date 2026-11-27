@@ -38,8 +38,6 @@ source_set("sync_integration_tests_impl") {
     "//chrome/browser/trusted_vault",
     "//chrome/browser/ui:browser_navigator_params_headers",
     "//chrome/browser/ui:ui_features",
-    "//chrome/test:browser_tests_runner",
-    "//chrome/test:test_support",
     "//components/account_settings",
     "//components/autofill/core/browser",
     "//components/autofill/core/browser:test_support",
@@ -99,10 +97,6 @@ source_set("sync_integration_tests_impl") {
     # but android_sync_integration_tests do not.
   ]
   data = [
-    "//chrome/test/data/empty.html",
-    "//chrome/test/data/autofill/",
-    "//chrome/test/data/send_tab_to_self/",
-    "//chrome/test/data/sync/",
   ]
 
   # Extensions are enabled on Win/Mac/Linux/CrOS and desktop Android.
@@ -112,7 +106,6 @@ source_set("sync_integration_tests_impl") {
 
   if (is_android) {
     sources += [
-      "//chrome/test/android/browsertests_apk/android_browsertests_jni_onload.cc",
       "single_client_web_apks_sync_test.cc",
     ]
 
@@ -122,11 +115,8 @@ source_set("sync_integration_tests_impl") {
       "//chrome:chrome_android_core",
       "//chrome/browser/android/webapk:webapk_sources",
       "//chrome/browser/ui:ui_features",
-      "//chrome/test:chrome_test_launcher",
-      "//chrome/test:test_support_ui_android",
       "//components/browser_sync:switches",
       "//components/saved_tab_groups/public",
-      "//content/test:android_test_message_pump_support",
       "//testing/android/native_test:native_test_support",
     ]
 
@@ -279,7 +269,6 @@ source_set("sync_integration_tests_impl") {
       "//chrome/browser/webdata_services",
       "//chrome/common",
       "//chrome/renderer",
-      "//chrome/test:test_support_ui",
       "//components/app_constants",
       "//components/bookmarks/test",
       "//components/browser_sync",
@@ -356,13 +345,6 @@ source_set("sync_integration_tests_impl") {
         "//chrome/browser/ash/sync",
         "//chrome/browser/ash/system_web_apps/test_support",
         "//chrome/browser/ui/ash/multi_user",
-        "//chromeos/ash/components/browser_context_helper",
-        "//chromeos/ash/components/dbus/shill",
-        "//chromeos/ash/components/sync_wifi",
-        "//chromeos/ash/components/sync_wifi:test_support",
-        "//chromeos/constants",
-        "//chromeos/printing",
-        "//chromeos/services/network_config/public/cpp",
         "//components/desks_storage",
       ]
     }
@@ -374,10 +356,6 @@ source_set("sync_integration_tests_impl") {
       deps += [ "//printing" ]
     }
     data += [
-      "//chrome/test/data/password/",
-      "//chrome/test/data/webapps_integration/",
-      "//chrome/test/data/web_apps/",
-      "//chrome/test/data/banners/",
       "//net/tools/testserver/",
       "//third_party/pywebsocket3/src/mod_pywebsocket/",
     ]
@@ -387,11 +365,6 @@ source_set("sync_integration_tests_impl") {
 if (is_android) {
   java_group("sync_integration_tests_java") {
     deps = [
-      "//chrome/android:delegate_public_impl_java",
-      "//chrome/test:android_browsertests_assets",
-      "//chrome/test:android_browsertests_java",
-      "//chrome/test:sync_integration_test_support_java",
-      "//chrome/test:test_support_java",
     ]
   }
 }
@@ -481,7 +454,6 @@ source_set("sync_integration_test_support") {
   public_deps = [
     "//chrome/browser",
     "//chrome/browser/favicon",
-    "//chrome/test:test_support",
     "//components/autofill/content/browser",
   ]
 
@@ -523,7 +495,6 @@ source_set("sync_integration_test_support") {
     "//components/tabs:public",
     "//components/webapps/common",
     "//content/public/browser",
-    "//content/test:test_support",
     "//net",
     "//services/network/public/mojom",
     "//skia",
@@ -546,8 +517,6 @@ source_set("sync_integration_test_support") {
       "//chrome/browser/android/webapk:webapk_sources",
       "//chrome/browser/password_manager/android:utils",
       "//chrome/browser/ui/android/tab_model",
-      "//chrome/test:sync_integration_test_support_jni_headers",
-      "//chrome/test:test_support_jni_headers",
       "//components/saved_tab_groups/public:conversion_utils",
     ]
   } else {
@@ -631,10 +600,6 @@ source_set("sync_integration_test_support") {
       "//chrome/browser/ash/net",
       "//chrome/browser/ash/printing",
       "//chrome/browser/ash/system_web_apps/test_support",
-      "//chromeos/ash/components/browser_context_helper",
-      "//chromeos/ash/experiences/arc:arc_test_support",
-      "//chromeos/ash/experiences/arc/mojom",
-      "//chromeos/printing",
       "//components/account_id",
       "//components/account_id:test_support",
       "//components/desks_storage",

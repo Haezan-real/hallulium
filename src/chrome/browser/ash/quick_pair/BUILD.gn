@@ -18,7 +18,6 @@ static_library("quick_pair") {
     "//ash/quick_pair/common",
     "//base",
     "//chrome/browser:browser_public_dependencies",
-    "//chromeos/ash/services/quick_pair/public/mojom",
     "//device/bluetooth",
     "//mojo/public/cpp/bindings",
   ]
@@ -32,7 +31,6 @@ static_library("quick_pair") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/signin",
     "//chrome/browser/ui/webui/ash/settings/pages/bluetooth",
-    "//chromeos/ash/experiences/arc:arc_app_constants",
     "//components/cross_device/logging",
     "//components/image_fetcher/core",
     "//components/services/app_service/public/cpp:app_types",

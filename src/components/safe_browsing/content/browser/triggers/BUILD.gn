@@ -125,7 +125,6 @@ source_set("unit_tests") {
     "//components/safe_browsing/core/common",
     "//components/subresource_filter/content/browser:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

@@ -165,7 +165,6 @@ source_set("test_support") {
   public_deps = [
     ":safety_hub",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
     "//components/password_manager/core/browser/leak_detection:leak_detection_interface_headers",
     "//testing/gmock",
   ]
@@ -222,13 +221,11 @@ if (!is_android) {
       "//chrome/browser/profiles:profile",
       "//chrome/browser/safe_browsing:test_support",
       "//chrome/browser/ui",
-      "//chrome/test:test_support_ui",
       "//components/content_settings/core/browser",
       "//components/content_settings/core/common",
       "//components/content_settings/core/common:features",
       "//components/permissions:permissions_common",
       "//components/safe_browsing/core/common:features",
-      "//content/test:test_support",
     ]
   }
 }
@@ -264,7 +261,6 @@ source_set("unit_tests") {
     "//chrome/browser/ui/safety_hub:test_support",
     "//chrome/common:chrome_features",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
     "//components/content_settings/core/browser",
     "//components/content_settings/core/common",
     "//components/content_settings/core/test:test_support",
@@ -278,7 +274,6 @@ source_set("unit_tests") {
     "//components/safety_check",
     "//components/sync_preferences:test_support",
     "//components/ukm:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
     "//ui/base",
   ]

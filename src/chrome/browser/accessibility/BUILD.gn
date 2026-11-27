@@ -11,7 +11,6 @@ if (!is_android) {
     public_deps = [
       "//base",
       "//chrome/browser/profiles:profile",
-      "//chrome/test:test_support_ui",
     ]
     deps = [
       "//chrome/browser:browser_process",
@@ -31,8 +30,6 @@ if (!is_android) {
       public += [ "browser_test_with_ax_client.h" ]
       sources += [ "browser_test_with_ax_client.cc" ]
       public_deps += [
-        "//chrome/test/accessibility/ax_client:launcher",
-        "//chrome/test/accessibility/ax_client:mojom",
         "//mojo/public/cpp/bindings",
         "//ui/accessibility",
       ]

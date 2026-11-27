@@ -19,11 +19,6 @@ static_library("data_migration") {
 
   deps = [
     "//chrome/browser/ash/nearby",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/data_migration",
-    "//chromeos/ash/components/data_migration:constants",
-    "//chromeos/ash/components/nearby/common/connections_manager",
-    "//chromeos/constants",
     "//components/user_manager",
   ]
 }

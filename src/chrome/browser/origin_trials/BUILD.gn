@@ -37,12 +37,10 @@ if (!is_android) {
       "//chrome/browser/content_settings:content_settings_factory",
       "//chrome/browser/profiles:profile",
       "//chrome/browser/ui",
-      "//chrome/test:test_support",
       "//components/browsing_data/content",
       "//components/origin_trials:browser",
       "//components/user_prefs",
       "//content/public/common",
-      "//content/test:test_support",
       "//net:test_support",
       "//url",
     ]

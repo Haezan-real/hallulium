@@ -27,7 +27,6 @@ cast_core_grpc_headers = string_join(",", cast_core_grpc_headers_list)
 
 # Cast Core gRPC framework libraries.
 cast_core_grpc_deps = [
-  "//chromecast/cast_core/grpc",
   "//third_party/grpc:grpc++",
 ]
 

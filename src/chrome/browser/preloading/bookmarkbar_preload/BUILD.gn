@@ -41,7 +41,5 @@ source_set("unit_tests") {
     "//chrome/browser:browser_features",
     "//chrome/browser/preloading",
     "//chrome/browser/preloading/prerender",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
   ]
 }

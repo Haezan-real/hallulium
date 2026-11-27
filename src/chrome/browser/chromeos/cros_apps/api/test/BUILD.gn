@@ -12,11 +12,9 @@ source_set("apitest_support") {
     "cros_apps_apitest.h",
   ]
 
-  deps = [ "//chromeos/constants" ]
 
   public_deps = [
     "//chrome/browser/chromeos/cros_apps/api",
-    "//chrome/test:test_support_ui",
     "//testing/gtest",
     "//third_party/blink/public/mojom/runtime_feature_state",
   ]

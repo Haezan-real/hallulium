@@ -9,7 +9,6 @@ import("//components/surface_embed/buildflags/buildflags.gni")
 # browser-to-renderer exposed mojom interfaces. Developers are responsible for
 # maintaining this file to match addition and removal of newly exposed targets.
 # This is part of our automated fuzzing of the browser/renderer interface that
-# lives at `//chrome/test/fuzzing/renderer_fuzzing/ipc_fuzzing`.
 # As for now, we are only listing those targets for interfaces exposed on
 # Linux.
 

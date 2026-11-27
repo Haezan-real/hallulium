@@ -34,8 +34,6 @@ source_set("soda") {
       "cros_soda_client.h",
     ]
     deps += [
-      "//chromeos/services/machine_learning/public/cpp",
-      "//chromeos/services/machine_learning/public/mojom",
     ]
   }
 }

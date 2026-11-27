@@ -28,7 +28,6 @@ source_set("test_support") {
 
   deps = [
     ":background_loader",
-    "//content/test:test_support",
   ]
 }
 
@@ -38,7 +37,6 @@ source_set("unit_tests") {
   deps = [
     ":background_loader",
     "//base",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

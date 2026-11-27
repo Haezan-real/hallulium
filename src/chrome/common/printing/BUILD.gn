@@ -101,7 +101,6 @@ source_set("unit_tests") {
   deps = [
     "//base",
     "//chrome/common/printing",
-    "//content/test:test_support",
     "//printing:test_support",
     "//testing/gtest",
   ]

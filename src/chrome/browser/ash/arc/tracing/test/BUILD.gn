@@ -20,7 +20,6 @@ static_library("test_support") {
 
   public_deps = [
     "//chrome/browser/ash/app_list/arc:test_support",
-    "//chrome/test:test_support_unit",
   ]
 
   deps = [
@@ -34,11 +33,8 @@ static_library("test_support") {
     "//chrome/browser/ash/arc/tracing",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/sync",
-    "//chrome/test:test_support",
-    "//components/exo",
     "//components/sync/base",
     "//components/sync/service",
-    "//content/test:test_support",
     "//ui/views",
   ]
 }

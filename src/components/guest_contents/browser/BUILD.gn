@@ -30,7 +30,6 @@ source_set("unit_tests") {
     "guest_contents_host_impl_unittest.cc",
   ]
 
-  public_deps = [ "//content/test:test_support" ]
 
   deps = [
     ":browser",
@@ -51,8 +50,6 @@ source_set("browser_tests") {
     "//components/guest_contents/common:mojom",
     "//components/network_session_configurator/common",
     "//content/shell:content_shell_lib",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//net:test_support",
     "//testing/gtest",
   ]

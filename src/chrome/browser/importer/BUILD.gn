@@ -96,11 +96,8 @@ source_set("browser_tests") {
       ":importer",
       "//chrome/browser/ui",
       "//chrome/common:constants",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//components/favicon_base",
       "//components/search_engines",
-      "//content/test:test_support",
       "//third_party/zlib/google:compression_utils",
     ]
   }
@@ -123,7 +120,6 @@ source_set("unit_tests") {
     "//chrome/browser/search_engines",
     "//chrome/common:constants",
     "//chrome/common/importer",
-    "//chrome/test:test_support",
     "//components/bookmarks/browser",
     "//components/bookmarks/test",
     "//components/history/core/browser",
@@ -133,7 +129,6 @@ source_set("unit_tests") {
     "//components/prefs",
     "//components/query_parser",
     "//components/user_data_importer/common",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

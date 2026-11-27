@@ -1,3 +1,0 @@
-# Hallulium stub
-group("closure_compiler") {}
-group("stub") {}

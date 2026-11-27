@@ -47,7 +47,6 @@ source_set("test_support") {
       "//ui/gl:test_support",
     ]
 
-    public_deps += [ "//content/test:test_support" ]
   }
 }
 

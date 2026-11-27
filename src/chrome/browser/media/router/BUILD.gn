@@ -64,7 +64,6 @@ static_library("media_router_feature") {
   configs += [ "//build/config/compiler:wexit_time_destructors" ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/browser_context_helper" ]
   }
 }
 
@@ -278,7 +277,6 @@ static_library("test_support") {
     deps += [
       "//chrome/browser/media/router/discovery/access_code:access_code_sink_service",
       "//chrome/browser/media/router/discovery/access_code:discovery_resources_proto",
-      "//chrome/test:test_support",
       "//components/media_router/browser:test_support",
       "//components/media_router/common:test_support",
       "//components/media_router/common/mojom:media_router",
@@ -318,7 +316,6 @@ source_set("unittests") {
     ":router",
     "//base",
     "//base/test:test_support",
-    "//chrome/test:test_support",
     "//components/endpoint_fetcher",
     "//components/media_router/browser:test_support",
     "//components/media_router/common:test_support",
@@ -326,7 +323,6 @@ source_set("unittests") {
     "//components/media_router/common/providers/cast/channel:capability",
     "//components/media_router/common/providers/cast/channel:test_support",
     "//components/webapps/common",
-    "//content/test:test_support",
     "//media:test_support",
     "//services/data_decoder/public/cpp:test_support",
     "//testing/gmock",
@@ -403,9 +399,7 @@ source_set("unittests") {
       "//chrome/browser/media/router/discovery/access_code:access_code_sink_service",
       "//chrome/browser/media/router/discovery/access_code:discovery_resources_proto",
       "//chrome/browser/prefs",
-      "//chrome/test:test_support",
       "//components/sync_preferences:test_support",
-      "//content/test:test_support",
       "//media/cast:common",
       "//services/preferences/public/cpp",
       "//third_party/openscreen/src/cast/common:public",
@@ -454,7 +448,6 @@ if (!is_android) {
       "//base",
       "//base/test:test_support",
       "//chrome/browser",
-      "//chrome/test:test_support",
       "//components/mirroring/mojom:service",
       "//components/translate/content/common",
     ]

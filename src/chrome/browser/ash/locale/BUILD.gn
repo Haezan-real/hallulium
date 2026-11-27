@@ -62,10 +62,8 @@ source_set("browser_tests") {
     ":locale",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
     "//components/language/core/browser",
     "//components/prefs",
-    "//content/test:test_support",
     "//ui/accessibility",
   ]
 }

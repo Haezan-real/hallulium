@@ -12,7 +12,6 @@ config("libjingle_xmpp_common_config") {
 static_library("rtc_xmllite") {
   visibility = [
     ":*",
-    "//remoting/*",
   ]
   sources = [
     "xmllite/qname.cc",

@@ -70,7 +70,6 @@ source_set("unit_tests") {
     "//components/user_data_importer/common",
     "//components/user_data_importer/mojom",
     "//components/user_data_importer/utility:zip_ffi_glue",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 

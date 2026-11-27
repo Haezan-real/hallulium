@@ -31,12 +31,9 @@ source_set("browser_tests") {
     ":accessibility_prefs",
     "//chrome/browser:browser_process",
     "//chrome/browser/policy:test_support",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_ui_android",
     "//components/policy/core/common:test_support",
     "//components/prefs",
     "//content/public/browser",
-    "//content/test:test_support",
     "//ui/accessibility",
   ]
 }

@@ -52,7 +52,6 @@ source_set("crdtp_platform") {
   deps = [ "//base" ]
 }
 
-# These tests are linked into //content/test:content_unittests.
 source_set("crdtp_test") {
   testonly = true
   sources = [

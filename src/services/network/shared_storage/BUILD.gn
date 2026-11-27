@@ -5,7 +5,6 @@
 source_set("shared_storage") {
   visibility = [
     ":*",
-    "//content/test:*",
     "//services/network:network_service",
     "//services/network:test_support",
     "//services/network:tests",

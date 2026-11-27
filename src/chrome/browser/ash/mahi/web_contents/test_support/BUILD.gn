@@ -19,7 +19,6 @@ static_library("test_support") {
   deps = [
     "//base",
     "//chrome/browser/ash/mahi/web_contents",
-    "//chromeos/components/mahi/public/cpp",
     "//testing/gmock",
     "//ui/gfx",
     "//ui/gfx:test_support",

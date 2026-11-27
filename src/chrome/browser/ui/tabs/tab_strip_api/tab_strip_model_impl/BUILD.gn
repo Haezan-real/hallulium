@@ -47,8 +47,6 @@ source_set("unit_tests") {
     "//chrome/browser/ui/tabs:tab_model",
     "//chrome/browser/ui/tabs:tab_strip",
     "//chrome/browser/ui/tabs:test_support",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }
@@ -70,9 +68,7 @@ source_set("browser_tests") {
     "//chrome/browser/ui/tabs/tab_strip_api",
     "//chrome/browser/ui/tabs/tab_strip_api:impl",
     "//chrome/browser/ui/tabs/tab_strip_api/observation",
-    "//chrome/test:test_support",
     "//components/browser_apis/tab_strip:mojom_experiment",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

@@ -103,7 +103,6 @@ if (is_android) {
     ]
 
     if (is_chromeos) {
-      deps += [ "//chromeos/components/mgs" ]
     }
   }
 
@@ -119,11 +118,9 @@ if (is_android) {
     deps = [
       ":user_education",
       "//chrome/app:command_ids",
-      "//chrome/test:test_support",
       "//components/prefs",
       "//components/strings:components_strings_grit",
       "//components/user_education/test",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
     ]

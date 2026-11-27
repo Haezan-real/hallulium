@@ -22,8 +22,6 @@ source_set("quick_unlock_private") {
     "//base",
     "//chrome/browser/extensions",
     "//chrome/common/extensions/api",
-    "//chromeos/ash/components/cryptohome",
-    "//chromeos/ash/components/login/auth",
     "//content/public/browser",
     "//extensions/browser",
   ]
@@ -34,10 +32,6 @@ source_set("quick_unlock_private") {
     "//chrome/browser/ash/login/quick_unlock",
     "//chrome/browser/ash/profiles",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/cryptohome:public",
-    "//chromeos/ash/components/login/auth/public:authpublic",
-    "//chromeos/ash/components/osauth/public",
     "//components/prefs",
     "//components/user_manager",
   ]

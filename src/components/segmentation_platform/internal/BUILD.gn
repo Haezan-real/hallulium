@@ -16,7 +16,6 @@ static_library("internal") {
     ":*",
     "//chrome/browser",
     "//chrome/browser/segmentation_platform:*",
-    "//chrome/test:*",
     "//components/segmentation_platform/embedder/*",
     "//components/visited_url_ranking/internal/*",
     "//ios/chrome/browser/segmentation_platform/model:*",
@@ -396,7 +395,6 @@ if (is_android) {
   android_library("internal_java") {
     visibility = [
       ":javatests",
-      "//chrome/android:chrome_all_java",
     ]
     srcjar_deps = [ ":jni_headers" ]
     sources = [

@@ -19,7 +19,6 @@ static_library("test_support") {
     "//components/printing/renderer",
     "//content/public/common",
     "//content/public/renderer",
-    "//content/test:test_support",
     "//ipc",
     "//pdf",
     "//pdf:buildflags",

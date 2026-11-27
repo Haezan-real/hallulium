@@ -17,7 +17,6 @@ static_library("psm") {
 
   deps = [
     "//base",
-    "//chromeos/ash/components/system",
     "//components/policy/core/common",
     "//components/policy/core/common:common_constants",
     "//components/policy/proto:",
@@ -59,12 +58,10 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/ash/policy/enrollment",
-    "//chromeos/ash/components/system",
     "//components/policy/core/common",
     "//components/policy/core/common:common_constants",
     "//components/policy/core/common:test_support",
     "//components/policy/proto",
-    "//content/test:test_support",
     "//services/network:test_support",
     "//services/network/public/cpp",
     "//testing/gmock",

@@ -119,7 +119,6 @@ grit_strings("branded_strings") {
 
 static_library("test_support") {
   testonly = true
-  visibility = [ "//chrome/test:test_support" ]
 
   sources = [
     "chrome_main_delegate.cc",
@@ -190,9 +189,6 @@ static_library("test_support") {
       "//chrome/browser/ash/dbus",
       "//chrome/browser/ash/locale",
       "//chrome/browser/ash/schedqos",
-      "//chromeos/ash/components/memory",
-      "//chromeos/ash/experiences/arc:arc_base_utils",
-      "//chromeos/dbus/constants",
     ]
   }
 

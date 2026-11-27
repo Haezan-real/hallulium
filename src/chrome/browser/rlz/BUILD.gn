@@ -52,7 +52,6 @@ source_set("unit_tests") {
   deps = [
     ":rlz",
     "//base/test:test_support",
-    "//chrome/test:test_support",
     "//components/rlz:test_support",
     "//rlz:test_support",
     "//testing/gmock",

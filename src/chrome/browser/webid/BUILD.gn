@@ -155,7 +155,6 @@ source_set("unit_tests") {
     "//chrome/browser/sync",
     "//chrome/browser/sync:factories",
     "//chrome/browser/trusted_vault",
-    "//chrome/test:test_support",
     "//components/content_settings/core/browser",
     "//components/content_settings/core/browser:cookie_settings",
     "//components/content_settings/core/common",
@@ -166,7 +165,6 @@ source_set("unit_tests") {
     "//components/sync_preferences:test_support",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//net",
     "//testing/gmock",
     "//testing/gtest",
@@ -191,8 +189,6 @@ if (!is_android) {
       "//chrome/browser/password_manager/factories",
       "//chrome/browser/profiles:profile",
       "//chrome/browser/ui",
-      "//chrome/test:test_support_ui",
-      "//content/test:test_support",
     ]
   }
 }

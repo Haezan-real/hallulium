@@ -13,7 +13,6 @@ source_set("updater") {
     "//chrome/updater/mojom",
   ]
 
-  friend = [ "//chrome/test:unit_tests" ]
 
   if (enable_updater && (is_mac || is_win)) {
     sources = [

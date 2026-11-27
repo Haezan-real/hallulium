@@ -34,7 +34,6 @@ source_set("audio") {
   } else {
     sources += [ "audio_service_chromeos.cc" ]
     deps += [
-      "//chromeos/ash/components/audio",
       "//content/public/browser",
     ]
   }

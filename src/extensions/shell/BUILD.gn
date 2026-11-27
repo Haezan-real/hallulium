@@ -221,8 +221,6 @@ source_set("app_shell_lib") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/dbus/constants",
-      "//chromeos/dbus/power",
     ]
   }
 
@@ -233,16 +231,6 @@ source_set("app_shell_lib") {
     ]
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/audio",
-      "//chromeos/ash/components/dbus",
-      "//chromeos/ash/components/dbus/audio",
-      "//chromeos/ash/components/dbus/cros_disks",
-      "//chromeos/ash/components/dbus/hermes",
-      "//chromeos/ash/components/dbus/shill",
-      "//chromeos/ash/components/disks",
-      "//chromeos/ash/components/login/login_state",
-      "//chromeos/ash/components/network",
-      "//ui/chromeos",
       "//ui/display/manager",
     ]
   }
@@ -297,7 +285,6 @@ test("app_shell_unittests") {
     "//components/keep_alive_registry",
     "//components/prefs",
     "//components/user_prefs",
-    "//content/test:test_support",
     "//extensions:shell_and_test_pak",
     "//extensions:test_support",
     "//extensions/browser",
@@ -334,7 +321,6 @@ test("app_shell_unittests") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/dbus/power" ]
   }
 
   if (is_chromeos) {
@@ -343,9 +329,6 @@ test("app_shell_unittests") {
       "browser/shell_screen_unittest.cc",
     ]
     deps += [
-      "//chromeos/ash/components/audio",
-      "//chromeos/ash/components/dbus:test_support",
-      "//chromeos/ash/components/dbus/audio",
     ]
   }
 }
@@ -387,7 +370,6 @@ source_set("browser_tests") {
     "//components/keep_alive_registry",
     "//components/version_info",
     "//content/shell:content_shell_lib",
-    "//content/test:test_support",
     "//extensions:test_support",
     "//extensions/browser",
     "//extensions/browser:test_support",

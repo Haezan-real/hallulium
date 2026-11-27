@@ -87,10 +87,8 @@ if (!is_android) {
       "//chrome/browser/preloading/prefetch/search_prefetch:field_trial_settings",
       "//chrome/browser/profiles:profile",
       "//chrome/browser/ui",
-      "//chrome/test:test_support",
       "//components/omnibox/browser",
       "//content/public/browser",
-      "//content/test:test_support",
       "//services/network/public/mojom",
     ]
   }
@@ -109,7 +107,6 @@ source_set("unit_tests") {
     "//components/prefs",
     "//components/prefs:test_support",
     "//content/public/common",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

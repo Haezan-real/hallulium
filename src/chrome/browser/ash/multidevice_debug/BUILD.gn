@@ -17,8 +17,6 @@ static_library("multidevice_debug") {
     "//chrome/browser/ash/device_sync",
     "//chrome/browser/ash/multidevice_setup",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/services/multidevice_setup",
     "//components/user_manager",
     "//content/public/browser",
   ]

@@ -48,7 +48,6 @@ source_set("browser_tests") {
   deps = [
     ":cpp",
     "//base",
-    "//chrome/test:test_support",
     "//content/public/browser",
     "//testing/gtest",
   ]
@@ -58,7 +57,6 @@ source_set("browser_tests") {
 
     deps += [
       "//chrome/services/media_gallery_util/public/mojom",
-      "//chrome/test:test_support_ui",
       "//third_party/libyuv",
     ]
 

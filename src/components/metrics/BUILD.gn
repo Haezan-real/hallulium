@@ -698,8 +698,6 @@ if (!is_cronet_build) {
 
       deps += [
         ":system_stack_sampled_metrics_status_proto",
-        "//chromeos/ash/components/dbus:test_support",
-        "//chromeos/ash/components/network:test_support",
       ]
     }
 
@@ -713,7 +711,6 @@ if (!is_cronet_build) {
     if (use_blink) {
       deps += [
         ":content",
-        "//content/test:test_support",
       ]
     }
 

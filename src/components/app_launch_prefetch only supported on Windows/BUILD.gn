@@ -1,3 +1,0 @@
-# Hallulium stub
-group("app_launch_prefetch only supported on Windows") {}
-group("stub") {}

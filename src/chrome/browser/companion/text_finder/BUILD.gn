@@ -40,9 +40,7 @@ source_set("unit_tests") {
     ":text_finder",
     "//base",
     "//base/test:test_support",
-    "//chrome/test:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

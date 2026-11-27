@@ -2,7 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//chromeos/dbus/config/use_real_dbus_clients.gni")
 
 assert(is_chromeos)
 
@@ -109,8 +108,6 @@ static_library("config") {
     "//chrome/browser/ui/webui/ash/sys_internals",
     "//chrome/browser/ui/webui/ash/vm",
     "//chrome/browser/ui/webui/nearby_share",
-    "//chromeos/ash/components/boca/receiver",
-    "//chromeos/ash/experiences/guest_os/borealis/motd",
     "//components/cross_device/logging",
     "//ui/webui",
   ]

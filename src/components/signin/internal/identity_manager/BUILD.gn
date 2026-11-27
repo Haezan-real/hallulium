@@ -117,7 +117,6 @@ source_set("identity_manager") {
     ]
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/account_manager",
       "//components/account_manager_core",
     ]
   }
@@ -212,7 +211,6 @@ source_set("unit_tests") {
 
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/account_manager",
       "//components/account_manager_core:test_support",
     ]
   }
@@ -271,7 +269,6 @@ static_library("test_support") {
       "test_profile_oauth2_token_service_delegate_chromeos.cc",
       "test_profile_oauth2_token_service_delegate_chromeos.h",
     ]
-    deps = [ "//chromeos/crosapi/mojom" ]
   }
 
   public_deps = [

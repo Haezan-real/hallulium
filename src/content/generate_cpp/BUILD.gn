@@ -1,3 +1,0 @@
-# Hallulium stub
-group("generate_cpp") {}
-group("stub") {}

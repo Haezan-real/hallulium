@@ -81,7 +81,6 @@ static_library("browser") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/crosapi/mojom",
       "//components/account_manager_core",
     ]
   }
@@ -141,8 +140,6 @@ source_set("unit_tests") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/ash/components/install_attributes:test_support",
-      "//chromeos/crosapi/mojom",
       "//components/account_manager_core:test_support",
     ]
     sources -= [

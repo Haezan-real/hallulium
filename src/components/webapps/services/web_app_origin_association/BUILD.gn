@@ -34,7 +34,6 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//components/webapps/services/web_app_origin_association:lib",
     "//content/public/browser",
-    "//content/test:test_support",
     "//net",
     "//net:test_support",
     "//services/network:network_service",

@@ -9,7 +9,6 @@ import("//ui/webui/resources/tools/bundle_js.gni")
 import("//ui/webui/resources/tools/minify_js.gni")
 
 if (is_chromeos) {
-  import("//chrome/test/base/ash/js2gtest.gni")
 }
 
 group("extensions") {
@@ -159,7 +158,6 @@ copy("colorenhancer_copy") {
 }
 
 if (is_chromeos) {
-  webui_test_deps = [ "//chrome/test:browser_tests_runner" ]
 
   test("colorenhancer_tests") {
     deps = [ ":colorenhancer_js_webui_tests" ]

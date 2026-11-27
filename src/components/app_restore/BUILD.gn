@@ -44,7 +44,6 @@ component("app_restore") {
   public_deps = [
     "//ash/constants",
     "//base",
-    "//chromeos/ui/base",
     "//components/account_id",
     "//components/services/app_service",
     "//components/sessions:session_id",
@@ -68,7 +67,6 @@ source_set("unit_tests") {
   deps = [
     ":app_restore",
     "//components/app_constants",
-    "//content/test:test_support",
     "//testing/gtest",
     "//ui/aura:test_support",
     "//ui/views:test_support",

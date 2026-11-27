@@ -68,9 +68,6 @@ source_set("networking_private") {
                 "networking_private_event_router_chromeos.cc",
               ]
     deps += [
-      "//chromeos/ash/components/login/login_state",
-      "//chromeos/ash/components/network",
-      "//chromeos/components/onc",
       "//components/proxy_config",
     ]
   } else {

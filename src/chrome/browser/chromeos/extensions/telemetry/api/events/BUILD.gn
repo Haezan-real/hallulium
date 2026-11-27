@@ -24,7 +24,6 @@ source_set("events") {
     "//chrome/browser/ui",
     "//chrome/browser/ui:browser_navigator_params_headers",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/crosapi/mojom",
     "//extensions/browser",
     "//url",
   ]
@@ -44,8 +43,6 @@ source_set("event_router") {
     ":event_converters",
     "//base",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/ash/components/telemetry_extension/events",
-    "//chromeos/crosapi/mojom",
     "//content/public/browser",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
@@ -66,7 +63,6 @@ source_set("event_manager") {
     "//chrome/browser/chromeos/extensions/telemetry/api/common",
     "//chrome/browser/chromeos/extensions/telemetry/api/common:util",
     "//chrome/common/chromeos/extensions",
-    "//chromeos/crosapi/mojom",
     "//content/public/browser",
   ]
 
@@ -85,7 +81,6 @@ source_set("event_converters") {
   deps = [
     "//base",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/crosapi/mojom",
     "//third_party/abseil-cpp:absl",
   ]
 }
@@ -102,8 +97,6 @@ source_set("test_support") {
   deps = [ "//base/test:test_support" ]
 
   public_deps = [
-    "//chromeos/ash/components/telemetry_extension/events",
-    "//chromeos/crosapi/mojom",
     "//mojo/public/cpp/bindings",
   ]
 }
@@ -120,16 +113,12 @@ source_set("browser_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui",
     "//chrome/browser/ui/tabs:tab_strip",
-    "//chrome/test:test_support_ui",
-    "//chromeos/crosapi/mojom",
-    "//content/test:test_support",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
     "//testing/gtest",
     "//url",
   ]
 
-  data = [ "//chrome/test/data" ]
 }
 
 source_set("unit_tests") {
@@ -150,9 +139,6 @@ source_set("unit_tests") {
     "//chrome/common",
     "//chrome/common/chromeos/extensions",
     "//chrome/common/chromeos/extensions/api",
-    "//chrome/test:test_support",
-    "//chromeos/constants",
-    "//chromeos/crosapi/mojom",
     "//content/public/browser",
     "//net",
     "//net:test_support",
@@ -172,8 +158,6 @@ source_set("extensions_unittests") {
     ":event_router",
     "//base/test:test_support",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/crosapi/mojom",
-    "//content/test:test_support",
     "//extensions:test_support",
     "//extensions/common",
     "//mojo/public/cpp/bindings",

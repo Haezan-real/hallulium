@@ -81,7 +81,6 @@ source_set("browser") {
       "component.cc",
       "component.h",
     ]
-    deps += [ "//chromeos/dbus/dlp:dlp_proto" ]
   }
 
   if (use_blink) {

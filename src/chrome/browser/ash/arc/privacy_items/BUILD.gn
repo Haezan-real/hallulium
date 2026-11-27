@@ -14,7 +14,6 @@ static_library("privacy_items") {
 
   deps = [
     "//base",
-    "//chromeos/ash/experiences/arc",
     "//components/keyed_service/core",
   ]
 }
@@ -26,10 +25,6 @@ source_set("unit_tests") {
 
   deps = [
     ":privacy_items",
-    "//chrome/test:test_support",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc:arc_test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

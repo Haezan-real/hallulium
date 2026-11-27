@@ -21,7 +21,6 @@ static_library("core_internal") {
     ":*",
     "//chrome/browser",
     "//chrome/browser/collaboration:*",
-    "//chrome/test:*",
     "//ios/chrome/browser/collaboration/model",
     "//ios/chrome/browser/data_sharing/model",
   ]
@@ -298,7 +297,6 @@ source_set("collaboration_finder_unit_tests") {
 
 if (is_android) {
   java_group("java") {
-    visibility = [ "//chrome/android:*" ]
     deps = [
       ":comments_java",
       ":core_java",

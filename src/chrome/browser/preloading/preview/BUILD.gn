@@ -13,12 +13,10 @@ source_set("browser_tests") {
 
   deps = [
     "//base/test:test_support",
-    "//chrome/test:test_support",
   ]
 
   if (use_blink) {
     deps += [ "//third_party/blink/public/common:preloading_headers" ]
   }
 
-  data = [ "//chrome/test/data/" ]
 }

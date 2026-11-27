@@ -21,9 +21,6 @@ static_library("crostini") {
     "//chrome/browser/ash/guest_os",
     "//chrome/browser/ash/plugin_vm",
     "//chrome/browser/ui/webui/settings",
-    "//chromeos/ash/components/dbus/session_manager",
-    "//chromeos/ash/components/network",
-    "//chromeos/ash/components/settings",
     "//components/prefs",
     "//components/services/app_service",
   ]
@@ -43,12 +40,9 @@ static_library("crostini") {
     "//chrome/browser/ui/webui/ash/settings/search",
     "//chrome/common",
     "//chrome/common:constants",
-    "//chromeos/ash/components/login/session",
-    "//chromeos/ash/experiences/arc",
     "//components/policy/core/common",
     "//content/public/browser",
     "//ui/base",
-    "//ui/chromeos",
     "//ui/display",
   ]
 }
@@ -65,8 +59,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/bruschetta",
     "//chrome/browser/ash/guest_os",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

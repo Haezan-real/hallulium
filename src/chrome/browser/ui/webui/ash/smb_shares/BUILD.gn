@@ -30,7 +30,6 @@ static_library("smb_shares") {
     "//chrome/browser/ash/smb_client",
     "//chrome/browser/profiles:profile",
     "//chrome/common",
-    "//chromeos/constants",
     "//components/strings:components_strings",
     "//components/user_manager",
     "//content/public/browser",
@@ -55,8 +54,6 @@ source_set("browser_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/common",
-    "//chrome/test:test_support_ui",
-    "//content/test:test_support",
   ]
 }
 
@@ -69,6 +66,5 @@ source_set("unit_tests") {
     ":smb_shares",
     "//base/test:test_support",
     "//chrome/browser/ash/smb_client:test_support",
-    "//content/test:test_support",
   ]
 }

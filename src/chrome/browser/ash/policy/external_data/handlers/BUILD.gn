@@ -39,7 +39,6 @@ static_library("handlers") {
     "//chrome/browser/ash/profiles",
     "//chrome/browser/profiles:profile",
     "//chrome/common:constants",
-    "//chromeos/ash/components/settings",
     "//components/policy:generated",
     "//components/prefs",
   ]
@@ -60,14 +59,11 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//chrome/browser/ash/printing",
     "//chrome/browser/ash/printing/enterprise",
-    "//chromeos/ash/components/settings",
-    "//chromeos/printing",
     "//components/policy:generated",
     "//components/policy/core/common",
     "//components/policy/core/common:test_support",
     "//components/policy/proto:",
     "//components/sync_preferences:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

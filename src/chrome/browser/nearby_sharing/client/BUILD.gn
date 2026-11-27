@@ -16,7 +16,6 @@ source_set("client") {
   deps = [
     "//base",
     "//chrome/browser/nearby_sharing/common",
-    "//chromeos/ash/components/nearby/common/client",
     "//components/cross_device/logging",
     "//components/signin/public/identity_manager",
     "//net",
@@ -43,7 +42,6 @@ source_set("test_support") {
     ":client",
     "//base",
     "//chrome/browser/nearby_sharing/common",
-    "//chromeos/ash/components/nearby/common/client",
     "//third_party/nearby:certificate_rpc_proto",
     "//third_party/nearby:contact_rpc_proto",
     "//third_party/nearby:device_rpc_proto",
@@ -60,7 +58,6 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/nearby_sharing/common",
-    "//chromeos/ash/components/nearby/common/client",
     "//components/signin/public/identity_manager:test_support",
     "//net",
     "//net/traffic_annotation:test_support",

@@ -15,9 +15,6 @@ static_library("rsu") {
   deps = [
     "//base",
     "//chrome/common:constants",
-    "//chromeos/ash/components/dbus/cryptohome:cryptohome_proto",
-    "//chromeos/ash/components/dbus/userdataauth",
-    "//chromeos/ash/components/dbus/userdataauth:userdataauth_proto",
     "//components/policy/core/common",
     "//components/prefs",
   ]
@@ -35,7 +32,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/policy/rsu",
     "//chrome/browser/ash/settings:test_support",
     "//chrome/common:constants",
-    "//chromeos/ash/components/dbus/userdataauth",
     "//components/policy/core/common:test_support",
     "//components/policy/proto",
     "//components/prefs",

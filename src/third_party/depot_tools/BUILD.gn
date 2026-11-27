@@ -1,3 +1,0 @@
-# Hallulium stub
-group("depot_tools") {}
-group("stub") {}

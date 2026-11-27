@@ -2,12 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// HaezanGL is Hallu's name for this GPU library. navigator.haezanGL is the
+// entry; navigator.gpu stays as an alias so existing pages keep working.
 // https://gpuweb.github.io/gpuweb/#navigator-gpu
 
 [
     ImplementedAs=GPU
 ] interface mixin NavigatorGPU {
-    [SameObject, SecureContext] readonly attribute GPU gpu;
+    [SameObject, SecureContext] readonly attribute GPU haezanGL;
+    [SameObject, SecureContext, ImplementedAs=haezanGL] readonly attribute GPU gpu;
 };
 Navigator includes NavigatorGPU;
 WorkerNavigator includes NavigatorGPU;

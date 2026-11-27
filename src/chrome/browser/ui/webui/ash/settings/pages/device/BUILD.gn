@@ -54,10 +54,6 @@ static_library("device") {
     "//chrome/browser/ui/webui/ash/settings/search",
     "//chrome/common",
     "//chrome/common:chrome_features",
-    "//chromeos/ash/components/demo_mode",
-    "//chromeos/components/magic_boost/public/cpp",
-    "//chromeos/constants",
-    "//chromeos/strings",
     "//components/spellcheck/browser",
     "//components/user_manager",
     "//content/public/browser",
@@ -72,7 +68,6 @@ static_library("device") {
   ]
 
   if (is_chrome_branded) {
-    deps += [ "//chromeos/ash/resources/internal/strings" ]
   }
 }
 
@@ -95,14 +90,9 @@ source_set("unit_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui/webui/ash/settings",
     "//chrome/browser/ui/webui/ash/settings/search",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_unit",
-    "//chromeos/components/magic_boost/test:fake_magic_boost_state",
-    "//chromeos/constants",
     "//components/prefs:test_support",
     "//components/spellcheck/browser",
     "//components/sync_preferences:test_support",
-    "//content/test:test_support",
     "//device/udev_linux:test_support",
     "//testing/gtest",
     "//ui/base:test_support",

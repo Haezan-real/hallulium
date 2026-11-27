@@ -32,8 +32,6 @@ test("usage_time_limit_unittests") {
     "//chrome/browser",
     "//chrome/browser/ash/child_accounts",
     "//chrome/browser/ash/child_accounts:test_support",
-    "//chromeos/ash/components/settings",
-    "//components/exo/wayland:ui_controls_protocol_stub",
     "//testing/gmock",
     "//testing/gtest",
     "//third_party/icu",

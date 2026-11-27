@@ -138,7 +138,6 @@ openscreen_source_set("common") {
 }
 
 openscreen_source_set("receiver") {
-  # Used by //components/cast_streaming and //chromecast/cast_core/browser in
   # Chromium.
   visibility += [ "*" ]
   public = [

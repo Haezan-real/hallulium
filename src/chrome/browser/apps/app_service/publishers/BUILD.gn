@@ -102,13 +102,6 @@ source_set("publishers") {
       "//chrome/browser/ui/ash/multi_user",
       "//chrome/browser/ui/ash/session",
       "//chrome/browser/ui/ash/shelf",
-      "//chromeos/ash/components/browser_context_helper",
-      "//chromeos/ash/components/policy/system_features_disable_list",
-      "//chromeos/ash/experiences/arc",
-      "//chromeos/ash/experiences/arc:arc_app_constants",
-      "//chromeos/ash/experiences/arc:arc_metrics_constants",
-      "//chromeos/ash/experiences/arc/intent_helper:arc_intent_helper_constants",
-      "//chromeos/ash/experiences/arc/session",
       "//components/app_constants",
     ]
 
@@ -141,12 +134,10 @@ source_set("unit_tests") {
     "//chrome/browser/web_applications:web_applications_test_support",
     "//chrome/browser/web_applications/mojom:mojom_web_apps_enum",
     "//chrome/common:chrome_features",
-    "//chrome/test:test_support",
     "//components/account_id",
     "//components/app_constants",
     "//components/services/app_service",
     "//components/services/app_service/public/cpp:app_types",
-    "//content/test:test_support",
     "//extensions/browser",
     "//testing/gmock",
     "//testing/gtest",
@@ -179,13 +170,6 @@ source_set("unit_tests") {
       "//chrome/browser/ash/plugin_vm",
       "//chrome/browser/ash/plugin_vm:test_support",
       "//chrome/browser/policy:system_features_disable_list",
-      "//chromeos/ash/components/browser_context_helper",
-      "//chromeos/ash/components/dbus/chunneld",
-      "//chromeos/ash/components/dbus/seneschal",
-      "//chromeos/ash/components/login/session",
-      "//chromeos/ash/experiences/arc:arc_app_constants",
-      "//chromeos/ash/experiences/arc:arc_test_support",
-      "//chromeos/ash/experiences/arc:notification_test_support",
     ]
 
     # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and

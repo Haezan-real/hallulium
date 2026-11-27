@@ -114,7 +114,6 @@ group("assert_no_deps") {
   deps = []
 
   if (is_android) {
-    deps += [ "//chrome/android:chrome_public_apk" ]
   } else {
     deps += [ ":chrome" ]
   }
@@ -181,7 +180,6 @@ if (!is_android && !is_mac) {
       if (build_mojo_proxy) {
         data_deps += [ "//mojo/proxy:mojo_proxy" ]
       }
-      deps += [ "//components/exo/wayland:ui_controls_protocol_stub" ]
     }
 
     if (!is_mac) {
@@ -357,7 +355,6 @@ if (!is_android && !is_mac) {
         deps += [
           "//chrome/browser/ash/locale",
           "//chrome/browser/ash/schedqos",
-          "//chromeos/ash/experiences/arc:arc_base_utils",
         ]
       }
 
@@ -1457,8 +1454,6 @@ group("dependencies") {
       "//chrome/browser/ash/boot_times_recorder",
       "//chrome/browser/ash/dbus",
       "//chrome/browser/ash/schedqos",
-      "//chromeos/ash/components/memory",
-      "//chromeos/dbus/constants",
     ]
   }
 }
@@ -1576,13 +1571,6 @@ if (!is_android && !is_electron_build) {
   }
 }
 
-repack("browser_tests_pak") {
-  testonly = true
-  sources = [ "$root_gen_dir/chrome/webui_test_resources.pak" ]
-  output = "$root_out_dir/browser_tests.pak"
-  deps = [ "//chrome/test/data/webui:resources" ]
-}
-
 if (is_electron_build) {
   group("packed_resources") {
     public_deps = [ "//electron:packed_resources" ]
@@ -1670,7 +1658,6 @@ if (is_android) {
 }
 
 # Android also supports this, but uses
-# //chrome/android:${_variant}_resource_allowlist.
 if (is_win && enable_resource_allowlist_generation) {
   generate_resource_allowlist("resource_allowlist") {
     deps = [ ":chrome_dll" ]

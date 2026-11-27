@@ -105,7 +105,6 @@ source_set("unit_tests") {
   ]
 
   # Only include this test on blink platforms because dependency on
-  # //content/test:test_support requires it.
   if (use_blink) {
     sources += [
       "media_stream_devices_controller_unittest.cc",
@@ -114,7 +113,6 @@ source_set("unit_tests") {
 
     deps += [
       ":webrtc",
-      "//content/test:test_support",
     ]
 
     if (is_android) {

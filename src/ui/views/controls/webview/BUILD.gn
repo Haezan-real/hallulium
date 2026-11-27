@@ -83,7 +83,6 @@ static_library("test_support") {
   deps = [
     "//base",
     "//content",
-    "//content/test:test_support",
     "//skia",
     "//testing/gtest",
     "//ui/base",

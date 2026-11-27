@@ -41,7 +41,6 @@ if (use_blink) {
       "//base/test:test_support",
       "//components/commerce/core:persisted_state_db_content_proto",
       "//components/leveldb_proto:test_support",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
       "//third_party/leveldatabase",

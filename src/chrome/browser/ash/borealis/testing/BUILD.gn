@@ -34,8 +34,6 @@ static_library("test_support") {
     "//chrome/browser/ash/borealis",
     "//chrome/browser/ash/guest_os",
     "//chrome/common:chrome_features",
-    "//chrome/test:test_support",
-    "//components/exo",
     "//testing/gtest",
   ]
 }

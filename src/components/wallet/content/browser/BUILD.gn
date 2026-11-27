@@ -29,7 +29,6 @@ source_set("unit_tests") {
     ":browser",
     "//base/test:test_support",
     "//components/wallet/content/common/mojom",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//services/shape_detection/public/mojom",
     "//skia",

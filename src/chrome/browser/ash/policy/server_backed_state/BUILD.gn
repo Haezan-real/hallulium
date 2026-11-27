@@ -20,7 +20,6 @@ static_library("server_backed_state") {
     "//base",
     "//chrome/browser:browser_process",
     "//chrome/common:constants",
-    "//chromeos/ash/components/dbus/session_manager",
     "//components/prefs",
   ]
 }
@@ -34,7 +33,6 @@ source_set("unit_tests") {
     ":server_backed_state",
     "//base",
     "//base/test:test_support",
-    "//chromeos/ash/components/dbus/session_manager",
     "//testing/gtest",
   ]
 }

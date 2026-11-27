@@ -151,7 +151,6 @@ source_set("test_support") {
 
   deps = [
     ":page_action",
-    "//chrome/test:test_support",
     "//components/tabs:test_support",
     "//testing/gmock",
     "//ui/actions:actions_headers",
@@ -180,7 +179,6 @@ source_set("unit_tests") {
     "//chrome/browser/ui:ui_features",
     "//chrome/browser/ui/toolbar/pinned_toolbar",
     "//chrome/browser/ui/views/location_bar",
-    "//chrome/test:test_support",
     "//components/tabs:test_support",
     "//ui/events:test_support",
   ]
@@ -202,10 +200,7 @@ source_set("interactive_ui_tests") {
     "//chrome/browser/ui",
     "//chrome/browser/ui:ui_features",
     "//chrome/browser/ui/views/toolbar",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_ui",
     "//content/public/browser",
-    "//content/test:test_support",
     "//ui/base:test_support",
     "//ui/views:test_support",
   ]

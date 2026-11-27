@@ -23,8 +23,6 @@ static_library("spotlight") {
     "//chrome/browser/ash/policy/remote_commands/crd/public",
     "//chrome/browser/ash/policy/remote_commands/crd/public:interface",
     "//chrome/browser/device_identity",
-    "//chromeos/ash/components/boca:spotlight",
-    "//chromeos/ash/components/boca:spotlight_lib",
   ]
 }
 
@@ -44,7 +42,6 @@ source_set("browser_tests") {
     "//chrome/browser",
     "//chrome/browser/ash/policy/remote_commands/crd/public:interface",
     "//chrome/browser/ui/ash/system_web_apps",
-    "//chrome/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

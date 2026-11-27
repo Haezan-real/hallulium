@@ -16,9 +16,6 @@ static_library("meet_browser") {
 
   public_deps = [
     "//base",
-    "//chromeos/ash/components/dbus/chromebox_for_meetings",
-    "//chromeos/services/chromebox_for_meetings/public/cpp",
-    "//chromeos/services/chromebox_for_meetings/public/mojom",
     "//mojo/public/cpp/bindings",
   ]
 
@@ -39,11 +36,6 @@ source_set("unit_tests") {
     ":meet_browser",
     "//base",
     "//base/test:test_support",
-    "//chromeos/ash/components/dbus/chromebox_for_meetings",
-    "//chromeos/services/chromebox_for_meetings/public/cpp",
-    "//chromeos/services/chromebox_for_meetings/public/cpp:test_support",
-    "//chromeos/services/chromebox_for_meetings/public/mojom",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//testing/gmock",
   ]

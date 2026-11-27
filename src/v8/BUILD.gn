@@ -2,7 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/config/android/config.gni")
 import("//build/config/arm.gni")
 import("//build/config/c++/c++.gni")
 import("//build/config/coverage/coverage.gni")
@@ -8097,7 +8096,6 @@ group("gn_all") {
     ":v8_fuzzers",
     ":v8_hello_world",
     ":v8_sample_process",
-    "test:gn_all",
     "tools:gn_all",
   ]
 
@@ -8775,7 +8773,6 @@ if (v8_enable_webassembly) {
 
 v8_fuzzer("inspector_fuzzer") {
   sources = [ "test/fuzzer/inspector-fuzzer.cc" ]
-  deps = [ "test/inspector:inspector_test" ]
 }
 
 # Target to build all generated .cc files.

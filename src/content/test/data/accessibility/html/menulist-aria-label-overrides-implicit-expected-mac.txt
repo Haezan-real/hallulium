@@ -1,5 +1,0 @@
-AXWebArea
-++AXGroup
-++++AXButton AXTitle='Implicit Button Name'
-++++AXMenu AXDescription='Aria Label Name'
-++++++AXMenuItem AXTitle='Item'

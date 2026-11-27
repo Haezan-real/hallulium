@@ -31,7 +31,6 @@ source_set("unit_tests") {
   deps = [
     ":print_preview_cros",
     "//base",
-    "//chrome/test:test_support",
     "//testing/gtest",
   ]
 }

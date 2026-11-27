@@ -137,7 +137,6 @@ source_set("test_support") {
     "//components/ukm:test_support",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//testing/gtest",
     "//ui/gfx/geometry",
   ]
@@ -183,7 +182,6 @@ source_set("unit_tests") {
     "//components/ukm:test_support",
     "//components/ukm/content",
     "//content/public/browser",
-    "//content/test:test_support",
     "//services/metrics/public/cpp:ukm_builders",
     "//testing/gtest",
     "//url",

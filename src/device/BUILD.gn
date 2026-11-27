@@ -282,9 +282,6 @@ test("device_unittests") {
     ]
     deps += [
       "//ash/constants",
-      "//chromeos/ash/services/nearby/public/cpp/",
-      "//chromeos/ash/services/secure_channel/public/cpp/shared",
-      "//chromeos/constants",
       "//device/bluetooth/bluez/ble_scan_parser",
       "//device/bluetooth/bluez/ble_scan_parser:lib",
     ]
@@ -354,10 +351,6 @@ test("device_unittests") {
     ]
 
     deps += [
-      "//chromecast/device/bluetooth:util",
-      "//chromecast/device/bluetooth/le",
-      "//chromecast/device/bluetooth/le:test_support",
-      "//chromecast/device/bluetooth/shlib:mock_shlib",
     ]
   }
 
@@ -479,7 +472,6 @@ test("device_unittests") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/dbus/u2f" ]
   }
 
   # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and

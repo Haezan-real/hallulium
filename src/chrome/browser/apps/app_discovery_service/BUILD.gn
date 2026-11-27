@@ -35,7 +35,6 @@ source_set("app_discovery_service") {
     "//chrome/browser/apps/app_discovery_service/almanac_api:proto",
     "//chrome/browser/apps/app_discovery_service/recommended_arc_apps",
     "//chrome/browser/profiles:profile",
-    "//chromeos/constants",
     "//components/country_codes",
     "//components/keyed_service/core",
     "//components/language/core/browser",
@@ -74,9 +73,6 @@ source_set("unit_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/web_applications:web_applications_test_support",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/system",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 

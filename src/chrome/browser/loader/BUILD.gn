@@ -54,8 +54,6 @@ if (!is_android) {
       ":impl",
       ":loader",
       "//chrome/browser/ui",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//components/page_load_metrics/browser",
     ]
   }
@@ -71,7 +69,6 @@ source_set("unit_tests") {
   deps = [
     ":impl",
     ":loader",
-    "//chrome/test:test_support",
     "//components/page_load_metrics/browser",
     "//components/ukm:test_support",
   ]

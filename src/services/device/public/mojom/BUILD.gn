@@ -195,7 +195,6 @@ mojom("usb") {
 
     visibility_blink = [
       ":*",
-      "//chromeos/ash/experiences/arc/mojom:mojom_blink",
       "//third_party/blink/public/mojom/usb:usb_blink",
       "//chrome/browser/ui/webui/usb_internals:mojo_bindings_blink",
     ]

@@ -68,7 +68,6 @@ source_set("unit_tests") {
 
   public_deps = [
     "//chrome/browser/ui/window_sizer",
-    "//chrome/test:test_support",
     "//ui/gfx/geometry",
   ]
   deps = [
@@ -90,8 +89,6 @@ source_set("unit_tests") {
       "//ash",
       "//ash/public/cpp",
       "//chrome/browser/ui/window_sizer",
-      "//chrome/test:test_support_unit",
-      "//content/test:test_support",
       "//ui/aura:test_support",
       "//ui/display:display_manager_test_api",
       "//ui/display/manager",
@@ -118,9 +115,7 @@ if (is_chromeos) {
       "//base",
       "//chrome/browser/ui",
       "//chrome/browser/ui:browser_list",
-      "//chrome/test:test_support_ui",
       "//components/keep_alive_registry",
-      "//content/test:test_support",
       "//ui/compositor",
       "//ui/events:test_support",
       "//ui/views",

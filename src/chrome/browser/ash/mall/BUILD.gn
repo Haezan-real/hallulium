@@ -21,7 +21,6 @@ static_library("mall") {
     "//chrome/browser/apps/almanac_api_client",
     "//chrome/browser/apps/almanac_api_client/proto",
     "//chrome/browser/profiles:profile",
-    "//chromeos/constants",
     "//content/public/browser",
     "//net",
     "//url",
@@ -38,9 +37,6 @@ source_set("unit_tests") {
     "//base",
     "//chrome/browser/apps/almanac_api_client",
     "//chrome/browser/apps/almanac_api_client/proto",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/system",
-    "//chromeos/constants",
     "//testing/gtest",
     "//url",
   ]

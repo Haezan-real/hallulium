@@ -284,5 +284,4 @@ source_set("ui_controls") {
     "//ui/ozone/common",
   ]
 
-  visibility += [ "//chrome/test:test_support" ]
 }

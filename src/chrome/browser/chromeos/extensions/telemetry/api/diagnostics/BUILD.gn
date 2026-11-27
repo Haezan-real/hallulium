@@ -23,10 +23,6 @@ source_set("diagnostics") {
     "//chrome/browser/chromeos/extensions/telemetry/api/common",
     "//chrome/browser/chromeos/extensions/telemetry/api/routines:routine_manager",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/ash/components/telemetry_extension/diagnostics",
-    "//chromeos/ash/services/cros_healthd/public/cpp",
-    "//chromeos/ash/services/cros_healthd/public/mojom",
-    "//chromeos/crosapi/mojom",
     "//extensions/browser",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
@@ -49,18 +45,11 @@ source_set("browser_tests") {
     "//chrome/browser/chromeos/extensions/telemetry/api/common:test_support",
     "//chrome/browser/chromeos/extensions/telemetry/api/routines:test_support",
     "//chrome/browser/ui",
-    "//chrome/test:test_support_ui",
-    "//chromeos/ash/components/telemetry_extension/diagnostics",
-    "//chromeos/ash/services/cros_healthd/public/cpp:fakes",
-    "//chromeos/ash/services/cros_healthd/public/mojom",
-    "//chromeos/crosapi/mojom",
-    "//content/test:test_support",
     "//extensions/common",
     "//testing/gtest",
     "//third_party/abseil-cpp:absl",
   ]
 
-  data = [ "//chrome/test/data" ]
 }
 
 source_set("unit_tests") {
@@ -75,8 +64,6 @@ source_set("unit_tests") {
     ":diagnostics",
     "//base/test:test_support",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/ash/services/cros_healthd/public/mojom",
-    "//chromeos/crosapi/mojom",
     "//testing/gtest",
   ]
 }

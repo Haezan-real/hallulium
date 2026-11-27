@@ -28,8 +28,6 @@ source_set("metrics") {
     ]
     public_deps += [
       "//chrome/browser/metrics/perf",
-      "//chromeos/ash/experiences/arc:arc_base",
-      "//chromeos/dbus/tpm_manager:tpm_manager_proto",
     ]
   }
 

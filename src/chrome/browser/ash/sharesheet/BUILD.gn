@@ -27,10 +27,8 @@ static_library("sharesheet") {
     "//chrome/browser/profiles",
     "//chrome/browser/sharesheet",
     "//chrome/browser/ui/ash/sharesheet",
-    "//chromeos/components/sharesheet:constants",
     "//components/services/app_service",
     "//storage/browser",
-    "//ui/chromeos/strings",
   ]
 }
 
@@ -44,8 +42,6 @@ source_set("unit_tests") {
     "//ash/public/cpp",
     "//base/test:test_support",
     "//chrome/browser/sharesheet",
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_unit",
     "//ui/base/clipboard:clipboard_test_support",
   ]
 }

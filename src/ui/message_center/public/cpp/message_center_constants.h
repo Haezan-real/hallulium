@@ -8,7 +8,9 @@
 #include <stddef.h>
 
 #include "build/build_config.h"
+#if BUILDFLAG(IS_CHROMEOS)
 #include "chromeos/constants/chromeos_features.h"
+#endif
 #include "third_party/skia/include/core/SkColor.h"
 #include "ui/gfx/color_palette.h"
 

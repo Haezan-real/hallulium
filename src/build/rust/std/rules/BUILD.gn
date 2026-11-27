@@ -2152,7 +2152,6 @@ cargo_crate("panic_abort") {
   crate_type = "rlib"
   crate_root = "//third_party/rust-toolchain/lib/rustlib/src/rust/library/panic_abort/src/lib.rs"
   sources = [
-    "//third_party/rust-toolchain/lib/rustlib/src/rust/library/panic_abort/src/android.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/panic_abort/src/lib.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/panic_abort/src/zkvm.rs",
   ]
@@ -2654,10 +2653,6 @@ cargo_crate("std") {
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/aix/fs.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/aix/mod.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/aix/raw.rs",
-    "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/android/fs.rs",
-    "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/android/mod.rs",
-    "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/android/net.rs",
-    "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/android/raw.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/cygwin/fs.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/cygwin/mod.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/cygwin/net.rs",
@@ -2709,7 +2704,6 @@ cargo_crate("std") {
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/illumos/mod.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/illumos/net.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/illumos/raw.rs",
-    "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/ios/mod.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/l4re/fs.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/l4re/mod.rs",
     "//third_party/rust-toolchain/lib/rustlib/src/rust/library/std/src/os/l4re/raw.rs",

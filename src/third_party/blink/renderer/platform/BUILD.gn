@@ -2712,7 +2712,6 @@ source_set("blink_fuzzer_test_support") {
   deps = [
     ":platform",
     "//base/test:test_config",
-    "//content/test:test_support",
   ]
 }
 

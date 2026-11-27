@@ -69,15 +69,6 @@ static_library("reporting") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/profiles:profile_util",
     "//chrome/common:constants",
-    "//chromeos/ash/components/dbus",
-    "//chromeos/ash/components/disks",
-    "//chromeos/ash/components/login/session",
-    "//chromeos/ash/components/network",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/components/system",
-    "//chromeos/ash/experiences/arc:prefs",
-    "//chromeos/ash/experiences/arc/mojom",
-    "//chromeos/dbus/power",
     "//components/policy:generated",
     "//components/policy/core/common",
     "//components/policy/proto:",
@@ -92,7 +83,6 @@ static_library("reporting") {
     "//components/user_manager",
     "//content/public/browser",
     "//extensions/common",
-    "//remoting/host/chromeos:host_event_reporter_impl",
     "//services/network/public/cpp",
     "//third_party/protobuf:protobuf_lite",
   ]
@@ -153,17 +143,6 @@ source_set("unit_tests") {
     "//chrome/browser/prefs",
     "//chrome/browser/profiles:profile",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/cros_disks",
-    "//chromeos/ash/components/dbus/shill",
-    "//chromeos/ash/components/disks",
-    "//chromeos/ash/components/disks:test_support",
-    "//chromeos/ash/components/login/session",
-    "//chromeos/ash/components/network:test_support",
-    "//chromeos/ash/components/system",
-    "//chromeos/ash/experiences/arc:prefs",
-    "//chromeos/ash/experiences/arc/mojom",
-    "//chromeos/dbus/power",
     "//components/policy:generated",
     "//components/policy/core/common",
     "//components/policy/core/common:test_support",
@@ -174,9 +153,7 @@ source_set("unit_tests") {
     "//components/reporting/client:test_support",
     "//components/reporting/proto:record_constants",
     "//components/reporting/util:status",
-    "//content/test:test_support",
     "//extensions/browser",
-    "//remoting/host/chromeos:host_event_reporter_impl",
     "//testing/gmock",
     "//testing/gtest",
   ]
@@ -194,7 +171,6 @@ if (use_fuzzing_engine_with_lpm) {
       # TODO(crbug.com/335294371): Remove dependency on //chrome/browser to
       # implement the proper fix.
       "//chrome/browser",
-      "//components/exo/wayland:ui_controls_protocol_stub",
     ]
   }
 }

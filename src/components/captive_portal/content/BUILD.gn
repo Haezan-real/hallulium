@@ -58,7 +58,6 @@ source_set("unit_tests") {
     "//components/captive_portal/core:test_support",
     "//components/embedder_support",
     "//components/prefs:test_support",
-    "//content/test:test_support",
     "//net",
     "//testing/gtest",
   ]

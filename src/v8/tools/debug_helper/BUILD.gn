@@ -39,7 +39,6 @@ action("run_mkgrokdump") {
 
   deps = [
     "../..:run_mksnapshot_default",
-    "../../test/mkgrokdump:mkgrokdump($v8_generator_toolchain)",
   ]
 
   script = "../run.py"

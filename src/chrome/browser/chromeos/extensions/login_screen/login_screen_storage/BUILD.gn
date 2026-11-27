@@ -14,14 +14,12 @@ static_library("login_screen_storage") {
   ]
 
   public_deps = [
-    "//chromeos/ash/components/dbus/session_manager:login_manager_proto",
     "//extensions/browser",
   ]
 
   deps = [
     "//base",
     "//chrome/common/extensions/api",
-    "//chromeos/ash/components/dbus/session_manager",
   ]
 }
 
@@ -35,10 +33,8 @@ source_set("browser_tests") {
   deps = [
     "//base",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
     "//components/policy/core/browser",
     "//components/policy/core/common:test_support",
-    "//content/test:test_support",
     "//extensions:test_support",
     "//testing/gmock",
     "//testing/gtest",
@@ -53,8 +49,6 @@ source_set("unit_tests") {
   deps = [
     ":login_screen_storage",
     "//base",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/session_manager",
     "//extensions:test_support",
     "//extensions/common",
     "//testing/gmock",

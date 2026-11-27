@@ -62,8 +62,9 @@ class MODULES_EXPORT GPU final : public ScriptWrappable,
  public:
   static const char kSupplementName[];
 
-  // Getter for navigator.gpu
-  static GPU* gpu(NavigatorBase&);
+  // Getter for navigator.haezanGL. navigator.gpu is the same object.
+  static GPU* haezanGL(NavigatorBase&);
+  static GPU* gpu(NavigatorBase& navigator) { return haezanGL(navigator); }
 
   explicit GPU(NavigatorBase&);
 

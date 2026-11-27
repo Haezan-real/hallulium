@@ -17,7 +17,6 @@ static_library("early_prefs") {
   public_deps = [
     "//base",
     "//chrome/browser:browser_public_dependencies",
-    "//chromeos/ash/components/early_prefs:writer",
     "//components/keyed_service/content",
     "//components/keyed_service/core",
     "//components/prefs",
@@ -28,9 +27,6 @@ static_library("early_prefs") {
     "//chrome/browser/ash/profiles",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/profiles:profile_manager",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/osauth/impl",
-    "//chromeos/ash/components/osauth/public",
     "//components/user_manager",
     "//components/webui/flags",
     "//content/public/browser",

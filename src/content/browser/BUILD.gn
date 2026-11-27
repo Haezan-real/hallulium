@@ -41,7 +41,6 @@ if (is_android) {
     cxx_bindings = [ "font_unique_name_lookup/name_table_ffi.rs" ]
     visibility = [
       ":browser",
-      "//content/test:*",
     ]
     deps = [
       "//third_party/rust/font_types/v0_11:lib",
@@ -76,19 +75,11 @@ source_set("browser") {
     ":for_content_tests",  # See top of //content/BUILD.gn for why.
     "//content/app:*",
     "//content/public/browser:browser_sources",
-    "//content/test/fuzzer:ad_auction_headers_util_fuzzer",
-    "//content/test/fuzzer:ad_auction_service_mojolpm_fuzzer",
-    "//content/test/fuzzer:browser_accessibility_fuzzer",
-    "//content/test/fuzzer:clipboard_host_mojolpm_fuzzer",
-    "//content/test/fuzzer:first_party_set_parser_fuzzer_support",
-    "//content/test/fuzzer:indexed_db_fuzzer_support",
-    "//content/test/fuzzer:media_stream_dispatcher_host_mojolpm_fuzzer",
   ]
 
   if (use_fuzzing_engine && is_android) {
     visibility += [
       ":*",
-      "//content/test/fuzzer:*",
     ]
   }
 
@@ -2729,10 +2720,6 @@ source_set("browser") {
       "smart_card/smart_card_service.h",
     ]
     deps += [
-      "//chromeos/components/firewall_hole",
-      "//chromeos/crosapi/mojom",
-      "//chromeos/services/machine_learning/public/cpp",
-      "//chromeos/services/machine_learning/public/mojom",
       "//components/value_store",
       "//content/browser/smart_card/emulation",
     ]
@@ -2757,18 +2744,10 @@ source_set("browser") {
       "tracing/cros_tracing_agent.h",
     ]
     deps += [
-      "//chromeos/ash/components/assistant:buildflags",
-      "//chromeos/ash/components/audio",
-      "//chromeos/ash/components/dbus",
-      "//chromeos/ash/components/dbus/debug_daemon",
-      "//chromeos/ash/components/network",
-      "//chromeos/ash/components/system",
-      "//chromeos/ash/resources",
       "//components/session_manager/core",
       "//services/data_decoder/public/cpp",
       "//services/data_decoder/public/mojom",
       "//ui/base/ime/ash",
-      "//ui/chromeos/styles:cros_styles_views",
     ]
     public_deps += [ "//ash/webui/common/resources" ]
   }
@@ -2780,8 +2759,6 @@ source_set("browser") {
     ]
 
     deps += [
-      "//chromecast:chromecast_buildflags",
-      "//chromecast/tracing:system_tracer",
     ]
 
     defines += [ "CAST_TRACING_AGENT=1" ]
@@ -3794,7 +3771,6 @@ group("for_content_tests") {
     "//content/browser/btm:unit_tests",
     "//content/browser/indexed_db:unit_tests",
     "//content/public/test/android/*",
-    "//content/test/*",
     "//content/web_test:web_test_browser",
   ]
   if (!is_component_build) {
@@ -3857,6 +3833,4 @@ fuzzer_test("content_sms_parser_fuzzer") {
 
 fuzzer_test("clear_site_data_handler_fuzzer") {
   sources = [ "browsing_data/clear_site_data_handler_fuzzer.cc" ]
-  deps = [ "//content/test:test_support" ]
-  seed_corpus = "//content/test/data/fuzzer_corpus/clear_site_data/"
 }

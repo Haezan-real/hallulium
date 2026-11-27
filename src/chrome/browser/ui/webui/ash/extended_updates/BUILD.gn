@@ -49,7 +49,6 @@ static_library("extended_updates") {
     "//ui/aura",
     "//ui/base",
     "//ui/base:types",
-    "//ui/chromeos",
     "//ui/webui",
     "//url",
   ]

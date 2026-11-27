@@ -38,7 +38,6 @@ source_set("impl") {
       "//chrome/browser/ash/customization",
       "//chrome/browser/ash/login",
       "//chrome/browser/ash/login/demo_mode",
-      "//chromeos/ash/components/system",
       "//components/component_updater/ash",
     ]
   }
@@ -57,11 +56,7 @@ if (is_chromeos) {
       "//chrome/browser/ui/ash/login:test_support",
       "//chrome/browser/ui/webui/ash/login",
       "//chrome/common",
-      "//chrome/test:test_support",
-      "//chromeos/ash/components/dbus",
-      "//chromeos/ash/components/system",
       "//content/public/browser",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
       "//third_party/zlib/google:compression_utils",

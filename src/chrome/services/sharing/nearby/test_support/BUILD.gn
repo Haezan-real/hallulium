@@ -24,7 +24,6 @@ source_set("test_support") {
 
   deps = [
     "//base/test:test_support",
-    "//chromeos/ash/services/nearby/public/mojom",
     "//testing/gmock",
     "//testing/gtest",
   ]

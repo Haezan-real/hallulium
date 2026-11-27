@@ -38,7 +38,6 @@ if (!is_android) {
     deps = [
       "//base/test:test_support",
       "//chrome/browser/ui",
-      "//chrome/test:test_support",
       "//components/wallet/content/browser",
       "//content/public/browser",
       "//testing/gmock",

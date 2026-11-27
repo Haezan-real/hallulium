@@ -21,9 +21,6 @@ source_set("browser_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui",
     "//chrome/common",
-    "//chromeos/constants",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }
@@ -46,7 +43,6 @@ source_set("api") {
 
   deps = [
     "//chrome/common",
-    "//chromeos/constants",
     "//content/public/browser",
     "//content/public/common",
     "//services/network/public/cpp",

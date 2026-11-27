@@ -36,8 +36,6 @@ source_set("impl") {
 
   if (is_chromeos_ash) {
     deps += [
-      "//chromeos/ash/components/channel",
-      "//chromeos/ash/components/demo_mode",
     ]
   }
 }

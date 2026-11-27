@@ -157,12 +157,10 @@ component("evdev") {
     ]
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/feature_usage",
     ]
     visibility += [
       "//chrome/browser/ui",
       "//chrome/browser/ui/ash/main_extra_parts",
-      "//chromeos/ash/components/heatmap/*",
     ]
   }
 
@@ -210,7 +208,6 @@ component("evdev") {
 
   visibility += [
     "//ash/webui/diagnostics_ui/*",
-    "//ui/chromeos/*",
     "//ui/events/*",
     "//ui/ozone/*",
   ]
@@ -233,7 +230,6 @@ source_set("mouse_button_property") {
 
   visibility += [
     "//ash/*",
-    "//components/exo",
   ]
 }
 
@@ -267,8 +263,6 @@ source_set("event_device_info") {
     "//ash/webui/diagnostics_ui/backend:*",
     "//chrome/browser/ash:unit_tests",
     "//chrome/browser/ash/system_logs:unit_tests",
-    "//chromeos/ash/services/cros_healthd/*",
-    "//ui/chromeos/*",
     "//ui/events/ash/*",
   ]
 }
@@ -352,7 +346,6 @@ source_set("unittests") {
     ]
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/feature_usage",
     ]
   }
 

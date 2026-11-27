@@ -21,8 +21,6 @@ static_library("test_support") {
     "//chrome/browser/ash/file_manager:test_support",
     "//chrome/browser/ash/policy/skyvault",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//storage/browser",
     "//testing/gtest",
   ]

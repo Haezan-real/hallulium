@@ -24,7 +24,6 @@ static_library("discovery") {
 
   public_deps = [
     "//base",
-    "//chromeos/ash/components/dbus/smbprovider",
     "//mojo/public/cpp/bindings",
     "//net",
     "//net/traffic_annotation",
@@ -33,7 +32,6 @@ static_library("discovery") {
 
   deps = [
     "//chrome/browser/ash/smb_client:constants",
-    "//chromeos/components/firewall_hole",
     "//content/public/browser",
   ]
 }
@@ -68,7 +66,6 @@ source_set("unit_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/ash/smb_client:constants",
-    "//chromeos/ash/components/dbus/smbprovider",
     "//net",
     "//testing/gtest",
   ]

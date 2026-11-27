@@ -383,8 +383,6 @@ rtc_library("perf_test") {
   if (rtc_enable_protobuf) {
     sources += [ "testsupport/perf_test_histogram_writer.cc" ]
     deps += [
-      "//third_party/catapult/tracing/tracing:histogram",
-      "//third_party/catapult/tracing/tracing:reserved_infos",
     ]
   } else {
     sources += [ "testsupport/perf_test_histogram_writer_no_protobuf.cc" ]

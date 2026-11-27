@@ -33,8 +33,6 @@ source_set("browser_tests") {
     "//chrome/browser/ui:ui_features",
     "//chrome/browser/ui/browser_window",
     "//chrome/browser/ui/tabs:tab_strip",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

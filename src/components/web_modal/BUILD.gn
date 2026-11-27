@@ -70,7 +70,6 @@ source_set("unit_tests") {
     ":test_support",
     ":web_modal",
     "//base",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

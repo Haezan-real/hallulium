@@ -114,8 +114,6 @@ if (!is_android) {
       "//base",
       "//chrome/browser",
       "//chrome/browser/infobars",
-      "//chrome/test:test_support",
-      "//content/test:test_support",
       "//pdf",
       "//testing/gmock",
       "//testing/gtest",

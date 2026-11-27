@@ -33,8 +33,6 @@ source_set("browser_tests") {
     "//base/test:test_support",
     "//content/public/browser",
     "//content/shell:content_shell_lib",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//net",
     "//services/network:test_support",
     "//testing/gtest",

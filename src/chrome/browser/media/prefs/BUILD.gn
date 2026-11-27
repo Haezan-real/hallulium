@@ -10,7 +10,6 @@ source_set("prefs") {
     "//chrome/browser/media/webrtc",
     "//chrome/browser/prefs:impl",
     "//chrome/browser/ui",
-    "//chrome/test/*",
   ]
   sources = [
     "capture_device_ranking.cc",
@@ -33,7 +32,6 @@ source_set("prefs") {
 
 source_set("unit_tests") {
   testonly = true
-  visibility = [ "//chrome/test/*" ]
   deps = [
     ":prefs",
     "//base",

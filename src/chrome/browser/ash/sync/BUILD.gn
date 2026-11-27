@@ -73,7 +73,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/login/users:test_support",
     "//chrome/browser/ui",
     "//chrome/browser/ui/webui/signin:login_ui_service",
-    "//chrome/test:test_support",
     "//components/account_id",
     "//components/signin/public/identity_manager",
     "//components/sync:test_support",

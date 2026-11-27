@@ -44,11 +44,9 @@ source_set("unit_tests") {
     "//chrome/browser/notifications",
     "//chrome/browser/profiles",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
     "//components/account_id",
     "//components/constrained_window",
     "//components/user_manager",
-    "//content/test:test_support",
     "//testing/gtest",
     "//ui/views",
   ]
@@ -64,7 +62,5 @@ source_set("browser_tests") {
   deps = [
     ":device_scheduled_reboot",
     "//base",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
   ]
 }

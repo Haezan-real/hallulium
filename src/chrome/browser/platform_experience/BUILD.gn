@@ -31,7 +31,6 @@ source_set("unit_tests") {
     ":features",
     ":prefs",
     "//base/test:test_support",
-    "//chrome/test:test_support",
     "//components/prefs",
     "//components/prefs:test_support",
     "//testing/gtest",

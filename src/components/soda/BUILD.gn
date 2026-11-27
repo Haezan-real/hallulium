@@ -38,8 +38,6 @@ component("soda") {
 
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/dbus/dlcservice",
-      "//chromeos/ash/components/dbus/dlcservice:dlcservice_proto",
       "//ui/base",
     ]
   }
@@ -93,10 +91,8 @@ source_set("unit_tests") {
       ":constants",
       ":soda",
       "//ash/constants",
-      "//chromeos/ash/components/dbus/dlcservice",
       "//components/live_caption:constants",
       "//components/prefs:test_support",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
     ]

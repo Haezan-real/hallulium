@@ -2,7 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-assert(is_chromeos, "Non-ChromeOS builds cannot depend on //chromeos/ash")
 
 static_library("test_support") {
   testonly = true
@@ -28,12 +27,8 @@ static_library("test_support") {
     "//chrome/browser/ui",
     "//chrome/browser/ui/webui/ash/settings/pages",
     "//chrome/browser/ui/webui/ash/settings/search",
-    "//chrome/test:test_support_ui",
-    "//chrome/test/data/webui/chromeos/settings:test_api_mojom",
-    "//chromeos/ash/components/osauth/public",
     "//components/account_id",
     "//content/public/common",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
   ]
 
@@ -44,7 +39,6 @@ static_library("test_support") {
     "//chrome/app:generated_resources",
     "//chrome/browser/ui/webui/ash/settings",
     "//chrome/browser/ui/webui/ash/settings/constants",
-    "//chromeos/ash/components/osauth/impl",
     "//content/public/browser",
     "//ui/base",
   ]

@@ -9,7 +9,6 @@ import("//tools/grit/grit_rule.gni")
 android_library("java") {
   visibility = [
     ":*",
-    "//chrome/android:chrome_all_java",
     "//chrome/browser/recent_tabs:helper_java",
   ]
 
@@ -80,7 +79,6 @@ android_library("java") {
 android_resources("java_resources") {
   deps = [
     ":java_strings_grd",
-    "//chrome/android:chrome_app_java_resources",
     "//components/browser_ui/widget/android:java_resources",
     "//ui/android:ui_java_resources",
   ]
@@ -180,16 +178,11 @@ android_library("recent_tabs_javatests") {
   deps = [
     ":java",
     "//base:base_java_test_support",
-    "//chrome/android:chrome_java",
-    "//chrome/android/features/tab_ui:test_support_javalib",
-    "//chrome/android/javatests:chrome_test_java_helper",
     "//chrome/browser/feature_engagement:java",
     "//chrome/browser/flags:java",
     "//chrome/browser/profiles/android:java",
     "//chrome/browser/recent_tabs:helper_java",
     "//chrome/browser/recent_tabs:java",
-    "//chrome/test/android:chrome_java_integration_test_support",
-    "//chrome/test/android:chrome_java_transit",
     "//components/browser_ui/bottomsheet/android:java",
     "//components/browser_ui/bottomsheet/android:manager_java",
     "//components/feature_engagement/public:public_java",
@@ -226,7 +219,6 @@ android_library("unit_device_javatests") {
     "//chrome/browser/recent_tabs:java",
     "//chrome/browser/tabmodel:java",
     "//chrome/browser/ui/android/favicon:java",
-    "//chrome/test/android:chrome_java_test_support_common",
     "//components/browser_ui/bottomsheet/android:java",
     "//components/sync_device_info:sync_device_info_java",
     "//content/public/test/android:content_java_test_support",

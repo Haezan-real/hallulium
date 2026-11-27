@@ -38,7 +38,6 @@ source_set("unit_tests") {
   deps = [
     ":print_preview",
     "//chrome/browser/ui/webui/ash/print_preview_cros",
-    "//chrome/test:test_support",
     "//testing/gtest",
     "//ui/views:test_support",
   ]

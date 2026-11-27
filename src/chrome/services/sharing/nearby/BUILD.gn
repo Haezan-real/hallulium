@@ -30,7 +30,6 @@ source_set("nearby") {
     "quick_start_decoder",
     "//base",
     "//chrome/services/sharing/public/cpp",
-    "//chromeos/ash/services/nearby/public/mojom",
     "//components/cross_device/logging",
     "//mojo/public/cpp/bindings",
     "//third_party/nearby:connections",
@@ -41,8 +40,6 @@ source_set("nearby") {
   ]
 
   deps = [
-    "//chromeos/ash/components/nearby/presence/conversions",
-    "//chromeos/services/network_config/public/mojom",
     "//components/cross_device/nearby",
   ]
 }
@@ -61,9 +58,6 @@ source_set("unit_tests") {
     "test_support",
     "//ash/public/cpp",
     "//base/test:test_support",
-    "//chromeos/ash/components/nearby/presence/conversions",
-    "//chromeos/ash/services/nearby/public/cpp:test_support",
-    "//chromeos/ash/services/network_config/public/cpp:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//third_party/nearby:connections_test_util",

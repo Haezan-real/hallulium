@@ -24,9 +24,6 @@ source_set("media_perception_private") {
 
   public_deps = [
     "//base",
-    "//chromeos/ash/components/dbus/media_analytics",
-    "//chromeos/ash/components/dbus/media_analytics:media_perception_proto",
-    "//chromeos/services/media_perception/public/mojom",
     "//extensions/browser:browser_sources",
     "//extensions/browser/api:extensions_api_client",
     "//extensions/common/api",
@@ -35,8 +32,6 @@ source_set("media_perception_private") {
   ]
 
   deps = [
-    "//chromeos/ash/components/dbus",
-    "//chromeos/ash/components/dbus/upstart",
     "//mojo/public/cpp/platform",
     "//mojo/public/cpp/system",
   ]

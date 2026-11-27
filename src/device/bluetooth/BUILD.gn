@@ -217,9 +217,6 @@ component("bluetooth") {
   if (is_chromeos) {
     deps += [
       "//ash/constants",
-      "//chromeos/ash/services/nearby/public/cpp/",
-      "//chromeos/ash/services/secure_channel/public/cpp/shared",
-      "//chromeos/constants",
       "//device/bluetooth/bluez/ble_scan_parser",
     ]
   }
@@ -591,8 +588,6 @@ component("bluetooth") {
         ]
       }
       if (is_chromeos) {
-        import("//chromeos/dbus/config/use_real_dbus_clients.gni")
-        configs += [ "//chromeos/dbus/config:use_real_dbus_clients_config" ]
         sources += [
           "chromeos/bluetooth_connection_logger.cc",
           "chromeos/bluetooth_connection_logger.h",
@@ -635,11 +630,8 @@ component("bluetooth") {
           "cast/bluetooth_utils.h",
         ]
 
-        public_deps += [ "//chromecast/public" ]
 
         deps += [
-          "//chromecast/device/bluetooth:util",
-          "//chromecast/device/bluetooth/le",
         ]
       } else {
         defines += [ "NO_PLATFORM_BLUETOOTH" ]

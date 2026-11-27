@@ -2,7 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//chromeos/dbus/config/use_real_dbus_clients.gni")
 
 assert(is_chromeos)
 assert(!is_official_build)
@@ -20,7 +19,6 @@ static_library("emulator") {
     "//base",
     "//chrome/browser/ash/system",
     "//chrome/common",
-    "//chromeos/dbus/power:power_manager_proto",
     "//content/public/browser",
     "//content/public/common",
     "//device/bluetooth",
@@ -31,8 +29,5 @@ static_library("emulator") {
     "//chrome/browser:resources",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui/webui/ash/bluetooth",
-    "//chromeos/ash/components/dbus",
-    "//chromeos/ash/components/dbus/audio",
-    "//chromeos/dbus/power",
   ]
 }

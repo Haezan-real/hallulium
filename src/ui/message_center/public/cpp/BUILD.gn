@@ -35,7 +35,6 @@ component("cpp") {
   if (is_chromeos) {
     deps += [
       "//ash/constants",
-      "//chromeos/constants",
     ]
   }
 }

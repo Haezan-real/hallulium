@@ -7,7 +7,6 @@
 allowed_visibility = [
   "//chrome/browser/ui/tab_contents/*",
   "//chrome/renderer:*",
-  "//chrome/test:*",
   "//media/gpu/vaapi/*",
   "//skia:*",
   "//third_party/blink/renderer/*",
@@ -20,7 +19,6 @@ allowed_visibility = [
 # linked into the browser binary.
 cwebp_exe_allowed_visibility = [
   "//android_webview/*",
-  "//chrome/android/*",
   "//clank/android_webview/*",
   "//clank/java/*",
 ]

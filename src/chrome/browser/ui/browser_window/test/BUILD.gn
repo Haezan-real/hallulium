@@ -43,7 +43,6 @@ if (is_android) {
     ]
     deps = [
       "//chrome/browser/flags:flags_android",
-      "//chrome/test:test_support_ui_android",
     ]
   }
 

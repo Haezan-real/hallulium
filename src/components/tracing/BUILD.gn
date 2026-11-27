@@ -148,7 +148,6 @@ source_set("unit_tests") {
     "//components/metrics",
     "//components/prefs:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
   ]
 }
 

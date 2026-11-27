@@ -16,7 +16,6 @@ static_library("value_validation") {
   ]
 
   deps = [
-    "//chromeos/components/onc",
     "//components/onc",
     "//components/policy:cloud_policy_proto_generated_compile",
     "//components/policy:generated",

@@ -112,7 +112,6 @@ source_set("unit_tests") {
       "//chrome/browser/ui:ui_features",
       "//chrome/browser/ui/webui/whats_new",
       "//chrome/common:chrome_features",
-      "//chrome/test:test_support",
       "//testing/gtest",
     ]
   }
@@ -142,14 +141,11 @@ if (!is_android) {
       "//chrome/browser/ui/views/frame/",
       "//chrome/browser/ui/views/glic",
       "//chrome/common:chrome_features",
-      "//chrome/test:test_support_ui",
       "//components/keep_alive_registry",
       "//components/prefs",
-      "//content/test:test_support",
       "//testing/gtest",
       "//ui/base/accelerators/global_accelerator_listener",
     ]
-    data_deps = [ "//chrome/test/data/webui/glic:generate_test_files" ]
 
     if (is_chromeos) {
       deps += [ "//ash" ]

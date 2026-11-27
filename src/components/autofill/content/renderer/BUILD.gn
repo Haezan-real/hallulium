@@ -86,7 +86,6 @@ static_library("test_support") {
     ":renderer",
     "//base",
     "//components/autofill/content/common/mojom",
-    "//content/test:test_support",
   ]
   deps = [
     "//components/autofill/content/renderer",

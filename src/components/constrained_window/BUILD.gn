@@ -65,8 +65,6 @@ source_set("browser_tests") {
     ":constrained_window",
     "//components/web_modal:test_support",
     "//content/shell:content_shell_lib",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//ui/views",
     "//ui/views:test_support",
   ]

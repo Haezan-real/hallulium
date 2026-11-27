@@ -34,11 +34,9 @@ static_library("floating_workspace") {
     "//chrome/browser/ui/ash/login",
     "//chrome/browser/ui/webui/ash/internet",
     "//chrome/browser/ui/webui/ash/login",
-    "//chromeos/ash/components/browser_context_helper",
     "//content/public/browser",
     "//ui/aura",
     "//ui/base:types",
-    "//ui/chromeos/strings:strings_provider",
     "//ui/display",
     "//ui/views",
     "//ui/webui",
@@ -63,8 +61,6 @@ source_set("browser_tests") {
     "//chrome/browser:browser_process",
     "//chrome/browser/ash/login/test:test_support",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

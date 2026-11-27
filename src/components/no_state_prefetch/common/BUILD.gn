@@ -49,7 +49,6 @@ source_set("unit_tests") {
     ":mojo_bindings",
     "//base",
     "//components/no_state_prefetch/common",
-    "//content/test:test_support",
     "//testing/gtest",
     "//url",
   ]

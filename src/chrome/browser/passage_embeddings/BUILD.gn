@@ -26,6 +26,5 @@ source_set("passage_embeddings") {
     "//services/passage_embeddings/public/mojom",
   ]
   if (is_chromeos) {
-    deps += [ "//chromeos/constants" ]
   }
 }

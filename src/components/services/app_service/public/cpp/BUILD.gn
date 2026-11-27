@@ -4,7 +4,6 @@
 
 # Component for the core data structures and types used by App Service. Large
 # parts of the codebase are dependent on this target (via
-# //chromeos/crosapi/mojom), so this must have minimal deps to avoid circular
 # chains.
 component("app_types") {
   output_name = "APP_TYPES"
@@ -344,7 +343,6 @@ source_set("unit_tests") {
     ":intents",
     ":preferred_apps",
     ":test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 
@@ -360,7 +358,6 @@ source_set("unit_tests") {
 
     deps += [
       ":instance_update",
-      "//chrome/test:test_support",
       "//components/services/app_service/public/cpp/shortcut:unit_tests",
     ]
   }

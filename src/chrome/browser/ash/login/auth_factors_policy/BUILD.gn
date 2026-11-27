@@ -17,12 +17,9 @@ static_library("auth_factors_policy") {
 
   public_deps = [
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/components/osauth/public",
   ]
   deps = [
     "//chrome/browser/ash/login",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/services/auth_factor_config",
     "//components/session_manager/core",
   ]
 }
@@ -46,12 +43,10 @@ source_set("browser_tests") {
     "//chrome/browser/ash/login/signin",
     "//chrome/browser/ash/login/test:test_support",
     "//chrome/browser/ash/profiles",
-    "//chromeos/ash/components/login/auth/public:authpublic",
     "//components/policy:policy_code_generate",
     "//components/policy/core/common:test_support",
     "//components/prefs",
     "//components/user_manager",
-    "//content/test:test_support",
     "//testing/gmock",
   ]
 }

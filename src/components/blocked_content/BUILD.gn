@@ -94,7 +94,6 @@ source_set("unit_tests") {
     "//components/sync_preferences:test_support",
     "//components/user_prefs",
     "//components/variations:test_support",
-    "//content/test:test_support",
     "//net:test_support",
     "//testing/gtest",
   ]

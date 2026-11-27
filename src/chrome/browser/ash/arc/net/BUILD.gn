@@ -20,7 +20,6 @@ static_library("net") {
     "//ash/public/cpp",
     "//base",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/experiences/arc",
     "//components/device_event_log",
     "//content/public/browser",
     "//crypto",
@@ -36,8 +35,6 @@ source_set("unit_tests") {
   deps = [
     ":net",
     "//base",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//crypto",
     "//crypto:test_support",
     "//net",

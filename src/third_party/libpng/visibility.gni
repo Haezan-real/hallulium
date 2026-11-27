@@ -53,9 +53,6 @@ visibility += [
 
 # Test/tool-only dependencies.
 libpng_testonly_visibility = [
-  "//chrome/test:accessibility_live_site_tests",
-  "//chrome/test:captured_sites_interactive_tests",
-  "//chrome/test:interactive_ui_tests",
   "//tools/imagediff",
 
   # Using a wildcard, to cover template-generated targets (e.g.

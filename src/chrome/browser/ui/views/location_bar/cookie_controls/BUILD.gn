@@ -91,7 +91,6 @@ source_set("browser_tests") {
     "//chrome/browser",  # Needed for browser.h and privacy_sandbox
     "//chrome/browser/ui",
     "//chrome/browser/ui/browser_window",
-    "//chrome/test:test_support_ui",
     "//components/privacy_sandbox:features",
     "//components/strings",
     "//testing/gmock",
@@ -115,8 +114,6 @@ source_set("interactive_ui_tests") {
   deps = [
     ":cookie_controls",
     "//chrome/browser",  # Needed for browser.h and privacy_sandbox
-    "//chrome/test:test_support",
-    "//chrome/test:test_support_ui",
     "//components/content_settings/core/test:test_support",
     "//components/privacy_sandbox:features",
     "//testing/gtest",
@@ -147,7 +144,6 @@ source_set("unit_tests") {
       ":cookie_controls",
       "//chrome/browser/ui:ui_features",
       "//chrome/browser/ui/views/page_action:test_support",
-      "//chrome/test:test_support",
       "//components/privacy_sandbox:features",
       "//components/tabs:test_support",
       "//testing/gmock",

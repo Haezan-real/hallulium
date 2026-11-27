@@ -162,7 +162,6 @@ source_set("unit_tests") {
     deps += [
       "//components/safe_browsing/android:safe_browsing_api_handler",
       "//components/safe_browsing/android:safe_browsing_api_handler_util",
-      "//content/test:test_support",
     ]
   }
 

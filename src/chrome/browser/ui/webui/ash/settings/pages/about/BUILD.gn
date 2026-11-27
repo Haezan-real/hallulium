@@ -35,7 +35,6 @@ static_library("about") {
     "//chrome/browser/ui/webui/ash/settings/search",
     "//chrome/common",
     "//chrome/common:constants",
-    "//chromeos/dbus/constants",
     "//components/policy/core/common",
     "//components/signin/public/identity_manager",
     "//components/strings:components_branded_strings",
@@ -43,7 +42,6 @@ static_library("about") {
     "//components/webui/version",
     "//content/public/browser",
     "//ui/base",
-    "//ui/chromeos",
     "//ui/webui",
   ]
 }

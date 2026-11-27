@@ -35,7 +35,6 @@ source_set("unit_tests") {
     ":startup",
     "//base",
     "//chrome/browser:browser_process",
-    "//chrome/test:test_support",
     "//testing/gmock",
     "//ui/base/unowned_user_data",
   ]

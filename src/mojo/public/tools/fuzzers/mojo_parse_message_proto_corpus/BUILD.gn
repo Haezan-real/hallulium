@@ -1,3 +1,0 @@
-# Hallulium stub
-group("mojo_parse_message_proto_corpus") {}
-group("stub") {}

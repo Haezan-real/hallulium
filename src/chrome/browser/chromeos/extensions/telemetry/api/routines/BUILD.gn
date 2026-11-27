@@ -18,8 +18,6 @@ source_set("routines") {
   deps = [
     "//base",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/ash/components/telemetry_extension/routines",
-    "//chromeos/crosapi/mojom",
     "//content/public/browser",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
@@ -42,11 +40,9 @@ source_set("test_support") {
   deps = [ "//base/test:test_support" ]
 
   public_deps = [
-    "//chromeos/crosapi/mojom",
     "//mojo/public/cpp/bindings",
   ]
 
-  public_deps += [ "//chromeos/ash/components/telemetry_extension/routines" ]
 }
 
 source_set("routine_manager") {
@@ -61,7 +57,6 @@ source_set("routine_manager") {
     "//chrome/browser/chromeos/extensions/telemetry/api/common",
     "//chrome/browser/chromeos/extensions/telemetry/api/common:util",
     "//chrome/common/chromeos/extensions/api",
-    "//chromeos/crosapi/mojom",
     "//content/public/browser",
   ]
 
@@ -86,9 +81,6 @@ source_set("unit_tests") {
     "//chrome/browser/ui/tabs:tab_enums",
     "//chrome/common/chromeos/extensions",
     "//chrome/common/chromeos/extensions/api",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/telemetry_extension/routines",
-    "//chromeos/crosapi/mojom",
     "//extensions:test_support",
     "//extensions/common",
     "//net:test_support",
@@ -108,12 +100,9 @@ source_set("browser_tests") {
     "//chrome/browser/chromeos/extensions/telemetry/api/common:test_support",
     "//chrome/browser/profiles:profile",
     "//chrome/common/chromeos/extensions/api",
-    "//chrome/test:test_support_ui",
-    "//chromeos/crosapi/mojom",
     "//extensions/common",
     "//mojo/public/cpp/bindings",
     "//testing/gtest",
   ]
 
-  data = [ "//chrome/test/data" ]
 }

@@ -39,7 +39,6 @@ source_set("unit_tests") {
       ":files_scan_data",
       "//base/test:test_support",
       "//content/public/browser",
-      "//content/test:test_support",
       "//testing/gtest",
     ]
   }

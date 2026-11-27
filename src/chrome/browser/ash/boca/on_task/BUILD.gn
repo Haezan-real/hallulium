@@ -51,13 +51,6 @@ static_library("on_task") {
     "//chrome/browser/ui/exclusive_access",
     "//chrome/browser/ui/tabs:tab_strip",
     "//chrome/browser/ui/views/frame:immersive_mode_controller",
-    "//chromeos/ash/components/audio",
-    "//chromeos/ash/components/boca",
-    "//chromeos/ash/components/boca/on_task",
-    "//chromeos/ash/components/boca/on_task:activity",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/strings:strings_grit",
-    "//chromeos/ui/frame",
     "//components/keyed_service/content",
     "//components/policy/core/browser",
     "//components/policy/core/common",
@@ -67,7 +60,6 @@ static_library("on_task") {
     "//components/user_prefs",
     "//extensions/browser",
     "//ui/base",
-    "//ui/chromeos",
 
     # Explicitly depend on boca to get around with circular dependency on
     # //chrome/browser/apps/almanac_api_client:almanac_api_client
@@ -94,7 +86,6 @@ source_set("unit_tests") {
     "//chrome/browser/content_settings:content_settings_factory",
     "//chrome/browser/extensions",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
   ]
 }
 
@@ -123,13 +114,6 @@ source_set("browser_tests") {
     "//chrome/browser/ui:browser_navigator_params_headers",
     "//chrome/browser/ui/ash/system_web_apps",
     "//chrome/browser/ui/views/frame:immersive_mode_controller",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/boca",
-    "//chromeos/ash/components/boca/on_task",
-    "//chromeos/ash/components/boca/on_task:util",
-    "//chromeos/ash/components/boca/proto",
-    "//chromeos/strings:strings_grit",
-    "//chromeos/ui/wm",
     "//ui/base",
   ]
 }

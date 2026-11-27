@@ -10,17 +10,11 @@ static_library("connectivity") {
     "//base",
     "//chrome/browser/ash/login/oobe_quick_start:oobe_quick_start_pref_names",
     "//chrome/browser/ash/nearby:quick_start_connectivity_service",
-    "//chromeos/ash/components/nearby/common/connections_manager",
-    "//chromeos/ash/components/quick_start",
-    "//chromeos/ash/services/nearby/public/cpp",
-    "//chromeos/ash/services/nearby/public/mojom",
-    "//chromeos/constants",
     "//components/cbor",
     "//components/prefs",
     "//components/qr_code_generator",
     "//crypto",
     "//device/bluetooth",
-    "//ui/chromeos",
     "//url",
   ]
   sources = [
@@ -55,10 +49,6 @@ static_library("test_support") {
   deps = [
     "//base",
     "//chrome/browser/ash/nearby:quick_start_connectivity_service",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/nearby/common/connections_manager",
-    "//chromeos/ash/components/nearby/common/connections_manager:test_support",
-    "//chromeos/ash/components/quick_start:test_support",
     "//components/cbor",
   ]
   sources = [
@@ -81,12 +71,6 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//chrome/browser/ash/login/oobe_quick_start:oobe_quick_start_pref_names",
     "//chrome/browser/ash/nearby:test_support",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/nearby/common/connections_manager:test_support",
-    "//chromeos/ash/components/quick_start",
-    "//chromeos/ash/components/quick_start:test_support",
-    "//chromeos/ash/services/nearby/public/mojom",
-    "//chromeos/constants",
     "//components/cbor",
     "//device/bluetooth:mocks",
     "//mojo/public/cpp/bindings",

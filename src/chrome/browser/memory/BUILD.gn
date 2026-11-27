@@ -34,7 +34,6 @@ source_set("memory") {
   }
 
   if (is_chromeos_ash) {
-    public_deps += [ "//chromeos/ash/components/login/login_state" ]
   }
 }
 
@@ -71,8 +70,6 @@ source_set("impl") {
   }
   if (is_chromeos_ash) {
     deps += [
-      "//chromeos/ash/components/dbus/resourced",
-      "//chromeos/ash/components/memory",
       "//dbus",
     ]
   }
@@ -96,7 +93,6 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//components/memory_pressure",
     "//components/prefs:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

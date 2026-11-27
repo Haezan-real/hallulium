@@ -51,7 +51,6 @@ source_set("lib") {
       "cros_speech_recognition_recognizer_impl.h",
     ]
     deps += [
-      "//chromeos/services/machine_learning/public/mojom",
       "//components/soda",
     ]
   }
@@ -84,12 +83,8 @@ source_set("unit_tests") {
 
     deps += [
       "//ash/constants",
-      "//chromeos/services/machine_learning/public/cpp",
-      "//chromeos/services/machine_learning/public/cpp:stub",
-      "//chromeos/services/machine_learning/public/mojom",
       "//components/soda",
       "//components/soda:test_support",
-      "//content/test:test_support",
       "//services/audio/public/cpp:test_support",
     ]
   }

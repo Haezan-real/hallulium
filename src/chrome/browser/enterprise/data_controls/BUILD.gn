@@ -117,7 +117,6 @@ source_set("test_support") {
     "//components/enterprise/common/proto:dlp_policy_event_proto",
     "//components/enterprise/data_controls/core/browser:test_support",
     "//components/prefs",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//third_party/abseil-cpp:absl",
@@ -133,7 +132,6 @@ source_set("test_support") {
       "dlp_reporting_manager_test_helper.h",
     ]
     public_deps += [
-      "//chrome/test:test_support",
       "//components/reporting/client:test_support",
       "//components/reporting/util:status",
     ]
@@ -153,7 +151,6 @@ source_set("unit_tests") {
     ":test_support",
     "//chrome/browser/enterprise/connectors/test:test_support",
     "//chrome/browser/profiles:profile",
-    "//chrome/test:test_support",
     "//components/enterprise/data_controls/core/browser:unit_tests",
   ]
 

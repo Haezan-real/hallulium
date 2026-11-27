@@ -31,11 +31,6 @@ static_library("osauth") {
     "//base",
     "//chrome/browser:browser_public_dependencies",
     "//chrome/browser/ash/login/quick_unlock",
-    "//chromeos/ash/components/dbus/userdataauth",
-    "//chromeos/ash/components/login/auth",
-    "//chromeos/ash/components/login/auth/public:authpublic",
-    "//chromeos/ash/components/osauth/impl",
-    "//chromeos/ash/components/osauth/public",
     "//components/keyed_service/content",
     "//components/keyed_service/core",
     "//components/prefs",
@@ -47,9 +42,6 @@ static_library("osauth") {
     "//chrome/browser/ash/profiles",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/profiles:profile_manager",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/cryptohome",
-    "//chromeos/ash/components/login/session",
     "//components/user_manager",
     "//content/public/browser",
   ]
@@ -67,10 +59,6 @@ source_set("browser_tests") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser/ash/login:test_support",
-    "//chrome/test:test_support_ui",
-    "//chromeos/ash/components/osauth/public",
-    "//chromeos/ash/components/osauth/test_support",
-    "//content/test:test_support",
   ]
 }
 
@@ -86,7 +74,6 @@ source_set("unit_tests") {
     ":osauth",
     "//base",
     "//base/test:test_support",
-    "//chromeos/ash/components/login/auth/public:authpublic",
     "//testing/gtest",
   ]
 }

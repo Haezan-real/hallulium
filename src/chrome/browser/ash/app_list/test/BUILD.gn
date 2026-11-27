@@ -34,7 +34,6 @@ static_library("test_support") {
     "//chrome/browser",
     "//chrome/browser/ash/app_list/search",
     "//chrome/browser/extensions",
-    "//chrome/test:test_support",
     "//components/crx_file",
     "//extensions/common",
     "//skia:skia_core_public_headers",

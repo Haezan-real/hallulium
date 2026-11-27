@@ -153,8 +153,6 @@ repack("repack_ui_test_pak_100_percent") {
       "$root_gen_dir/ui/chromeos/strings/ui_chromeos_strings_en-US.pak",
     ]
     deps += [
-      "//ui/chromeos/resources",
-      "//ui/chromeos/strings",
     ]
   }
 

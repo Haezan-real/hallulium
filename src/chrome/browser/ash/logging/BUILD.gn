@@ -37,7 +37,6 @@ source_set("browser_tests") {
     "//components/session_manager/core",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//services/network/public/mojom",
     "//testing/gtest",

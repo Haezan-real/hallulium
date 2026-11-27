@@ -44,7 +44,6 @@ component("global_media_controls") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/constants" ]
     public += [ "public/views/chapter_item_view.h" ]
   }
 
@@ -124,7 +123,6 @@ source_set("unit_tests") {
     "//components/global_media_controls/public/mojom:device_service",
     "//components/media_message_center:test_support",
     "//components/strings:components_strings_grit",
-    "//content/test:test_support",
     "//media",
     "//services/media_session/public/cpp/test:test_support",
     "//skia",

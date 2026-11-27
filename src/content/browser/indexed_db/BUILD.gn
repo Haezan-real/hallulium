@@ -119,7 +119,6 @@ source_set("indexed_db") {
 
   friend = [
     ":unit_tests",
-    "//content/test/*",
   ]
 }
 

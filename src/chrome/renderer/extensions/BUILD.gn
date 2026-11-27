@@ -136,7 +136,6 @@ source_set("unit_tests") {
       "//chrome/common:non_code_constants",
       "//chrome/common/extensions",
       "//chrome/renderer:process_state",
-      "//content/test:test_support",
       "//extensions:test_support",
       "//extensions/renderer:unit_test_support",
       "//testing/gtest",

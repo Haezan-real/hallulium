@@ -74,6 +74,5 @@ source_set("test_support") {
     ":webui",
     "//base",
     "//content/public/browser",
-    "//content/test:test_support",
   ]
 }

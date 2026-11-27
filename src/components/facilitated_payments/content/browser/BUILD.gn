@@ -39,7 +39,6 @@ source_set("unit_tests") {
     ":browser",
     "//components/facilitated_payments/core/browser:test_support",
     "//components/optimization_guide/core:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

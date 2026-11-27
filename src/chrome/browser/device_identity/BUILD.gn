@@ -46,10 +46,8 @@ source_set("device_identity") {
       "chromeos/token_encryptor.cc",
       "chromeos/token_encryptor.h",
     ]
-    public_deps += [ "//chromeos/ash/components/settings" ]
     deps += [
       "//chrome/common:constants",
-      "//chromeos/ash/components/cryptohome",
     ]
   }
 }
@@ -60,10 +58,8 @@ source_set("unit_tests") {
   deps = [
     ":device_identity",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
     "//components/prefs:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//google_apis:test_support",
     "//services/network:test_support",
     "//testing/gmock",
@@ -74,7 +70,6 @@ source_set("unit_tests") {
       "chromeos/device_oauth2_token_store_chromeos_unittest.cc",
       "chromeos/token_encryptor_unittest.cc",
     ]
-    deps += [ "//chromeos/ash/components/policy/device_policy:test_support" ]
   } else {
     sources += [ "device_oauth2_token_store_desktop_unittest.cc" ]
     deps += [

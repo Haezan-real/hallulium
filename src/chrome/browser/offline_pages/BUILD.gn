@@ -113,7 +113,6 @@ source_set("impl") {
     ]
 
     deps += [
-      "//chrome/android:chrome_jni_headers",
       "//chrome/browser:browser_process",
       "//chrome/browser/android:tabs_public",
       "//chrome/browser/android/locale",
@@ -167,7 +166,6 @@ source_set("unit_tests") {
     "//chrome/browser/image_fetcher",
     "//chrome/browser/preloading:prefs",
     "//chrome/browser/renderer_host",
-    "//chrome/test:test_support",
     "//components/back_forward_cache",
     "//components/image_fetcher/core:test_support",
     "//components/offline_pages/content/background_loader:test_support",

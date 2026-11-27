@@ -11,8 +11,6 @@ source_set("perf") {
   sources = [ "profile_provider_chromeos.h" ]
   public_deps = [
     "//base",
-    "//chromeos/ash/components/login/login_state",
-    "//chromeos/dbus/power",
     "//content/public/browser",
   ]
 }
@@ -24,9 +22,6 @@ test("profile_provider_unittest") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus",
-    "//content/test:test_support",
     "//testing/gtest",
     "//ui/aura",
   ]

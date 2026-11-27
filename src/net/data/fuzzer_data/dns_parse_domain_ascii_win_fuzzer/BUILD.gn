@@ -1,3 +1,0 @@
-# Hallulium stub
-group("dns_parse_domain_ascii_win_fuzzer") {}
-group("stub") {}

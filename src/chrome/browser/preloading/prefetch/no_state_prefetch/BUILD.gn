@@ -67,7 +67,6 @@ if (!is_android) {
     public_deps = [
       ":no_state_prefetch",
       "//chrome/browser/safe_browsing:test_support",
-      "//chrome/test:test_support_ui",
       "//components/no_state_prefetch/browser",
       "//components/safe_browsing/core/browser/db:test_database_manager",
     ]
@@ -95,7 +94,6 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//chrome/browser/preloading:prefs",
     "//chrome/common",
-    "//chrome/test:test_support",
     "//components/content_settings/core/browser:cookie_settings",
     "//components/content_settings/core/common",
     "//components/no_state_prefetch/browser",
@@ -127,7 +125,6 @@ if (!is_android) {
       "//chrome/browser/preloading:prefs",
       "//chrome/browser/preloading:test_support",
       "//chrome/browser/preloading/prefetch/no_state_prefetch",
-      "//chrome/test:test_support",
       "//components/embedder_support",
       "//components/no_state_prefetch/browser",
       "//components/privacy_sandbox:features",

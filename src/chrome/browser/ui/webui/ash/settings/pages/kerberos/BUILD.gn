@@ -16,7 +16,6 @@ static_library("kerberos") {
     "//base",
     "//chrome/browser/ash/kerberos",
     "//chrome/browser/ui/webui/settings",
-    "//chromeos/ash/components/dbus/kerberos:kerberos_proto",
     "//components/signin/public/identity_manager",
   ]
 
@@ -33,7 +32,6 @@ static_library("kerberos") {
     "//content/public/browser",
     "//skia:skia_core_public_headers",
     "//ui/base",
-    "//ui/chromeos/resources",
     "//ui/gfx",
     "//ui/webui",
   ]

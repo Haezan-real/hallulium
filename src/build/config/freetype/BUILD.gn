@@ -18,8 +18,6 @@ group("freetype") {
   # Eventually `freetype` should be replaced with Fontations libraries.
   # Therefore no new entries should be added to this list.
   visibility = [
-    "//chrome/test:*",
-    "//content/test:*",
 
     # The path/label of the PDFium target that depends on `freetype` is
     # different when building PDFium during Chromium build and during

@@ -19,7 +19,6 @@ static_library("survey") {
     "//chrome/browser/ash/app_list/arc",
     "//chrome/browser/ash/hats",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/experiences/arc",
     "//components/keyed_service/core",
   ]
 }
@@ -32,9 +31,6 @@ source_set("unit_tests") {
   deps = [
     ":survey",
     "//base",
-    "//chrome/test:test_support",
-    "//chromeos/ash/experiences/arc",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

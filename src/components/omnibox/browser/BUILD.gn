@@ -502,7 +502,6 @@ static_library("location_bar") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/constants" ]
   }
 
   if ((!is_android || enable_vr) && !is_ios) {
@@ -940,7 +939,6 @@ source_set("unit_tests") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/constants" ]
   }
 
   if (enable_extensions) {

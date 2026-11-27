@@ -45,7 +45,6 @@ source_set("unit_tests") {
     "//components/user_prefs",
     "//components/variations",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

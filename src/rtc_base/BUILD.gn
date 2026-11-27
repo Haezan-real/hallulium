@@ -1,3 +1,0 @@
-# Hallulium stub
-group("rtc_base") {}
-group("stub") {}

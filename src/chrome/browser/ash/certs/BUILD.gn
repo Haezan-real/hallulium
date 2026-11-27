@@ -14,10 +14,6 @@ static_library("certs") {
 
   deps = [
     "//chrome/browser/ash/login",
-    "//chromeos/ash/components/dbus/userdataauth",
-    "//chromeos/ash/components/tpm",
-    "//chromeos/ash/components/tpm:buildflags",
-    "//chromeos/dbus/tpm_manager",
   ]
 }
 
@@ -30,13 +26,6 @@ source_set("unit_tests") {
     ":certs",
     "//base",
     "//base/test:test_support",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/userdataauth",
-    "//chromeos/ash/components/network",
-    "//chromeos/ash/components/network:test_support",
-    "//chromeos/ash/components/tpm",
-    "//chromeos/dbus/tpm_manager",
-    "//content/test:test_support",
     "//crypto",
     "//crypto:test_support",
     "//net",

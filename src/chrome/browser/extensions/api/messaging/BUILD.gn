@@ -102,7 +102,6 @@ source_set("messaging") {
       "//chrome/browser/ash/drive",
       "//chrome/browser/ash/guest_os",
       "//chrome/browser/chromeos/drivefs:native_message_host_origins",
-      "//remoting/host/it2me:chrome_os_host",
     ]
   }
 
@@ -157,7 +156,6 @@ source_set("unit_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/common:chrome_features",
     "//chrome/common:non_code_constants",
-    "//chrome/test:test_support",
     "//components/version_info",
     "//extensions/browser",
     "//extensions/common",
@@ -182,7 +180,6 @@ source_set("platform_browser_tests") {
     "//base/test:test_support",
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
     "//components/embedder_support",
     "//components/infobars/content",
     "//extensions:test_support",
@@ -211,7 +208,6 @@ if (!is_android) {
       "//chrome/browser/profiles:profile",
       "//chrome/browser/ui",
       "//chrome/browser/ui/startup",
-      "//chrome/test:test_support",
       "//extensions:test_support",
       "//extensions/browser",
       "//extensions/common",

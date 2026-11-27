@@ -44,8 +44,6 @@ source_set("browser_tests") {
     ":input_device_settings",
     "//base",
     "//chrome/browser/apps/almanac_api_client",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 

@@ -166,7 +166,6 @@ source_set("unit_tests") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/ash/components/account_manager",
       "//components/account_manager_core",
       "//components/account_manager_core:test_support",
     ]
@@ -219,7 +218,6 @@ source_set("test_support") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/account_manager" ]
   }
 
   if (is_android) {

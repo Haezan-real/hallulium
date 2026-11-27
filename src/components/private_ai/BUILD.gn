@@ -153,7 +153,6 @@ source_set("unit_tests") {
     "//components/private_ai/phosphor",
     "//components/private_ai/phosphor:unit_tests",
     "//components/private_ai/proto_utils:unit_tests",
-    "//content/test:test_support",
     "//mojo/public/cpp/system",
     "//services/network:test_support",
     "//services/network/public/mojom",

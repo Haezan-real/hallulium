@@ -15,9 +15,7 @@ static_library("security_token_restriction") {
   deps = [
     "//base",
     "//chrome/browser/ash/login",
-    "//chromeos/ui/vector_icons",
     "//ui/base",
-    "//ui/chromeos",
     "//ui/gfx",
     "//ui/views",
   ]

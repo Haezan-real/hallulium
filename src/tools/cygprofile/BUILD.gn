@@ -38,7 +38,6 @@ template("generate_orderfile_test") {
 
     data_deps = [
       # From performance_test_suite_template_base:
-      "//chrome/test:telemetry_perf_tests${invoker.suffix}",
 
       # From performance_test_suite_template_android:
       "//components:components_perftests",

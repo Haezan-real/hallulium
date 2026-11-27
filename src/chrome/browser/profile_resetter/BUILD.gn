@@ -107,7 +107,6 @@ if (!is_android) {
     if (is_chromeos) {
       deps += [
         "//chrome/browser/ash/input_method",
-        "//chromeos/ash/components/network",
       ]
     }
   }
@@ -125,14 +124,11 @@ if (!is_android) {
       "//chrome/browser/google",
       "//chrome/browser/search/background",
       "//chrome/browser/search_engines",
-      "//chrome/test:test_support",
       "//components/browsing_data/content",
       "//components/language/core/browser",
     ]
     if (is_chromeos) {
       deps += [
-        "//chromeos/ash/components/dbus/shill:test_support",
-        "//chromeos/ash/components/network",
       ]
     }
   }
@@ -145,7 +141,6 @@ if (!is_android) {
     ]
     public_deps = [
       ":profile_resetter",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
     ]
@@ -167,17 +162,12 @@ if (!is_android) {
       "//base",
       "//chrome/browser/ui",
       "//chrome/browser/ui/tabs:tab_strip",
-      "//chrome/test:test_support_ui",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
     ]
 
     if (is_chromeos) {
       deps += [
-        "//chromeos/ash/components/dbus/hermes",
-        "//chromeos/ash/components/dbus/shill",
-        "//chromeos/ash/components/network",
       ]
     }
   }
@@ -210,11 +200,9 @@ if (!is_android) {
       "//chrome/browser/ui/tabs:tab_strip",
       "//chrome/browser/webdata_services",
       "//chrome/common",
-      "//chrome/test:test_support",
       "//components/content_settings/core/browser",
       "//components/prefs",
       "//components/search_engines",
-      "//content/test:test_support",
       "//extensions/browser",
       "//extensions/common",
       "//net",

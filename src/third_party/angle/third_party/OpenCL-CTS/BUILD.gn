@@ -1,3 +1,0 @@
-# Hallulium stub
-group("OpenCL-CTS") {}
-group("stub") {}

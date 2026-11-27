@@ -36,7 +36,6 @@ source_set("runtime") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/components/kiosk" ]
   }
 
   if (is_android) {

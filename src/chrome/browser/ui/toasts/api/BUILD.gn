@@ -28,7 +28,6 @@ source_set("unit_tests") {
     ":toasts",
     "//base",
     "//base/test:test_support",
-    "//chrome/test:test_support",
     "//testing/gtest",
     "//ui/gfx",
     "//ui/menus",

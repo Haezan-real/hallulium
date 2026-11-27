@@ -1,3 +1,0 @@
-# Hallulium stub
-group("linux-amd64") {}
-group("stub") {}

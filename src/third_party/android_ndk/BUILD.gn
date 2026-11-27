@@ -1,3 +1,0 @@
-# Hallulium stub
-group("android_ndk") {}
-group("stub") {}

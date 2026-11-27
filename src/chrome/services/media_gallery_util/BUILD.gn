@@ -73,7 +73,6 @@ fuzzer_test("media_metadata_parser_fuzzer") {
   deps = [
     ":lib",
     "//base",
-    "//content/test:test_support",
     "//testing/libfuzzer:libfuzzer_base_wrappers",
   ]
 }

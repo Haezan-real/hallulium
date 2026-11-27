@@ -24,7 +24,6 @@ static_library("cloud_storage") {
     "//chrome/browser/extensions",
     "//chrome/common",
     "//chrome/common:constants",
-    "//chromeos/constants",
     "//components/keyed_service/core",
     "//components/prefs",
     "//content/public/browser",

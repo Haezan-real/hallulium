@@ -42,7 +42,6 @@ source_set("traits") {
 
   visibility = [
     ":*",
-    "//fuchsia_web/webengine/mojom:*",
     "//media/mojo/mojom:*",
   ]
 }

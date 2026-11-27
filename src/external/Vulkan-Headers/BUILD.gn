@@ -1,3 +1,0 @@
-# Hallulium stub
-group("Vulkan-Headers") {}
-group("stub") {}

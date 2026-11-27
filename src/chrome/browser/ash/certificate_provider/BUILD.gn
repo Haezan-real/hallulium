@@ -15,8 +15,6 @@ source_set("certificate_provider") {
   public_deps = [
     "//base",
     "//chrome/browser/profiles:profile",
-    "//chromeos/components/certificate_provider",
-    "//chromeos/components/security_token_pin",
     "//components/account_id",
     "//components/keyed_service/core",
     "//net",
@@ -35,8 +33,6 @@ source_set("impl") {
     "//chrome/browser/ui/ash/login",
     "//chrome/common/extensions",
     "//chrome/common/extensions/api",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ui/wm",
     "//extensions/browser",
     "//extensions/common",
     "//third_party/boringssl",
@@ -61,7 +57,6 @@ source_set("test_support") {
   ]
   public_deps = [
     "//base",
-    "//chrome/test:test_support_ui",
     "//crypto",
     "//extensions:test_support",
     "//extensions/common",
@@ -72,7 +67,6 @@ source_set("test_support") {
     "//chrome/common:constants",
     "//chrome/common/extensions",
     "//chrome/common/extensions/api",
-    "//chrome/test:test_support",
     "//content/public/browser",
     "//extensions/browser",
     "//extensions/browser/api/test",

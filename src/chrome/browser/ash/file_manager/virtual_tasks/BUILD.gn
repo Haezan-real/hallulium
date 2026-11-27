@@ -29,7 +29,6 @@ static_library("virtual_tasks") {
     "//content/public/browser",
     "//storage/browser",
     "//ui/base",
-    "//ui/chromeos/strings",
     "//url",
   ]
 }
@@ -60,9 +59,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/file_manager",
     "//chrome/browser/web_applications:web_applications_test_support",
     "//chrome/common:chrome_features",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/file_manager:constants",
-    "//content/test:test_support",
     "//storage/browser",
     "//testing/gmock",
     "//testing/gtest",

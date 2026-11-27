@@ -15,7 +15,6 @@ static_library("schedqos") {
   deps = [
     "//base",
     "//chrome/browser/ash/system",
-    "//chromeos/ash/components/dbus/resourced",
     "//dbus",
   ]
 }
@@ -28,7 +27,6 @@ source_set("unit_tests") {
   deps = [
     ":schedqos",
     "//base/test:test_support",
-    "//chromeos/ash/components/dbus/resourced",
     "//dbus",
     "//testing/gmock",
     "//testing/gtest",

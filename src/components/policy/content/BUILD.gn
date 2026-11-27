@@ -77,7 +77,6 @@ source_set("unit_tests") {
     "//components/sync_preferences:test_support",
     "//components/user_prefs",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
     "//url",
   ]

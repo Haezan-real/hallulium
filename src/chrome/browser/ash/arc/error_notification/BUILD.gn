@@ -22,8 +22,6 @@ static_library("error_notification") {
     "//base",
     "//chrome/browser/notifications",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc/vector_icons",
     "//ui/message_center",
   ]
 }

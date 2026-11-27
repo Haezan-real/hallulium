@@ -57,9 +57,7 @@ if (!is_android) {
       "//chrome/browser/background/glic",
       "//chrome/browser/glic",
       "//chrome/browser/ui:ui_features",
-      "//chrome/test:test_support",
       "//components/signin/public/identity_manager:test_support",
-      "//content/test:test_support",
       "//testing/gtest",
     ]
   }

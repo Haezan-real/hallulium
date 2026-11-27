@@ -30,7 +30,6 @@ static_library("camera_app") {
     "//chrome/browser/ash/hats",
     "//chrome/browser/screen_ai/public:optical_character_recognizer",
     "//chrome/services/pdf/public/mojom",
-    "//chromeos/ash/experiences/system_web_apps/types",
     "//content/public/browser",
     "//mojo/public/cpp/base",
     "//mojo/public/cpp/bindings",
@@ -58,11 +57,6 @@ static_library("camera_app") {
     "//chrome/browser/web_applications",
     "//chrome/browser/web_applications/mojom:mojom_web_apps_enum",
     "//chrome/common:constants",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/experiences/camera:camera_save_handler",
-    "//chromeos/ash/experiences/settings_ui",
-    "//chromeos/constants",
-    "//chromeos/ui/base",
     "//components/language/core/browser",
     "//components/prefs",
     "//components/services/app_service",
@@ -72,8 +66,6 @@ static_library("camera_app") {
     "//services/screen_ai/public/mojom",
     "//third_party/blink/public/mojom:mojom_platform",
     "//ui/base",
-    "//ui/chromeos/styles:cros_styles_views",
-    "//ui/chromeos/styles:cros_styles_views_generator",
     "//ui/display",
     "//ui/gfx",
     "//ui/gfx/codec",
@@ -91,8 +83,6 @@ source_set("browser_tests") {
   deps = [
     "//chrome/browser/ash/system_web_apps/test_support:test_support_ui",
     "//chrome/browser/ui",
-    "//chrome/test:test_support_ui",
     "//content/public/browser",
-    "//content/test:test_support",
   ]
 }

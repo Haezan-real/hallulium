@@ -48,7 +48,6 @@ source_set("time_zone_monitor") {
 
   if (is_chromeos) {
     sources += [ "time_zone_monitor_ash.cc" ]
-    deps += [ "//chromeos/ash/components/settings" ]
   }
 
   if (is_apple) {

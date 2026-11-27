@@ -212,7 +212,6 @@ source_set("unit_tests") {
       "//components/password_manager/services/csv_password:fake_password_parser_service",
       "//components/user_data_importer/content",
       "//components/user_data_importer/content:test_support",
-      "//content/test:test_support",
     ]
   }
 

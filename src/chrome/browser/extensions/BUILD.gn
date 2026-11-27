@@ -647,7 +647,6 @@ source_set("extensions") {
       "system_display/display_info_provider_android.h",
     ]
     deps += [
-      "//chrome/android:chrome_jni_headers",
       "//chrome/browser/ui/android/tab_model",
     ]
   } else {
@@ -1113,19 +1112,7 @@ source_set("extensions") {
         "//chrome/browser/chromeos/policy/dlp",
         "//chrome/browser/chromeos/upload_office_to_cloud",
         "//chrome/browser/speech",
-        "//chromeos/ash/components/browser_context_helper",
-        "//chromeos/ash/components/platform_keys",
-        "//chromeos/components/kiosk",
-        "//chromeos/components/mgs",
-        "//chromeos/components/quick_answers/public/cpp:prefs",
-        "//chromeos/components/security_token_pin",
-        "//chromeos/constants",
-        "//chromeos/dbus/missive",
-        "//chromeos/dbus/power",
-        "//chromeos/services/chromebox_for_meetings/public/cpp",
-        "//chromeos/services/chromebox_for_meetings/public/mojom",
         "//components/user_manager",
-        "//remoting/host/it2me:chrome_os_host",
       ]
 
       if (use_cups) {
@@ -1145,7 +1132,6 @@ source_set("extensions") {
           "//chrome/browser/chromeos/extensions/printing_metrics",
           "//chrome/browser/chromeos/printing",
           "//chrome/browser/pdf:pdf_pref_names",
-          "//chromeos/printing",
           "//printing/backend",
         ]
 
@@ -1167,15 +1153,6 @@ source_set("extensions") {
         "//chrome/browser/chromeos/extensions/contact_center_insights",
         "//chrome/browser/chromeos/extensions/vpn_provider",
         "//chrome/browser/chromeos/extensions/wm",
-        "//chromeos/components/disks:prefs",
-        "//chromeos/components/quick_answers/public/cpp:prefs",
-        "//chromeos/components/security_token_pin",
-        "//chromeos/constants",
-        "//chromeos/dbus/missive",
-        "//chromeos/dbus/power",
-        "//chromeos/services/chromebox_for_meetings/public/cpp",
-        "//chromeos/services/chromebox_for_meetings/public/mojom",
-        "//remoting/host/it2me:chrome_os_host",
       ]
 
       allow_circular_includes_from += [
@@ -1313,63 +1290,17 @@ source_set("extensions") {
         "//chrome/browser/ui/ash/shelf/app_service",
         "//chrome/browser/ui/ash/thumbnail_loader",
         "//chrome/browser/ui/webui/ash/settings/pages/a11y",
-        "//chromeos/ash/components/attestation",
-        "//chromeos/ash/components/browser_context_helper",
-        "//chromeos/ash/components/cryptohome",
-        "//chromeos/ash/components/dbus",
-        "//chromeos/ash/components/dbus/attestation:attestation_proto",
-        "//chromeos/ash/components/dbus/cicerone",
-        "//chromeos/ash/components/dbus/cicerone:cicerone_proto",
-        "//chromeos/ash/components/dbus/constants",
-        "//chromeos/ash/components/dbus/cros_disks",
-        "//chromeos/ash/components/dbus/cryptohome",
-        "//chromeos/ash/components/dbus/image_burner",
-        "//chromeos/ash/components/dbus/update_engine",
-        "//chromeos/ash/components/disks",
-        "//chromeos/ash/components/enhanced_network_tts",
-        "//chromeos/ash/components/enhanced_network_tts/mojom",
-        "//chromeos/ash/components/file_manager:constants",
-        "//chromeos/ash/components/language_packs",
-        "//chromeos/ash/components/language_packs/public/mojom",
-        "//chromeos/ash/components/login/auth",
-        "//chromeos/ash/components/login/login_state",
-        "//chromeos/ash/components/network",
-        "//chromeos/ash/components/osauth/public",
-        "//chromeos/ash/components/policy/external_storage",
-        "//chromeos/ash/components/proximity_auth",
-        "//chromeos/ash/components/settings",
-        "//chromeos/ash/components/system",
-        "//chromeos/ash/components/tether",
-        "//chromeos/ash/components/tpm",
-        "//chromeos/ash/experiences/arc",
-        "//chromeos/ash/experiences/arc:arc_app_constants",
-        "//chromeos/ash/experiences/guest_os/virtual_machines",
-        "//chromeos/ash/services/assistant/public/cpp",
-        "//chromeos/ash/services/ime/public/mojom",
-        "//chromeos/components/remote_apps/mojom",
-        "//chromeos/process_proxy",
-        "//chromeos/services/machine_learning/public/cpp",
-        "//chromeos/services/machine_learning/public/mojom",
-        "//chromeos/services/media_perception/public/mojom",
-        "//chromeos/services/tts/public/mojom",
-        "//chromeos/ui/base",
-        "//chromeos/ui/clipboard_history",
-        "//chromeos/version",
         "//components/constrained_window",
         "//components/crash/content/browser/error_reporting",
         "//components/drive",
         "//components/user_manager",
         "//media/capture:capture_lib",
         "//media/capture/video/chromeos/mojom:cros_camera",
-        "//remoting/host",
         "//third_party/protobuf:protobuf_lite",
         "//ui/accessibility",
         "//ui/base/ime/ash",
-        "//ui/chromeos",
         "//ui/display/manager",
         "//ui/events/ash",
-        "//ui/file_manager:file_manager_gen_resources",
-        "//ui/file_manager:resources",
         "//ui/ozone",
         "//ui/views",
       ]
@@ -1423,7 +1354,6 @@ source_set("extensions") {
         deps += [
           "//chrome/browser/ash/chromebox_for_meetings/meet_browser",
           "//chrome/browser/ash/chromebox_for_meetings/xu_camera",
-          "//chromeos/ash/components/chromebox_for_meetings",
         ]
       }
     }
@@ -1588,7 +1518,6 @@ static_library("test_support") {
     "//components/signin/public/identity_manager:test_support",
     "//components/sync:test_support",
     "//components/value_store:test_support",
-    "//content/test:test_support",
     "//extensions:test_support",
     "//extensions/browser:crx_installer",
     "//services/data_decoder/public/cpp:test_support",
@@ -1628,7 +1557,6 @@ static_library("test_support") {
       ]
 
       deps += [
-        "//chromeos/ash/components/dbus/lorgnette_manager:lorgnette_proto",
         "//components/user_manager:test_support",
       ]
     }
@@ -1648,7 +1576,6 @@ if (enable_extensions) {
       "//chrome/browser",
 
       # Pull test-specific stubs for symbols needed by //c/b.
-      "//chrome/test:test_support",
     ]
   }
 }  # if (enable_extensions)
@@ -1719,8 +1646,6 @@ source_set("chrome_extensions_browser_client") {
       deps += [
         "//chrome/browser/ash/profiles",
         "//chrome/browser/chromeos/policy/dlp",
-        "//chromeos/ash/components/demo_mode",
-        "//chromeos/components/mgs",
       ]
     }
   }

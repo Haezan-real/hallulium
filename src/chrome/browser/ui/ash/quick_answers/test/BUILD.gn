@@ -13,7 +13,6 @@ source_set("mock_quick_answers_client") {
   ]
 
   deps = [
-    "//chromeos/components/quick_answers",
     "//services/network/public/cpp",
     "//testing/gmock",
   ]

@@ -41,9 +41,6 @@ static_library("settings_manager") {
     "//chrome/browser/ui/webui/ash/settings/pages/privacy",
     "//chrome/browser/ui/webui/ash/settings/search",
     "//chrome/browser/ui/webui/ash/settings/services/metrics",
-    "//chromeos/ash/components/local_search_service/public/cpp",
-    "//chromeos/ash/components/phonehub",
-    "//chromeos/constants",
     "//content/public/browser",
   ]
 
@@ -80,16 +77,8 @@ source_set("unit_tests") {
     "//chrome/browser/ui/webui/ash/settings/constants",
     "//chrome/browser/ui/webui/ash/settings/pages",
     "//chrome/browser/ui/webui/ash/settings/search",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/userdataauth",
-    "//chromeos/ash/components/local_search_service",
-    "//chromeos/ash/components/local_search_service/public/cpp",
-    "//chromeos/ash/components/system",
-    "//chromeos/ash/experiences/arc",
-    "//chromeos/ash/experiences/arc:arc_test_support",
     "//components/account_id",
     "//components/user_manager",
-    "//content/test:test_support",
     "//testing/gtest",
     "//ui/base:test_support",
   ]

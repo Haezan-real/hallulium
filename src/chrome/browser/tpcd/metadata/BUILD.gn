@@ -30,10 +30,8 @@ if (!is_android) {
       ":metadata",
       "//chrome/browser",
       "//chrome/browser/net:storage_test_utils",
-      "//chrome/test:test_support",
       "//components/privacy_sandbox:features",
       "//components/tpcd/metadata/browser",
-      "//content/test:test_support",
       "//net:test_support",
       "//testing/gmock",
     ]

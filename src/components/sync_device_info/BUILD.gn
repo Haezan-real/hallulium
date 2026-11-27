@@ -64,8 +64,6 @@ static_library("sync_device_info") {
   if (is_chromeos) {
     sources += [ "local_device_info_util_chromeos.cc" ]
     deps += [
-      "//chromeos/ash/components/system",
-      "//chromeos/constants",
     ]
   }
 
@@ -137,7 +135,6 @@ source_set("unit_tests") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/system" ]
   }
 }
 

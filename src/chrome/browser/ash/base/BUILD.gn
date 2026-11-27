@@ -45,8 +45,6 @@ source_set("browser_tests") {
     "//base",
     "//chrome/browser",
     "//chrome/browser:browser_process",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//extensions/common",
   ]
 }

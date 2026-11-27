@@ -51,7 +51,6 @@ static_library("test_support") {
 
   public_deps = [
     ":browser",
-    "//content/test:test_support",
   ]
 }
 

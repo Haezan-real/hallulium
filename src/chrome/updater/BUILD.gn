@@ -561,8 +561,6 @@ if (is_win || is_mac || is_linux) {
       "//chrome/browser/updater:*",
       "//chrome/enterprise_companion:*",
       "//chrome/enterprise_companion/device_management_storage:*",
-      "//chrome/test:*",
-      "//chrome/test:unit_tests",
     ]
   }
 
@@ -875,8 +873,6 @@ if (is_win || is_mac || is_linux) {
     ]
     if (is_win) {
       sources += [
-        "//chrome/test/base/process_inspector_win.cc",
-        "//chrome/test/base/process_inspector_win.h",
       ]
     }
     deps = [
@@ -1073,9 +1069,6 @@ if (is_win || is_mac || is_linux) {
 
       data += [
         "test/data/ProcmonConfiguration.pmc",
-        "//chrome/test/data/updater/OfflineManifest.gup",
-        "//chrome/test/data/updater/updater_qualification_app_exe.crx",
-        "//chrome/test/data/updater/updater_qualification_app_exe.crx.xz",
       ]
 
       if (target_cpu == "arm64") {
@@ -1153,27 +1146,6 @@ if (is_win || is_mac || is_linux) {
       ]
 
       data += [
-        "//chrome/test/data/updater/CountingMetrics.plist",
-        "//chrome/test/data/updater/Keystone.ticketstore",
-        "//chrome/test/data/updater/Keystone.withlaunchservicechecker.ticketstore",
-        "//chrome/test/data/updater/Keystone.legacy.ticketstore",
-        "//chrome/test/data/updater/updater_setup_test_dmg.dmg",
-        "//chrome/test/data/updater/setup_test_preinstallfailure/.preinstall",
-        "//chrome/test/data/updater/setup_test_preinstallfailure/.install",
-        "//chrome/test/data/updater/setup_test_preinstallfailure/.postinstall",
-        "//chrome/test/data/updater/setup_test_preinstallfailure/marker.app",
-        "//chrome/test/data/updater/setup_test_postinstallfailure/.preinstall",
-        "//chrome/test/data/updater/setup_test_postinstallfailure/.install",
-        "//chrome/test/data/updater/setup_test_postinstallfailure/.postinstall",
-        "//chrome/test/data/updater/setup_test_postinstallfailure/marker.app",
-        "//chrome/test/data/updater/setup_test_installfailure/.preinstall",
-        "//chrome/test/data/updater/setup_test_installfailure/.install",
-        "//chrome/test/data/updater/setup_test_installfailure/.postinstall",
-        "//chrome/test/data/updater/setup_test_installfailure/marker.app",
-        "//chrome/test/data/updater/setup_test_envcheck/.install",
-        "//chrome/test/data/updater/setup_test_envcheck/marker.app",
-        "//chrome/test/data/updater/updater_qualification_app_dmg.crx",
-        "//chrome/test/data/updater/updater_qualification_app_dmg.crx.xz",
         "//third_party/updater/chrome_mac_universal/cipd/GoogleUpdater_test.app/Contents/MacOS/GoogleUpdater_test",
         "//third_party/updater/chrome_mac_universal/cipd/GoogleUpdater_test.app/Contents/Info.plist",
         "//third_party/updater/chrome_mac_universal/cipd/GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/MacOS/GoogleSoftwareUpdate",
@@ -1236,8 +1208,6 @@ if (is_win || is_mac || is_linux) {
       sources += [ "test/integration_tests_linux.cc" ]
 
       data += [
-        "//chrome/test/data/updater/updater_qualification_app.crx",
-        "//chrome/test/data/updater/updater_qualification_app.crx.xz",
       ]
       data_deps += [
         "//chrome/enterprise_companion:enterprise_companion_test",

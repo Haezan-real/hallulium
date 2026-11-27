@@ -54,7 +54,6 @@ source_set("speech") {
 
     public_deps += [
       "//chrome/browser/ash/accessibility",
-      "//chromeos/services/tts/public/mojom",
     ]
   }
 
@@ -140,7 +139,6 @@ source_set("impl") {
 
     deps += [
       "//chrome/services/speech:lib",
-      "//chromeos/ash/experiences/arc/session",
       "//components/keyed_service/content",
       "//components/keyed_service/core",
       "//components/language/core/common",
@@ -168,7 +166,6 @@ source_set("impl") {
     ]
 
     deps += [
-      "//chromeos/services/tts/public/mojom",
       "//components/keyed_service/content",
     ]
   }

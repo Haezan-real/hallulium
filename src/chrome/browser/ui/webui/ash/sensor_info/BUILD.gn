@@ -53,8 +53,6 @@ source_set("unit_tests") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/search/background",
     "//chrome/browser/search_engines",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//services/network:test_support",
     "//services/network/public/cpp",

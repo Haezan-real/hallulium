@@ -58,7 +58,6 @@ source_set("browser_tests") {
       "//components/sync/base",
       "//components/sync/service",
       "//components/unified_consent",
-      "//content/test:test_support",
     ]
   }
 }

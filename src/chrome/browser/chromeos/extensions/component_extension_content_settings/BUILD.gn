@@ -40,7 +40,6 @@ source_set("unit_tests") {
     ":component_extension_content_settings",
     "//base",
     "//chrome/browser/content_settings:content_settings_factory",
-    "//chrome/test:test_support",
     "//testing/gmock",
   ]
 

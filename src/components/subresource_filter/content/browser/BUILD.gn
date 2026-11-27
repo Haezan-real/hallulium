@@ -146,7 +146,6 @@ static_library("test_support") {
     "//components/subresource_filter/core/common:test_support",
     "//components/subresource_filter/core/mojom",
     "//content/public/browser",
-    "//content/test:test_support",
     "//net",
     "//url",
   ]
@@ -195,7 +194,6 @@ source_set("unit_tests") {
     "//components/ukm/content",
     "//components/url_pattern_index/proto:url_pattern_index",
     "//content/public/browser",
-    "//content/test:test_support",
     "//ipc",
     "//testing/gtest",
     "//ui/base:test_support",

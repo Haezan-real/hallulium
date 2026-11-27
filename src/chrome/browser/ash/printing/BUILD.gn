@@ -127,21 +127,10 @@ static_library("printing") {
     "//chrome/browser/printing",
     "//chrome/browser/sync:factories",
     "//chrome/common",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/channel",
-    "//chromeos/ash/components/dbus",
-    "//chromeos/ash/components/dbus/debug_daemon",
-    "//chromeos/ash/components/dbus/dlcservice",
-    "//chromeos/ash/components/dbus/printscanmgr",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/experiences/settings_ui",
-    "//chromeos/printing",
-    "//chromeos/services/network_config/public/cpp",
     "//components/device_event_log",
     "//components/pref_registry",
     "//printing/backend",
     "//third_party/libipp",
-    "//ui/chromeos/styles:cros_tokens_color_mappings",
   ]
 
   if (use_cups) {
@@ -157,7 +146,6 @@ static_library("printing") {
 
   public_deps = [
     "//chrome/browser:browser_public_dependencies",
-    "//chromeos:chromeos_export",
   ]
 
   allow_circular_includes_from = [
@@ -187,7 +175,6 @@ static_library("test_support") {
   public_deps = [
     "//base",
     "//chrome/browser/ash/printing",
-    "//chromeos/printing",
   ]
 }
 
@@ -235,17 +222,9 @@ source_set("unit_tests") {
     "//chrome/browser/ash/settings",
     "//chrome/browser/ash/settings:test_support",
     "//chrome/browser/printing",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/debug_daemon",
-    "//chromeos/ash/components/dbus/dlcservice",
-    "//chromeos/ash/components/dbus/printscanmgr",
-    "//chromeos/ash/components/network",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/services/network_config/public/cpp:test_support",
     "//components/sync:test_support",
     "//components/sync_preferences:test_support",
     "//components/user_manager",
-    "//content/test:test_support",
     "//net:test_support",
     "//services/device/public/cpp:test_support",
     "//services/network:test_support",
@@ -275,6 +254,5 @@ fuzzer_test("zeroconf_printer_detector_fuzzer") {
     "//base",
     "//base/test:test_support",
     "//chrome/browser",
-    "//components/exo/wayland:ui_controls_protocol_stub",
   ]
 }

@@ -43,7 +43,6 @@ source_set("unit_tests") {
     "//components/commerce/core/mojom:mojo_bindings",
     "//components/history/core/browser:features",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

@@ -14,9 +14,6 @@ static_library("network_change_manager") {
 
   deps = [
     "//base",
-    "//chromeos/ash/components/dbus",
-    "//chromeos/ash/components/network",
-    "//chromeos/dbus/power",
     "//content/public/browser",
     "//mojo/public/cpp/bindings",
     "//net",
@@ -32,10 +29,6 @@ source_set("unit_tests") {
   deps = [
     ":network_change_manager",
     "//base",
-    "//chromeos/ash/components/network",
-    "//chromeos/ash/components/network:test_support",
-    "//chromeos/dbus/power",
-    "//content/test:test_support",
     "//net",
     "//testing/gtest",
   ]
@@ -49,10 +42,7 @@ source_set("browser_tests") {
   sources = [ "network_change_manager_client_browsertest.cc" ]
 
   deps = [
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/shill",
     "//content/public/browser",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//net",
   ]

@@ -34,7 +34,6 @@ source_set("unit_tests") {
   deps = [
     ":search_integrity",
     "//base",
-    "//chrome/test:test_support",
     "//components/search_engines",
     "//components/search_engines:test_support",
   ]

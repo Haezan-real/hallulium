@@ -17,14 +17,12 @@ static_library("audio") {
   public_deps = [
     "//base",
     "//chrome/browser:browser_public_dependencies",
-    "//chromeos/ash/components/audio",
   ]
 
   deps = [
     "//ash/webui/settings/public/constants:mojom",
     "//chrome/browser/ash/hats",
     "//chrome/browser/profiles:profile_manager",
-    "//chromeos/ash/experiences/settings_ui",
     "//components/session_manager/core",
 
     # Due to a cycle, we can't depend on //chrome/browser. Explicitly list one
@@ -47,10 +45,6 @@ source_set("browser_tests") {
     "//base",
     "//chrome/browser:browser_process",
     "//chrome/browser/ash/accessibility",
-    "//chrome/test:test_support_ui",
-    "//chromeos/ash/components/audio",
-    "//chromeos/ash/components/audio/public/cpp/sounds",
-    "//content/test:test_support",
     "//ui/base",
     "//ui/events:test_support",
   ]
@@ -69,7 +63,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/audio",
     "//chrome/browser/ash/hats",
     "//chrome/browser/ui",
-    "//chrome/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

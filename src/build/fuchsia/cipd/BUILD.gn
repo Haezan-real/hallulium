@@ -238,7 +238,6 @@ cipd_archive("web_engine") {
   package_subdirectory = _web_engine_directory
   description = "Prebuilt WebEngine binaries for Fuchsia."
 
-  deps = [ "//fuchsia_web/webengine:web_engine" ]
   sources =
       [ "${root_gen_dir}/fuchsia_web/webengine/web_engine/web_engine.far" ]
 }
@@ -247,7 +246,6 @@ cipd_archive("cast_runner") {
   package_subdirectory = _web_engine_directory
   description = "Prebuilt Cast application Runner binaries for Fuchsia."
 
-  deps = [ "//fuchsia_web/runners:cast_runner_pkg" ]
   sources =
       [ "${root_gen_dir}/fuchsia_web/runners/cast_runner/cast_runner.far" ]
 }
@@ -257,7 +255,6 @@ cipd_archive("web_engine_shell") {
   description = "Simple command-line embedder for WebEngine."
   testonly = true
 
-  deps = [ "//fuchsia_web/shell:web_engine_shell_pkg" ]
   sources = [
     "${root_gen_dir}/fuchsia_web/shell/web_engine_shell/web_engine_shell.far",
   ]
@@ -270,7 +267,6 @@ action("strip_chromedriver_binary") {
 
   prog_name = "${root_out_dir}/clang_x64/chromedriver"
 
-  deps = [ "//chrome/test/chromedriver:chromedriver_server($host_toolchain)" ]
   script = "//build/gn_run_binary.py"
   sources = [
     "${clang_base_path}/bin/llvm-strip",
@@ -289,7 +285,6 @@ action("strip_chromedriver_binary") {
   visibility = []
   visibility = [
     ":*",
-    "//fuchsia_web/av_testing:*",
   ]
 }
 
@@ -326,10 +321,8 @@ cipd_test_archive("tests") {
   ]
 
   _web_engine_tests = [ "${root_gen_dir}/fuchsia_web/webengine/web_engine_integration_tests/web_engine_integration_tests.far" ]
-  deps += [ "//fuchsia_web/webengine:web_engine_integration_tests_pkg" ]
 
   _cast_runner_tests = [ "${root_gen_dir}/fuchsia_web/runners/cast_runner_integration_tests/cast_runner_integration_tests.far" ]
-  deps += [ "//fuchsia_web/runners:cast_runner_integration_tests_pkg" ]
 
   _all_tests = _common_tests + _web_engine_tests + _cast_runner_tests
 

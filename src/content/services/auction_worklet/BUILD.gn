@@ -148,7 +148,6 @@ source_set("auction_worklet") {
 group("for_content_tests") {
   visibility = [
     ":tests",
-    "//content/test:test_support",
   ]
   if (!is_component_build) {
     public_deps = [ ":auction_worklet" ]
@@ -210,7 +209,6 @@ source_set("tests") {
     "//content/common:for_content_tests",
     "//content/public/common",
     "//content/services/auction_worklet/public/cpp:test_support",
-    "//content/test:test_support",
     "//gin",
     "//net",
     "//net:test_support",

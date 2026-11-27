@@ -77,16 +77,12 @@ if (!is_android || enable_desktop_android_extensions) {
       "//chrome/browser/ui",
       "//chrome/common:constants",
       "//chrome/common:non_code_constants",
-      "//chrome/test:test_support",
       "//components/prefs",
-      "//content/test:test_support",
       "//third_party/blink/public/common:headers",
     ]
 
     if (enable_desktop_android_extensions) {
-      deps += [ "//chrome/test:test_support_ui_android" ]
     } else {
-      deps += [ "//chrome/test:test_support_ui" ]
     }
   }
 }

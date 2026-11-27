@@ -52,8 +52,6 @@ component("views") {
   if (is_chromeos) {
     deps += [
       "//ash",
-      "//chromeos/ash/experiences/arc",
-      "//chromeos/ash/experiences/arc/intent_helper",
     ]
   }
 }
@@ -68,7 +66,6 @@ source_set("test_support") {
     "//chrome/browser/ui",
     "//chrome/browser/ui/global_media_controls",
     "//chrome/browser/ui/views/toolbar",
-    "//chrome/test:test_support_ui",
     "//components/global_media_controls",
     "//components/media_message_center",
     "//components/media_router/browser:test_support",

@@ -23,10 +23,6 @@ source_set("magic_boost") {
     "//chrome/browser/resources:component_extension_resources",
     "//chrome/browser/ui/ash/editor_menu:utils",
     "//chrome/browser/ui/ash/read_write_cards",
-    "//chromeos/components/magic_boost/public/cpp",
-    "//chromeos/components/mahi/public/cpp",
-    "//chromeos/strings:strings_grit",
-    "//chromeos/ui/vector_icons",
     "//components/application_locale_storage",
     "//ui/color",
     "//ui/display",
@@ -35,7 +31,6 @@ source_set("magic_boost") {
   ]
 
   if (is_chrome_branded) {
-    deps += [ "//chromeos/ash/resources/internal/strings" ]
   }
 
   # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and
@@ -64,7 +59,6 @@ source_set("magic_boost_constants") {
 
   deps = [
     "//build:branding_buildflags",
-    "//chromeos/strings:strings_grit",
   ]
 
   if (is_chrome_branded) {

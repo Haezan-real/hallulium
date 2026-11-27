@@ -172,7 +172,6 @@ target(tracing_lib_type, "cpp") {
     }
 
     if (is_chromeos) {
-      deps += [ "//chromeos/dbus/constants" ]
     }
   }  # !is_ios
 }

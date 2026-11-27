@@ -21,7 +21,6 @@ source_set("decoder") {
     "//base",
     "//chrome/services/sharing/public/cpp",
     "//chrome/services/sharing/public/proto",
-    "//chromeos/ash/services/nearby/public/mojom",
     "//mojo/public/cpp/bindings",
   ]
 }

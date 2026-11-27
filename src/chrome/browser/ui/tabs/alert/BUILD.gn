@@ -63,9 +63,7 @@ source_set("unit_tests") {
     "//chrome/browser/permissions/system",
     "//chrome/browser/ui:ui_features",
     "//chrome/browser/ui/tabs:test_support",
-    "//chrome/test:test_support",
     "//components/tabs:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]
@@ -86,9 +84,7 @@ source_set("interactive_ui_tests") {
     "//chrome/browser/glic/test_support",
     "//chrome/browser/ui:ui_features",
     "//chrome/browser/ui/tabs:test_support",
-    "//chrome/test:test_support",
     "//components/tabs:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

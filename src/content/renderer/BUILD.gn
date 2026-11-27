@@ -25,7 +25,6 @@ target(link_target_type, "renderer") {
   # internal content ones) should depend on the public one.
   visibility = [
     ":for_content_tests",
-    "//chromecast/media/audio:*",
     "//content/app:*",
     "//content/public/renderer:renderer_sources",
   ]
@@ -388,7 +387,6 @@ target(link_target_type, "renderer") {
           "media/cast_renderer_factory.h",
         ]
 
-        deps += [ "//chromecast/media/audio:audio_renderer" ]
       }
 
       deps += [ "//media/remoting:remoting_renderer" ]
@@ -412,8 +410,6 @@ target(link_target_type, "renderer") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos:chromeos_export",
-      "//chromeos/system",
     ]
   }
 
@@ -457,7 +453,6 @@ group("for_content_tests") {
     ":content_security_policy_util_fuzzer__apk__java__validate",
     ":content_security_policy_util_fuzzer__library",
     ":content_security_policy_util_fuzzer__library__jni_registration__native_sources",
-    "//content/test/*",
     "//content/web_test:web_test_renderer_public_deps",
   ]
 
@@ -476,7 +471,6 @@ fuzzer_test("audio_decoder_fuzzer") {
   sources = [ "media/audio_decoder_fuzzer.cpp" ]
   deps = [
     ":for_content_tests",
-    "//content/test:test_support",
   ]
   seed_corpus = "//media/test/data"
 }
@@ -492,7 +486,6 @@ fuzzer_test("content_security_policy_util_fuzzer") {
   deps = [
     ":for_content_tests",
     "//base",
-    "//content/test:test_support",
     "//services/network:network_service",
     "//services/network/public/cpp",
     "//services/network/public/mojom",

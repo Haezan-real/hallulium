@@ -145,7 +145,6 @@ if (!is_android && !is_ios) {
       "//components/prefs",
       "//components/prefs:test_support",
       "//components/sync_preferences:test_support",
-      "//content/test:test_support",
       "//media",
       "//media/mojo/mojom:speech_recognition",
       "//mojo/public/cpp/bindings",

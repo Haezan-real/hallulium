@@ -79,7 +79,6 @@ source_set("test_support") {
   ]
   deps = [
     ":suggestions",
-    "//chrome/test:test_support",
   ]
 }
 
@@ -104,7 +103,6 @@ source_set("unit_tests") {
     "//chrome/browser/page_content_annotations:extraction_service",
     "//chrome/browser/ui:ui_features",
     "//chrome/common:buildflags",
-    "//chrome/test:test_support",
     "//components/sync_preferences:test_support",
     "//pdf:buildflags",
     "//testing/gmock",

@@ -516,9 +516,6 @@ build_webui("build") {
     "//chrome/browser/ui/webui/ash/settings/pages/privacy/mojom:mojom_ts__generator",
     "//chrome/browser/ui/webui/ash/settings/pages/search/mojom:mojom_ts__generator",
     "//chrome/browser/ui/webui/ash/settings/search/mojom:mojom_ts__generator",
-    "//chromeos/ash/components/audio/public/mojom:mojom_ts__generator",
-    "//chromeos/ash/components/drivefs/mojom:pinning_manager_types_ts__generator",
-    "//chromeos/ash/services/ime/public/mojom:mojom_ts__generator",
     "//ui/events/ash/mojom:mojom_ts__generator",
   ]
   mojo_files = [

@@ -155,7 +155,6 @@ source_set("unit_tests") {
     "//components/version_info",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//net:",
     "//net:test_support",
     "//services/network:test_support",

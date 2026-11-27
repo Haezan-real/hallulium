@@ -1,4 +1,0 @@
-# Hallulium stub
-group("gn_all") {}
-group("stub") {}
-group("test") {}

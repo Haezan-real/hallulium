@@ -23,13 +23,8 @@ static_library("tpm") {
     "//chrome/browser/notifications",
     "//chrome/browser/profiles:profile",
     "//chrome/common",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/install_attributes",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/experiences/settings_ui",
     "//components/prefs",
     "//ui/base",
-    "//ui/chromeos",
     "//ui/message_center/public/cpp",
   ]
 }
@@ -46,9 +41,6 @@ source_set("unit_tests") {
     "//chrome/browser/ash/policy/enrollment",
     "//chrome/browser/ash/settings:test_support",
     "//chrome/common",
-    "//chromeos/ash/components/install_attributes:test_support",
-    "//chromeos/ash/components/settings",
-    "//chromeos/ash/components/system",
     "//testing/gmock",
     "//testing/gtest",
   ]

@@ -40,8 +40,6 @@ source_set("unit_tests") {
     "//chrome/browser/extensions",
     "//chrome/browser/profiles:profile",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]

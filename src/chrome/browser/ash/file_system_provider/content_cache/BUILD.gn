@@ -26,7 +26,6 @@ static_library("content_cache") {
 
   deps = [
     "//base",
-    "//chromeos/ash/components/dbus/spaced",
     "//net",
     "//sql",
 
@@ -53,7 +52,6 @@ source_set("unit_tests") {
     ":content_cache",
     "//base/test:test_support",
     "//chrome/browser/ash/file_system_provider",
-    "//chromeos/ash/components/dbus/spaced",
     "//net",
     "//testing/gmock",
     "//testing/gtest",

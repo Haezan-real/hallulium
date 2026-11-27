@@ -105,8 +105,6 @@ source_set("profile") {
   if (is_chromeos) {
     deps += [
       "//ash/constants",
-      "//chromeos/ash/components/browser_context_helper",
-      "//chromeos/constants",
     ]
   }
   if (is_android) {
@@ -188,8 +186,6 @@ source_set("profile_manager_impl") {
       "//chrome/browser/ash/profiles",
       "//chrome/browser/chromeos/extensions/contact_center_insights",
       "//chrome/browser/chromeos/extensions/desk_api",
-      "//chromeos/ash/components/browser_context_helper",
-      "//chromeos/ash/experiences/arc/session:arc_base_enums",
     ]
   }
 }
@@ -704,11 +700,9 @@ source_set("unit_tests") {
     "//chrome/browser",
     "//chrome/browser/browsing_topics",
     "//chrome/browser/signin",
-    "//chrome/test:test_support",
     "//components/prefs:test_support",
     "//components/signin/public/base:test_support",
     "//components/signin/public/identity_manager:test_support",
-    "//content/test:test_support",
     "//services/network:test_support",
     "//testing/gtest",
   ]
@@ -734,12 +728,9 @@ source_set("test_support") {
   ]
   public_deps = [
     "//base",
-    "//chrome/test:test_support",
-    "//content/test:test_support",
   ]
   deps = [ "//testing/gtest" ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/browser_context_helper" ]
   }
 }

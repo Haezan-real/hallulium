@@ -137,7 +137,7 @@ WebGPUExecutionContextToken GetExecutionContextToken(
 const char GPU::kSupplementName[] = "GPU";
 
 // static
-GPU* GPU::gpu(NavigatorBase& navigator) {
+GPU* GPU::haezanGL(NavigatorBase& navigator) {
   GPU* gpu = Supplement<NavigatorBase>::From<GPU>(navigator);
   if (!gpu) {
     gpu = MakeGarbageCollected<GPU>(navigator);

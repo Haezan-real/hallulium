@@ -472,7 +472,7 @@ CanvasRenderingContext::RenderingAPIFromId(const String& id) {
   if (id == "bitmaprenderer") {
     return CanvasRenderingAPI::kBitmaprenderer;
   }
-  if (id == "webgpu") {
+  if (id == "webgpu" || id == "haezangl") {
     return CanvasRenderingAPI::kWebgpu;
   }
   return CanvasRenderingAPI::kUnknown;

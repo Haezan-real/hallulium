@@ -71,7 +71,6 @@ source_set("test_support") {
     ":test_support_common",
     "//base/test:test_support",
     "//components/performance_manager",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
   ]
@@ -90,8 +89,6 @@ source_set("browsertest_support") {
     "//base/test:test_support",
     "//components/performance_manager",
     "//content/shell:content_shell_lib",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//net:test_support",
     "//testing/gmock",
     "//testing/gtest",

@@ -18,9 +18,6 @@ static_library("online_reauth") {
     "//chrome/browser:browser_public_dependencies",
     "//chrome/browser/ash/login/saml",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/components/login/auth",
-    "//chromeos/ash/components/login/auth/public:authpublic",
-    "//chromeos/ash/components/proximity_auth",
     "//components/keyed_service/core",
     "//components/session_manager/core",
   ]
@@ -32,7 +29,6 @@ static_library("online_reauth") {
     "//chrome/browser/ash/login/auth",
     "//chrome/browser/ash/profiles",
     "//chrome/common:constants",
-    "//chromeos/ash/components/settings",
     "//components/prefs",
     "//components/user_manager",
     "//content/public/browser",
@@ -56,11 +52,7 @@ source_set("unit_tests") {
     "//chrome/browser/ash/login/saml:test_support",
     "//chrome/browser/ash/login/users:test_support",
     "//chrome/common:constants",
-    "//chrome/test:test_support",
-    "//chromeos/ash/components/dbus/userdataauth",
-    "//chromeos/ash/components/login/auth/public:authpublic",
     "//components/session_manager/core",
     "//components/user_manager",
-    "//content/test:test_support",
   ]
 }

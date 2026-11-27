@@ -99,7 +99,6 @@ source_set("toolbar") {
   }
 
   if (is_chromeos) {
-    public_deps += [ "//chromeos/ash/experiences/arc/intent_helper" ]
   }
 }
 
@@ -297,7 +296,6 @@ if (!is_android) {
       "//chrome/browser/ui/interaction",
       "//chrome/browser/ui/views/frame",
       "//components/metrics:content",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
       "//ui/views",
@@ -329,12 +327,10 @@ if (!is_android) {
       "//chrome/browser/ui/side_panel:side_panel_views_dependent",
       "//chrome/browser/ui/views/frame",
       "//chrome/browser/web_applications:web_applications_test_support",
-      "//chrome/test:test_support",
       "//components/commerce/core:feature_list",
       "//components/prefs",
       "//components/translate/content/browser:test_support",
       "//components/vector_icons",
-      "//content/test:test_support",
       "//testing/gtest",
       "//ui/base",
       "//ui/views",
@@ -399,8 +395,6 @@ if (!is_android && !is_chromeos_device) {
       "//chrome/browser/ui/views/frame",
       "//chrome/browser/ui/waap:manager",
       "//chrome/browser/user_education",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//components/bookmarks/browser",
       "//components/commerce/core:feature_list",
       "//components/feature_engagement/test:test_support",
@@ -409,7 +403,6 @@ if (!is_android && !is_chromeos_device) {
       "//components/strings:components_strings",
       "//components/strings:components_strings_grit",
       "//components/user_education/views",
-      "//content/test:test_support",
       "//testing/gtest",
       "//ui/base",
       "//ui/base:ozone_buildflags",
@@ -458,7 +451,6 @@ if (toolkit_views) {
       "//chrome/browser/ui/views/frame",
       "//chrome/browser/ui/waap",
       "//chrome/common:buildflags",
-      "//chrome/test:test_support",
       "//components/keyed_service/core",
       "//components/prefs",
       "//components/user_education/views",
@@ -466,7 +458,6 @@ if (toolkit_views) {
       "//components/version_info",
       "//components/webui/flags",
       "//content/public/browser",
-      "//content/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
       "//ui/accessibility",
@@ -490,8 +481,6 @@ if (toolkit_views) {
         "//ash/constants",
         "//chrome/browser/ash/ownership",
         "//chrome/browser/ash/settings",
-        "//chromeos/ash/components/cryptohome",
-        "//chromeos/ash/components/dbus/session_manager",
         "//components/user_manager",
       ]
     }

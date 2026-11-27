@@ -107,7 +107,6 @@ source_set("impl") {
       "auto_picture_in_picture_tab_model_observer_helper.cc",
     ]
     deps += [
-      "//chrome/android:chrome_jni_headers",
       "//components/strings:components_strings",
     ]
   } else {
@@ -156,9 +155,7 @@ source_set("unit_tests") {
     ":picture_in_picture",
     "//base",
     "//base/test:test_support",
-    "//chrome/test:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//extensions/buildflags",
     "//testing/gmock",
     "//testing/gtest",
@@ -230,16 +227,12 @@ if (!is_android) {
       "//chrome/browser/ui/views/page_info",
       "//chrome/browser/ui/web_applications",
       "//chrome/browser/web_applications",
-      "//chrome/test:test_support",
-      "//chrome/test:webrtc_browser_tests_base",
       "//components/content_settings/core/browser",
       "//components/metrics:content",
       "//components/permissions",
       "//components/viz/common",
       "//content/public/browser",
       "//content/public/common",
-      "//content/test:browsertest_support",
-      "//content/test:test_support",
       "//media",
       "//net:test_support",
       "//services/media_session/public/cpp",
@@ -259,7 +252,6 @@ if (!is_android) {
 
     if (is_chromeos) {
       deps += [
-        "//chromeos/ui/base",
         "//ui/aura",
       ]
     }
@@ -278,15 +270,12 @@ if (!is_android) {
     ]
     public_deps = [
       "//base",
-      "//chrome/test:test_support",
-      "//chrome/test:test_support_ui",
       "//ui/gfx/geometry",
     ]
     deps = [
       "//chrome/browser/ui",
       "//chrome/browser/ui/tabs:tab_strip",
       "//content/public/browser",
-      "//content/test:test_support",
     ]
   }
 }

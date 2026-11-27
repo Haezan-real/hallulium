@@ -71,7 +71,6 @@ source_set("unit_tests") {
     "//base/test:test_support",
     "//chrome/browser/safe_browsing",
     "//chrome/browser/signin",
-    "//chrome/test:test_support",
     "//components/download/public/common:test_support",
     "//components/prefs",
     "//components/safe_browsing/core/common:features",
@@ -82,7 +81,6 @@ source_set("unit_tests") {
     "//components/sync_preferences:test_support",
     "//components/vector_icons",
     "//content/public/browser",
-    "//content/test:test_support",
     "//ui/views",
   ]
 }

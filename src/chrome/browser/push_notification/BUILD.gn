@@ -30,8 +30,6 @@ source_set("push_notification") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/push_notification/protos:proto",
     "//chrome/browser/signin",
-    "//chromeos/ash/components/browser_context_helper",
-    "//chromeos/ash/components/nearby/common/scheduling",
     "//components/cross_device/logging",
     "//components/gcm_driver",
     "//components/gcm_driver/instance_id",
@@ -58,9 +56,7 @@ source_set("test_support") {
     "//base/test:test_support",
     "//chrome/browser/push_notification",
     "//chrome/browser/push_notification/protos:proto",
-    "//chrome/test:test_support",
     "//content/public/browser",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

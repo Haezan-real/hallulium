@@ -13,7 +13,6 @@ source_set("unit_tests") {
     "//components/visitedlink/common",
     "//components/visitedlink/core",
     "//components/visitedlink/renderer",
-    "//content/test:test_support",
     "//testing/gtest",
     "//third_party/blink/public/common",
   ]

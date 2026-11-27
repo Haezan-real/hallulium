@@ -42,7 +42,6 @@ template("generate_profile_test") {
 
     data_deps = [
       # From performance_test_suite_template_base:
-      "//chrome/test:telemetry_perf_tests${invoker.suffix}",
 
       # From performance_test_suite_template_android:
       "//components:components_perftests",
@@ -82,14 +81,6 @@ if (defined(android_app_secondary_abi)) {
     deps = [ ":generate_profile_webview_py" ]
 
     data_deps = []
-    if (enable_chrome_android_internal) {
-      data_deps += [
-        "//chrome/test:telemetry_perf_tests_android_clank_webview_64_32_bundle",
-      ]
-    } else {
-      data_deps +=
-          [ "//chrome/test:telemetry_perf_tests_android_webview_bundle" ]
-    }
 
     # This avoids generate_profile_webview.py attempting to download it on demand.
     data = [ "${clang_base_path}/bin/llvm-profdata" ]

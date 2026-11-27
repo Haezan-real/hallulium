@@ -62,7 +62,6 @@ source_set("web_dialogs_unittests") {
     ":web_dialogs",
     "//base",
     "//base/test:test_support",
-    "//content/test:test_support",
     "//skia",
     "//testing/gtest",
     "//third_party/boringssl",

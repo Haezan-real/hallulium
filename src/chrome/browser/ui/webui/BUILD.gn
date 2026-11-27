@@ -3,7 +3,6 @@
 # found in the LICENSE file.
 
 import("//chrome/common/features.gni")
-import("//chromeos/dbus/config/use_real_dbus_clients.gni")
 import("//components/enterprise/buildflags/buildflags.gni")
 import("//components/safe_browsing/buildflags.gni")
 import("//components/signin/features.gni")
@@ -126,7 +125,6 @@ source_set("configs") {
   if (is_chromeos) {
     deps += [
       "//chrome/browser/ui/webui/ash/config",
-      "//chromeos/constants",
     ]
   }
 

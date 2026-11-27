@@ -45,7 +45,6 @@ source_set("factories_impl") {
     deps += [ "//chrome/browser/ui/tabs/saved_tab_groups" ]
   } else {
     deps += [
-      "//chrome/android:chrome_jni_headers",
       "//chrome/browser/tab_group_sync:android",
     ]
   }
@@ -209,7 +208,6 @@ if (is_android) {
       "//chrome/browser/tabwindow:java",
       "//chrome/browser/url_constants/android:java",
       "//chrome/browser/user_education:java",
-      "//chrome/test/android:chrome_java_unit_test_support",
       "//components/embedder_support/android:util_java",
       "//components/feature_engagement:feature_engagement_java",
       "//components/prefs/android:java",
@@ -238,8 +236,6 @@ if (is_android) {
       "//base:base_java_test_support",
       "//chrome/browser/flags:java",
       "//chrome/browser/profiles/android:java",
-      "//chrome/test/android:chrome_java_integration_test_support",
-      "//chrome/test/android:chrome_java_transit",
       "//components/saved_tab_groups/public:java",
       "//third_party/androidx:androidx_test_runner_java",
       "//third_party/hamcrest:hamcrest_core_java",

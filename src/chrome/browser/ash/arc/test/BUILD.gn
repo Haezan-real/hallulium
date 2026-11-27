@@ -22,7 +22,5 @@ static_library("arc_test_support") {
     "//base",
     "//chrome/browser:global_features",
     "//chrome/browser/ash/arc/session",
-    "//chrome/test:test_support",
-    "//chromeos/ash/experiences/arc",
   ]
 }

@@ -64,7 +64,6 @@ source_set("impl") {
   if (is_android) {
     sources += [ "announcement_notification_delegate_android.cc" ]
 
-    deps += [ "//chrome/android:chrome_jni_headers" ]
   } else {
     sources += [
       "announcement_notification_delegate.cc",
@@ -85,7 +84,6 @@ source_set("unit_tests") {
   deps = [
     ":announcement_notification",
     "//build:chromeos_buildflags",
-    "//chrome/test:test_support",
     "//components/sync_preferences",
     "//skia",
     "//testing/gmock",

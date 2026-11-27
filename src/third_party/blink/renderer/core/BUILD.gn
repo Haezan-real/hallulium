@@ -1575,7 +1575,6 @@ source_set("unit_tests") {
     "//components/subresource_filter/core/common:test_support",
     "//components/ukm:test_support",
     "//components/viz/test:test_support",
-    "//content/test:test_support",
     "//gpu/command_buffer/client:raster",
     "//gpu/config",
     "//mojo/public/cpp/system",
@@ -1752,7 +1751,6 @@ source_set("unit_test_support") {
 
   deps = [
     ":core",
-    "//content/test:test_support",
     "//testing/gmock",
     "//testing/gtest",
     "//third_party/blink/renderer/core:testing",

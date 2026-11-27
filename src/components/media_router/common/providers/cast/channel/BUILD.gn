@@ -108,7 +108,6 @@ source_set("unit_tests") {
     "//components/media_router/common/providers/cast/certificate:test_support",
     "//components/prefs",
     "//components/prefs:test_support",
-    "//content/test:test_support",
     "//net:test_support",
     "//services/data_decoder/public/cpp",
     "//services/data_decoder/public/cpp:test_support",

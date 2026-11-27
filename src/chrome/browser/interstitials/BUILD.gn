@@ -73,6 +73,5 @@ source_set("test_support") {
   deps = [
     "//base",
     "//components/security_interstitials/core",
-    "//content/test:test_support",
   ]
 }

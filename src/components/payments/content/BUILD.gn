@@ -95,8 +95,6 @@ static_library("content") {
     ]
 
     deps += [
-      "//chromeos/ash/experiences/arc",
-      "//chromeos/components/payments/mojom",
     ]
   } else {
     sources += [ "android_app_communication_stub.cc" ]
@@ -296,7 +294,6 @@ source_set("payment_content_unit_tests") {
     "//components/webauthn/core/browser",
     "//components/webauthn/core/browser:test_support",
     "//components/webdata/common",
-    "//content/test:test_support",
     "//crypto:test_support",
     "//net:test_support",
     "//services/metrics/public/cpp:metrics_cpp",
@@ -315,12 +312,6 @@ source_set("payment_content_unit_tests") {
       "android_app_communication_test_support_chrome_os.h",
     ]
     deps += [
-      "//chromeos/ash/experiences/arc",
-      "//chromeos/ash/experiences/arc:arc_test_support",
-      "//chromeos/ash/experiences/arc/intent_helper",
-      "//chromeos/ash/experiences/arc/mojom",
-      "//chromeos/components/payments:test_support",
-      "//chromeos/components/payments/mojom",
     ]
   } else {
     sources += [ "android_app_communication_test_support_stub.cc" ]

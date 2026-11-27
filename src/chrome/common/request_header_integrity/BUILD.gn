@@ -74,7 +74,6 @@ source_set("unit_tests") {
 
   if (is_chrome_branded) {
     sources += [ "internal/google_header_names.h" ]
-    deps += [ "//chrome/test:test_support" ]
   }
 }
 
@@ -90,9 +89,7 @@ if (!is_android) {
       ":request_header_integrity",
       "//base",
       "//build:branding_buildflags",
-      "//chrome/test:test_support_ui",
       "//components/network_session_configurator/common",
-      "//content/test:test_support",
       "//net:test_support",
       "//services/network/public/mojom",
       "//url",

@@ -86,7 +86,6 @@ static_library("discovery") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/network" ]
   }
 
   if (is_posix) {

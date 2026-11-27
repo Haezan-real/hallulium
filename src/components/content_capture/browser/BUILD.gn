@@ -44,7 +44,6 @@ source_set("unit_tests") {
   deps = [
     ":test_support",
     "//base/test:test_support",
-    "//content/test:test_support",
   ]
 }
 
@@ -59,7 +58,5 @@ source_set("browser_tests") {
     "//base/test:test_support",
     "//content/public/browser",
     "//content/shell:content_shell_lib",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
   ]
 }

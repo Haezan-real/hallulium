@@ -38,9 +38,7 @@ source_set("unit_tests") {
     ":hid",
     "//base/test:test_support",
     "//chrome/app:generated_resources",
-    "//chrome/test:test_support",
     "//components/permissions:test_support",
-    "//content/test:test_support",
     "//services/device/public/cpp:test_support",
     "//services/device/public/cpp/hid",
   ]

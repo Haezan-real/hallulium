@@ -648,9 +648,7 @@ component("views") {
     sources += [ "highlight_border.cc" ]
     deps += [
       "//ash/constants",
-      "//chromeos/constants",
       "//ui/base/ime/ash",
-      "//ui/chromeos/styles:cros_tokens_color_mappings_generator",
     ]
   }
 

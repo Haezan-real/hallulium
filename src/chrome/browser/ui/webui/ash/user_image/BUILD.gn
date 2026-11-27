@@ -19,7 +19,6 @@ static_library("user_image") {
     "//components/account_id",
     "//components/user_manager",
     "//content/public/browser",
-    "//ui/chromeos",
     "//ui/display",
     "//ui/gfx",
     "//url",

@@ -27,7 +27,6 @@ source_set("browser_tests") {
     "//components/policy/core/common",
     "//components/prefs",
     "//components/privacy_sandbox:privacy_sandbox_prefs",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 }

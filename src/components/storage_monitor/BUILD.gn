@@ -52,8 +52,6 @@ component("storage_monitor") {
       "storage_monitor_chromeos.h",
     ]
     deps += [
-      "//chromeos/ash/components/dbus/cros_disks",
-      "//chromeos/ash/components/disks",
     ]
 
     if (use_dbus) {
@@ -142,7 +140,6 @@ source_set("unit_tests") {
   deps = [
     ":test_support",
     "//base/test:test_support",
-    "//content/test:test_support",
     "//testing/gtest",
   ]
 
@@ -156,7 +153,6 @@ source_set("unit_tests") {
   }
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/disks:test_support" ]
     if (use_dbus) {
       deps += [
         "//services/device/public/mojom",

@@ -25,7 +25,6 @@ source_set("enterprise_device_attributes") {
     "//chrome/browser/ash/policy/core",
     "//chrome/browser/profiles",
     "//chrome/browser/profiles:profile",
-    "//chromeos/ash/components/browser_context_helper",
     "//components/user_manager",
   ]
 }

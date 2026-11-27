@@ -55,14 +55,12 @@ static_library("test_support") {
     ]
     deps += [
       ":test_support_jni_headers",
-      "//chrome/test:test_support_ui_android",
       "//components/safe_search_api:test_support",
       "//components/signin/public/identity_manager:test_support",
       "//components/supervised_user/core/browser/android",
       "//services/network:test_support",
     ]
   } else {
-    deps += [ "//chrome/test:test_support_ui" ]
   }
 }
 
@@ -244,7 +242,6 @@ if (is_android) {
     deps = [
       ":test_support_jni_headers",
       "//build/android:build_java",
-      "//chrome/android:chrome_java",
       "//chrome/browser/profiles/android:java",
       "//components/browser_ui/bottomsheet/android/test:java",
       "//content/public/test/android:content_java_test_support",
@@ -270,7 +267,6 @@ if (is_android) {
       "//base:base_java",
       "//base:base_java_test_support",
       "//base/test:public_transit_java",
-      "//chrome/android:chrome_java",
       "//chrome/browser/flags:java",
       "//chrome/browser/profiles/android:java",
       "//chrome/browser/signin/services/android:java",
@@ -284,9 +280,6 @@ if (is_android) {
       "//chrome/browser/ui/android/appmenu:java",
       "//chrome/browser/ui/android/appmenu/test:test_support_java",
       "//chrome/browser/ui/android/multiwindow:java",
-      "//chrome/test/android:chrome_java_integration_test_support",
-      "//chrome/test/android:chrome_java_transit",
-      "//chrome/test/android:pagecontroller_utils_java",
       "//components/browser_ui/bottomsheet/android:java",
       "//components/browser_ui/bottomsheet/android:manager_java",
       "//components/browser_ui/bottomsheet/android/test:java",
@@ -318,7 +311,6 @@ if (is_android) {
       "//base:base_java",
       "//base:base_java_test_support",
       "//base:base_junit_test_support",
-      "//chrome/android:chrome_java",
       "//third_party/android_deps:robolectric_all_java",
       "//third_party/androidx:androidx_test_runner_java",
       "//third_party/junit",
@@ -341,13 +333,11 @@ if (is_android) {
         "//chrome/browser:global_features",
         "//chrome/browser/profiles:profile",
         "//chrome/browser/sync",
-        "//chrome/test:test_support",
         "//components/messages/android/test:test_support_cpp",
         "//components/safe_search_api:test_support",
         "//components/supervised_user/core/browser:test_support",
         "//components/supervised_user/core/browser/android",
         "//components/url_matcher",
-        "//content/test:test_support",
         "//net:test_support",
         "//net/android:net_java_test_support_enums_srcjar",
       ]

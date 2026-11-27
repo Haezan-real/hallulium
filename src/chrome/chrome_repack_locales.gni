@@ -83,9 +83,6 @@ template("chrome_repack_locales") {
       deps += [
         "//ash/strings",
         "//ash/webui/camera_app_ui/resources/strings",
-        "//chromeos/strings",
-        "//remoting/resources",
-        "//ui/chromeos/strings",
       ]
       if (is_internal_chrome_branded) {
         source_patterns += [
@@ -94,7 +91,6 @@ template("chrome_repack_locales") {
         ]
         deps += [
           "//chrome/app/theme/google_chrome/chromeos/strings",
-          "//chromeos/ash/resources/internal/strings",
         ]
       }
       compress = true

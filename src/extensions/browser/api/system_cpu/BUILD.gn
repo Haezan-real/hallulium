@@ -29,7 +29,6 @@ source_set("system_cpu") {
   libs = []
 
   if (is_chromeos) {
-    deps = [ "//chromeos/system" ]
   }
 
   if (is_mac) {

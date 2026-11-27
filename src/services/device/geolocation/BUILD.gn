@@ -105,7 +105,6 @@ source_set("geolocation") {
       "wifi_data_provider_chromeos.cc",
       "wifi_data_provider_chromeos.h",
     ]
-    deps += [ "//chromeos/ash/components/network" ]
   } else if (is_linux && use_dbus) {
     sources += [
       "wifi_data_provider_linux.cc",
@@ -200,6 +199,5 @@ source_set("test_support") {
   ]
 
   if (is_chromeos) {
-    deps += [ "//chromeos/ash/components/dbus/shill" ]
   }
 }

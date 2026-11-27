@@ -165,7 +165,6 @@ source_set("sync") {
 
     # TODO(crbug.com/352700220): Extract target for //chrome/browser/android/webapk from
     # //chrome/browser and use that instead here.
-    "//chrome/browser/android/webapk/proto",
     "//components/webapps/browser",
   ]
 
@@ -198,7 +197,6 @@ source_set("sync") {
       "glue/web_contents_state_synced_tab_delegate.h",
     ]
     deps += [
-      "//chrome/android:chrome_jni_headers",
       "//chrome/browser/android:tabs_public",
       "//chrome/browser/sync/android:jni_headers",
       "//chrome/browser/tab",
@@ -262,10 +260,6 @@ source_set("sync") {
       "//chrome/browser/ash/printing/oauth2",
       "//chrome/browser/ash/profiles",
       "//chrome/browser/ui/ash/multi_user",
-      "//chromeos/ash/components/network",
-      "//chromeos/ash/components/sync_wifi",
-      "//chromeos/ash/components/tether",
-      "//chromeos/ash/experiences/arc:arc_base_utils",
       "//components/desks_storage",
       "//ui/events/ash",
     ]

@@ -26,7 +26,6 @@ static_library("projector_app") {
     "//chrome/browser/profiles:profile",
     "//chrome/browser/ui/ash/projector",
     "//chrome/common",
-    "//chromeos/ash/components/channel",
     "//components/version_info:channel",
     "//third_party/blink/public/common:headers",
   ]
@@ -51,6 +50,5 @@ source_set("browser_tests") {
     "//chrome/browser/ash/system_web_apps",
     "//chrome/browser/ash/system_web_apps/test_support:test_support_ui",
     "//chrome/browser/ui/ash/system_web_apps",
-    "//content/test:test_support",
   ]
 }

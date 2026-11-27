@@ -51,8 +51,6 @@ if (!is_android) {
       ":impl",
       ":ntp_tiles",
       "//chrome/browser",
-      "//chrome/test:test_support",
-      "//chrome/test/supervised_user:test_support",
       "//content/public/browser",
       "//testing/gmock",
       "//testing/gtest",

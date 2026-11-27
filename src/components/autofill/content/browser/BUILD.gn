@@ -117,7 +117,6 @@ source_set("test_support") {
     "//components/autofill/core/browser:test_support",
     "//components/credential_management:browser",
     "//content/public/browser",
-    "//content/test:test_support",
   ]
 
   deps = [ "//base" ]
@@ -146,7 +145,6 @@ source_set("unit_tests") {
     "//components/version_info",
     "//content/public/browser",
     "//content/public/common",
-    "//content/test:test_support",
     "//mojo/public/cpp/system",
     "//net:test_support",
     "//services/service_manager/public/cpp",
@@ -168,8 +166,6 @@ source_set("browser_tests") {
     ":test_support",
     "//base",
     "//content/public/browser",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
     "//services/device/public/cpp:test_support",
     "//services/device/public/cpp/geolocation",
     "//services/device/public/mojom",

@@ -15,15 +15,11 @@ static_library("diagnostics") {
   ]
 
   public_deps = [
-    "//chromeos/ash/components/dbus/chromebox_for_meetings",
-    "//chromeos/services/chromebox_for_meetings/public/cpp",
-    "//chromeos/services/chromebox_for_meetings/public/mojom",
     "//mojo/public/cpp/bindings",
   ]
 
   deps = [
     "//base",
-    "//chromeos/ash/services/cros_healthd/public/cpp",
   ]
 }
 
@@ -36,15 +32,6 @@ source_set("unit_tests") {
     ":diagnostics",
     "//base",
     "//base/test:test_support",
-    "//chromeos/ash/components/dbus/chromebox_for_meetings",
-    "//chromeos/ash/components/mojo_service_manager",
-    "//chromeos/ash/components/mojo_service_manager:test_support",
-    "//chromeos/ash/services/cros_healthd/public/cpp",
-    "//chromeos/ash/services/cros_healthd/public/cpp:fakes",
-    "//chromeos/services/chromebox_for_meetings/public/cpp",
-    "//chromeos/services/chromebox_for_meetings/public/cpp:test_support",
-    "//chromeos/services/chromebox_for_meetings/public/mojom",
-    "//content/test:test_support",
     "//mojo/public/cpp/bindings",
     "//testing/gmock",
   ]

@@ -60,7 +60,6 @@ source_set("unit_tests") {
 
   deps = [
     ":find_bar",
-    "//chrome/test:test_support",
   ]
 }
 
@@ -79,7 +78,6 @@ if (!is_android) {
       ":find_bar",
       "//chrome/browser/ui:ui_features",
       "//chrome/browser/ui/browser_window",
-      "//chrome/test:test_support",
     ]
 
     if (is_mac) {
@@ -99,7 +97,6 @@ if (!is_android && !is_chromeos_device) {
     deps = [
       ":find_bar",
       "//chrome/browser/ui/browser_window",
-      "//chrome/test:test_support",
     ]
 
     if (is_mac) {

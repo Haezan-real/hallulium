@@ -81,8 +81,6 @@ source_set("generic_sensor") {
 
   if (is_chromeos) {
     deps += [
-      "//chromeos/components/sensors",
-      "//chromeos/components/sensors/mojom",
     ]
 
     sources += [

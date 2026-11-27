@@ -234,7 +234,5 @@ source_set("browser_tests") {
     "//base",
     "//components/input",
     "//content/shell:content_shell_lib",
-    "//content/test:browsertest_support",
-    "//content/test:test_support",
   ]
 }

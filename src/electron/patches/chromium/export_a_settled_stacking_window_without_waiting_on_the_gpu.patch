@@ -1,0 +1,204 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Haezan-real <exetude@gmail.com>
+Date: Sun, 15 Nov 2026 04:51:51 -0500
+Subject: Export a settled stacking window without waiting on the GPU.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+
+diff --git a/components/viz/service/display/surface_aggregator.cc b/components/viz/service/display/surface_aggregator.cc
+index 661d53bb6b0fd1b3917956fe976e0e641c7d8ada..0e8fd19b03b62b896667a2640338f055fbd71795 100644
+--- a/components/viz/service/display/surface_aggregator.cc
++++ b/components/viz/service/display/surface_aggregator.cc
+@@ -2183,6 +2183,7 @@ void SurfaceAggregator::SetHaezansCapture(std::optional<int> max_z,
+   if (!haezans_max_z_ || !haezans_callback_) {
+     haezans_quads_.clear();
+     haezans_pending_.clear();
++    haezans_copy_after_ = base::TimeTicks();
+     haezans_results_.clear();
+     haezans_pass_id_.reset();
+   }
+@@ -2222,6 +2223,7 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+   if (!any_below) {
+     haezans_quads_.clear();
+     haezans_pending_.clear();
++    haezans_copy_after_ = base::TimeTicks();
+     haezans_pass_id_.reset();
+     return;
+   }
+@@ -2304,27 +2306,39 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+ 
+   haezans_quads_ = std::move(current);
+ 
+-  // Draw the new rectangles this frame and copy them on the next one, so the
+-  // frame that opens a window presents before any copy. Rectangles that touch
+-  // are one window and one copy. Empty damage keeps the cached backing.
+-  std::vector<gfx::Rect> due = std::move(haezans_pending_);
+-  haezans_pending_ = ClusterCaptureRects(std::move(fresh));
+-  for (gfx::Rect& rect : haezans_pending_)
++  // Draw new rectangles into the cache now. Copy them only after the display
++  // has produced no new rectangles for a while, so opening a window does not
++  // export an image on the open frames. Touching rectangles are one copy.
++  std::vector<gfx::Rect> new_rects = ClusterCaptureRects(std::move(fresh));
++  for (gfx::Rect& rect : new_rects)
+     rect.Intersect(content->output_rect);
+-  std::erase_if(haezans_pending_,
+-                [](const gfx::Rect& rect) { return rect.IsEmpty(); });
++  std::erase_if(new_rects, [](const gfx::Rect& rect) { return rect.IsEmpty(); });
++  if (!new_rects.empty()) {
++    std::vector<gfx::Rect> combined = new_rects;
++    combined.insert(combined.end(), haezans_pending_.begin(),
++                    haezans_pending_.end());
++    haezans_pending_ = ClusterCaptureRects(std::move(combined));
++    for (gfx::Rect& rect : haezans_pending_)
++      rect.Intersect(content->output_rect);
++    std::erase_if(haezans_pending_,
++                  [](const gfx::Rect& rect) { return rect.IsEmpty(); });
++    haezans_copy_after_ = base::TimeTicks::Now() + base::Milliseconds(400);
++  }
++
++  std::vector<gfx::Rect> copy_rects;
++  if (new_rects.empty() && !haezans_pending_.empty() &&
++      !haezans_copy_after_.is_null() &&
++      base::TimeTicks::Now() >= haezans_copy_after_) {
++    copy_rects = std::move(haezans_pending_);
++    haezans_pending_.clear();
++    haezans_copy_after_ = base::TimeTicks();
++  }
+ 
+   gfx::Rect capture_damage;
+-  for (const gfx::Rect& rect : haezans_pending_)
++  for (const gfx::Rect& rect : new_rects)
+     capture_damage.Union(rect);
+-  std::vector<gfx::Rect> copy_rects;
+-  for (gfx::Rect rect : due) {
+-    rect.Intersect(content->output_rect);
+-    if (rect.IsEmpty())
+-      continue;
++  for (const gfx::Rect& rect : copy_rects)
+     capture_damage.Union(rect);
+-    copy_rects.push_back(rect);
+-  }
+   capture->damage_rect = capture_damage;
+   capture->has_damage_from_contributing_content = !capture_damage.IsEmpty();
+ 
+diff --git a/components/viz/service/display/surface_aggregator.h b/components/viz/service/display/surface_aggregator.h
+index cf8de6b22bdf242ce831c7dcfcbbc8a4460eb697..bcd50a3f07cd123b4d46a6b6f740658ec50258b2 100644
+--- a/components/viz/service/display/surface_aggregator.h
++++ b/components/viz/service/display/surface_aggregator.h
+@@ -121,9 +121,9 @@ class VIZ_SERVICE_EXPORT SurfaceAggregator : public SurfaceObserver {
+   void SetMaxRenderTargetSize(int max_size);
+ 
+   // When set, quads at or below |max_z| are drawn into one persistent pass.
+-  // A new rectangle is copied on the following frame, one GPU image per
+-  // window. The callback's token is taken with TakeHaezansResult. A null
+-  // callback turns it off.
++  // A new rectangle is drawn into that pass immediately and copied after the
++  // display has been still, one GPU image per window. The callback's token is
++  // taken with TakeHaezansResult. A null callback turns it off.
+   using HaezansRegionCallback =
+       base::RepeatingCallback<void(const gfx::Rect&, uint32_t)>;
+   void SetHaezansCapture(std::optional<int> max_z,
+@@ -479,8 +479,9 @@ class VIZ_SERVICE_EXPORT SurfaceAggregator : public SurfaceObserver {
+   HaezansRegionCallback haezans_callback_;
+   std::set<std::tuple<uint32_t, int, int, int, int>> haezans_quads_;
+   std::optional<AggregatedRenderPassId> haezans_pass_id_;
+-  // Rectangles drawn last frame, copied on this one.
++  // Rectangles drawn into the cache, copied once the display has been still.
+   std::vector<gfx::Rect> haezans_pending_;
++  base::TimeTicks haezans_copy_after_;
+   std::map<uint32_t, std::unique_ptr<CopyOutputResult>> haezans_results_;
+   uint32_t haezans_next_result_ = 0;
+   // Cleared in the destructor so a copy that finishes later is dropped.
+diff --git a/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.cc b/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.cc
+index 7c53cdcb36bd32587712da314555d176ae03a16e..ada65f36692aa40dcc134a061f11481671105b3a 100644
+--- a/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.cc
++++ b/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.cc
+@@ -64,7 +64,8 @@ AcceleratedStaticBitmapImage::CreateFromExternalSharedImage(
+     gpu::ExportedSharedImage exported_shared_image,
+     const gpu::SyncToken& sync_token,
+     SkAlphaType alpha_type,
+-    base::OnceCallback<void(const gpu::SyncToken&)> external_callback) {
++    base::OnceCallback<void(const gpu::SyncToken&)> external_callback,
++    bool verify_release) {
+   auto shared_gpu_context = blink::SharedGpuContext::ContextProviderWrapper();
+   if (!shared_gpu_context) {
+     return nullptr;
+@@ -76,21 +77,41 @@ AcceleratedStaticBitmapImage::CreateFromExternalSharedImage(
+ 
+   scoped_refptr<gpu::ClientSharedImage> shared_image =
+       sii->ImportSharedImage(std::move(exported_shared_image));
+-  auto release_token = sii->GenVerifiedSyncToken();
+-  // No need to keep the original image after the new reference has been added.
+-  // Need to update the sync token, however.
+-  std::move(external_callback).Run(release_token);
+-
+-  auto release_callback = blink::BindOnce(
+-      [](base::WeakPtr<WebGraphicsContext3DProviderWrapper> context_provider,
+-         scoped_refptr<gpu::ClientSharedImage> shared_image,
+-         const gpu::SyncToken& sync_token, bool is_lost) {
+-        if (is_lost || !context_provider) {
+-          return;
+-        }
+-        shared_image->UpdateDestructionSyncToken(sync_token);
+-      },
+-      shared_gpu_context, shared_image);
++
++  viz::ReleaseCallback release_callback;
++  if (verify_release) {
++    auto release_token = sii->GenVerifiedSyncToken();
++    // The imported reference is in place, so the sender can drop its own.
++    std::move(external_callback).Run(release_token);
++    release_callback = blink::BindOnce(
++        [](base::WeakPtr<WebGraphicsContext3DProviderWrapper> context_provider,
++           scoped_refptr<gpu::ClientSharedImage> shared_image,
++           const gpu::SyncToken& sync_token, bool is_lost) {
++          if (is_lost || !context_provider) {
++            return;
++          }
++          shared_image->UpdateDestructionSyncToken(sync_token);
++        },
++        shared_gpu_context, shared_image);
++  } else {
++    // The sender keeps its reference until this image is destroyed, which is
++    // after the caller has copied it. Verifying the token would flush the GPU
++    // command buffer and wait on the renderer thread.
++    auto release_token = sii->GenUnverifiedSyncToken();
++    release_callback = blink::BindOnce(
++        [](base::WeakPtr<WebGraphicsContext3DProviderWrapper> context_provider,
++           scoped_refptr<gpu::ClientSharedImage> shared_image,
++           base::OnceCallback<void(const gpu::SyncToken&)> external,
++           gpu::SyncToken external_token, const gpu::SyncToken& sync_token,
++           bool is_lost) {
++          if (!is_lost && context_provider)
++            shared_image->UpdateDestructionSyncToken(sync_token);
++          if (external)
++            std::move(external).Run(external_token);
++        },
++        shared_gpu_context, shared_image, std::move(external_callback),
++        release_token);
++  }
+ 
+   return base::AdoptRef(new AcceleratedStaticBitmapImage(
+       std::move(shared_image), sync_token, alpha_type,
+diff --git a/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.h b/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.h
+index 06542d5f66c53b5bce69b58c74bb4b3a6f9fe9aa..cb4e0aa5ed7678395b88690c6538ee0c0ca91478 100644
+--- a/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.h
++++ b/third_party/blink/renderer/platform/graphics/accelerated_static_bitmap_image.h
+@@ -59,12 +59,16 @@ class PLATFORM_EXPORT AcceleratedStaticBitmapImage final
+   // The shared image may come from a different context,
+   // potentially from a different process.
+   // This takes ownership of the shared image.
++  // |verify_release| false imports the image without waiting for the GPU
++  // process and runs |release_callback| when this image is destroyed, after the
++  // caller has finished reading it.
+   static scoped_refptr<AcceleratedStaticBitmapImage>
+   CreateFromExternalSharedImage(
+       gpu::ExportedSharedImage exported_shared_image,
+       const gpu::SyncToken& sync_token,
+       SkAlphaType alpha_type,
+-      base::OnceCallback<void(const gpu::SyncToken&)> release_callback);
++      base::OnceCallback<void(const gpu::SyncToken&)> release_callback,
++      bool verify_release = true);
+ 
+   bool IsOpaque() override;
+   bool IsTextureBacked() const override { return true; }

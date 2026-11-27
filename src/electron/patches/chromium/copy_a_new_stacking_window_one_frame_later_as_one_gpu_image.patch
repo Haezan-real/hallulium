@@ -1,0 +1,486 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Haezan-real <exetude@gmail.com>
+Date: Sun, 15 Nov 2026 03:49:38 -0500
+Subject: Copy a new stacking window one frame later as one GPU image.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+
+diff --git a/components/viz/common/frame_sinks/copy_output_result.h b/components/viz/common/frame_sinks/copy_output_result.h
+index 1ce16c3c69b600fe1e7263f640e491581f25f2c6..faa44aa4f09c2247d18747fcde9470958d282d89 100644
+--- a/components/viz/common/frame_sinks/copy_output_result.h
++++ b/components/viz/common/frame_sinks/copy_output_result.h
+@@ -90,7 +90,8 @@ class VIZ_COMMON_EXPORT CopyOutputResult {
+   static constexpr gpu::SharedImageUsageSet kDefaultSharedImageUsage =
+       gpu::SHARED_IMAGE_USAGE_RASTER_READ |
+       gpu::SHARED_IMAGE_USAGE_DISPLAY_READ |
+-      gpu::SHARED_IMAGE_USAGE_DISPLAY_WRITE;
++      gpu::SHARED_IMAGE_USAGE_DISPLAY_WRITE |
++      gpu::SHARED_IMAGE_USAGE_WEBGPU_READ;
+ 
+   CopyOutputResult(Format format,
+                    Destination destination,
+diff --git a/components/viz/service/display/display.cc b/components/viz/service/display/display.cc
+index c087e5335b9276a2940fdfdb4b0da13520440789..bd86dbae0180f3e4ae4a5e0e00f34f06112fe5ce 100644
+--- a/components/viz/service/display/display.cc
++++ b/components/viz/service/display/display.cc
+@@ -67,6 +67,7 @@
+ #include "components/viz/service/display/skia_output_surface.h"
+ #include "components/viz/service/display/skia_renderer.h"
+ #include "components/viz/service/display/software_renderer.h"
++#include "components/viz/common/frame_sinks/copy_output_result.h"
+ #include "components/viz/service/display/surface_aggregator.h"
+ #include "components/viz/service/surfaces/surface.h"
+ #include "components/viz/service/surfaces/surface_manager.h"
+@@ -427,6 +428,12 @@ void Display::SetHaezansDomCapture(
+     aggregator_->SetHaezansCapture(haezans_max_z_, haezans_callback_);
+ }
+ 
++std::unique_ptr<CopyOutputResult> Display::TakeHaezansResult(uint32_t token) {
++  if (!aggregator_)
++    return nullptr;
++  return aggregator_->TakeHaezansResult(token);
++}
++
+ void Display::SetVisible(bool visible) {
+   TRACE_EVENT1("viz", "Display::SetVisible", "visible", visible);
+   if (renderer_)
+diff --git a/components/viz/service/display/display.h b/components/viz/service/display/display.h
+index 2b64ecc05785295193c45c7b7d8f1455f7eb31b2..96f4c31b19069e9aebff48b2d028abd77d59b40f 100644
+--- a/components/viz/service/display/display.h
++++ b/components/viz/service/display/display.h
+@@ -57,6 +57,7 @@ class Scheduler;
+ }
+ 
+ namespace viz {
++class CopyOutputResult;
+ class DirectRenderer;
+ class DisplayClient;
+ class DisplayResourceProvider;
+@@ -130,6 +131,7 @@ class VIZ_SERVICE_EXPORT Display : public DisplaySchedulerClient,
+   // new rectangle. An empty callback turns the capture off.
+   void SetHaezansDomCapture(std::optional<int> max_z,
+                             SurfaceAggregator::HaezansRegionCallback callback);
++  std::unique_ptr<CopyOutputResult> TakeHaezansResult(uint32_t token);
+ 
+   // Sets additional clip rect for the OutputSurface. DirectRenderer will not
+   // draw outside of this rect.
+diff --git a/components/viz/service/display/surface_aggregator.cc b/components/viz/service/display/surface_aggregator.cc
+index bf8a07a5cae31aaa0be77d9e84e0af17fe0b83ad..661d53bb6b0fd1b3917956fe976e0e641c7d8ada 100644
+--- a/components/viz/service/display/surface_aggregator.cc
++++ b/components/viz/service/display/surface_aggregator.cc
+@@ -460,6 +460,7 @@ SurfaceAggregator::SurfaceAggregator(
+ }
+ 
+ SurfaceAggregator::~SurfaceAggregator() {
++  *haezans_alive_ = false;
+   manager_->RemoveObserver(this);
+ 
+   contained_surfaces_.clear();
+@@ -2134,12 +2135,57 @@ void SurfaceAggregator::MarkAndPropagateCopyRequestPasses(
+   }
+ }
+ 
++namespace {
++
++// Rectangles that nearly touch belong to one window. Grow, union, and repeat
++// so a chain of layers becomes one copy instead of one rectangle per layer.
++std::vector<gfx::Rect> ClusterCaptureRects(std::vector<gfx::Rect> rects) {
++  constexpr int kSlack = 16;
++  bool merged = true;
++  while (merged) {
++    merged = false;
++    for (size_t i = 0; i < rects.size(); ++i) {
++      if (rects[i].IsEmpty())
++        continue;
++      gfx::Rect grown = rects[i];
++      grown.Inset(-kSlack);
++      for (size_t j = i + 1; j < rects.size();) {
++        if (rects[j].IsEmpty()) {
++          rects.erase(rects.begin() +
++                      static_cast<std::vector<gfx::Rect>::difference_type>(j));
++          continue;
++        }
++        gfx::Rect other = rects[j];
++        other.Inset(-kSlack);
++        if (!grown.Intersects(other)) {
++          ++j;
++          continue;
++        }
++        rects[i].Union(rects[j]);
++        rects.erase(rects.begin() +
++                    static_cast<std::vector<gfx::Rect>::difference_type>(j));
++        grown = rects[i];
++        grown.Inset(-kSlack);
++        merged = true;
++      }
++    }
++  }
++  std::erase_if(rects, [](const gfx::Rect& rect) { return rect.IsEmpty(); });
++  return rects;
++}
++
++}  // namespace
++
+ void SurfaceAggregator::SetHaezansCapture(std::optional<int> max_z,
+                                            HaezansRegionCallback callback) {
+   haezans_max_z_ = std::move(max_z);
+   haezans_callback_ = std::move(callback);
+-  if (!haezans_max_z_ || !haezans_callback_)
++  if (!haezans_max_z_ || !haezans_callback_) {
+     haezans_quads_.clear();
++    haezans_pending_.clear();
++    haezans_results_.clear();
++    haezans_pass_id_.reset();
++  }
+ }
+ 
+ void SurfaceAggregator::ApplyHaezansCapture() {
+@@ -2175,6 +2221,7 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+   }
+   if (!any_below) {
+     haezans_quads_.clear();
++    haezans_pending_.clear();
+     haezans_pass_id_.reset();
+     return;
+   }
+@@ -2255,45 +2302,45 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+                    gfx::Size(), gfx::RectF(content->output_rect),
+                    /*force_anti_aliasing_off=*/false);
+ 
+-  if (fresh.size() > 8) {
+-    gfx::Rect united;
+-    for (const gfx::Rect& rect : fresh)
+-      united.Union(rect);
+-    fresh.clear();
+-    if (!united.IsEmpty())
+-      fresh.push_back(united);
+-  }
+   haezans_quads_ = std::move(current);
+ 
+-  // Only the new rectangles are drawn and read back. An empty damage rect
+-  // keeps the cached backing, so a float opening does not redraw the rest.
++  // Draw the new rectangles this frame and copy them on the next one, so the
++  // frame that opens a window presents before any copy. Rectangles that touch
++  // are one window and one copy. Empty damage keeps the cached backing.
++  std::vector<gfx::Rect> due = std::move(haezans_pending_);
++  haezans_pending_ = ClusterCaptureRects(std::move(fresh));
++  for (gfx::Rect& rect : haezans_pending_)
++    rect.Intersect(content->output_rect);
++  std::erase_if(haezans_pending_,
++                [](const gfx::Rect& rect) { return rect.IsEmpty(); });
++
+   gfx::Rect capture_damage;
+-  for (const gfx::Rect& rect : fresh)
++  for (const gfx::Rect& rect : haezans_pending_)
++    capture_damage.Union(rect);
++  std::vector<gfx::Rect> copy_rects;
++  for (gfx::Rect rect : due) {
++    rect.Intersect(content->output_rect);
++    if (rect.IsEmpty())
++      continue;
+     capture_damage.Union(rect);
++    copy_rects.push_back(rect);
++  }
+   capture->damage_rect = capture_damage;
+   capture->has_damage_from_contributing_content = !capture_damage.IsEmpty();
+ 
+-  for (const gfx::Rect& rect : fresh) {
++  for (const gfx::Rect& rect : copy_rects) {
+     auto request = std::make_unique<CopyOutputRequest>(
+         CopyOutputRequest::ResultFormat::RGBA,
+-        CopyOutputRequest::ResultDestination::kSystemMemory,
++        CopyOutputRequest::ResultDestination::kSharedImage,
+         base::BindOnce(
+-            [](HaezansRegionCallback callback, gfx::Rect rect,
+-               std::unique_ptr<CopyOutputResult> result) {
+-              if (!result || result->IsEmpty() || !callback)
++            [](std::weak_ptr<bool> alive, SurfaceAggregator* aggregator,
++               gfx::Rect rect, std::unique_ptr<CopyOutputResult> result) {
++              std::shared_ptr<bool> still = alive.lock();
++              if (!still || !*still)
+                 return;
+-              const gfx::Size size = result->size();
+-              if (size.IsEmpty())
+-                return;
+-              std::vector<uint8_t> pixels(
+-                  static_cast<size_t>(size.width()) * size.height() * 4);
+-              if (!result->ReadRGBAPlane(base::span<uint8_t>(pixels),
+-                                         size.width() * 4)) {
+-                return;
+-              }
+-              callback.Run(gfx::Rect(rect.origin(), size), std::move(pixels));
++              aggregator->DeliverHaezansResult(rect, std::move(result));
+             },
+-            haezans_callback_, rect));
++            std::weak_ptr<bool>(haezans_alive_), base::Unretained(this), rect));
+     request->set_area(rect);
+     request->set_result_task_runner(
+         base::SequencedTaskRunner::GetCurrentDefault());
+@@ -2305,6 +2352,31 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+   (*dest_pass_list_)[content_index + 1] = std::move(replacement);
+ }
+ 
++void SurfaceAggregator::DeliverHaezansResult(
++    const gfx::Rect& rect,
++    std::unique_ptr<CopyOutputResult> result) {
++  if (!result || result->IsEmpty() || !haezans_callback_ ||
++      !result->GetSharedImage()) {
++    return;
++  }
++  const gfx::Size size = result->size();
++  if (size.IsEmpty())
++    return;
++  const uint32_t token = ++haezans_next_result_;
++  haezans_results_.emplace(token, std::move(result));
++  haezans_callback_.Run(gfx::Rect(rect.origin(), size), token);
++}
++
++std::unique_ptr<CopyOutputResult> SurfaceAggregator::TakeHaezansResult(
++    uint32_t token) {
++  auto found = haezans_results_.find(token);
++  if (found == haezans_results_.end())
++    return nullptr;
++  auto result = std::move(found->second);
++  haezans_results_.erase(found);
++  return result;
++}
++
+ AggregatedFrame SurfaceAggregator::Aggregate(
+     const SurfaceId& surface_id,
+     base::TimeTicks expected_display_time,
+diff --git a/components/viz/service/display/surface_aggregator.h b/components/viz/service/display/surface_aggregator.h
+index e581b887291200dc36af005fd95636047eea8bdd..cf8de6b22bdf242ce831c7dcfcbbc8a4460eb697 100644
+--- a/components/viz/service/display/surface_aggregator.h
++++ b/components/viz/service/display/surface_aggregator.h
+@@ -39,6 +39,7 @@
+ 
+ namespace viz {
+ class DisplayResourceProvider;
++class CopyOutputResult;
+ class Surface;
+ class SurfaceDrawQuad;
+ class SurfaceManager;
+@@ -119,12 +120,15 @@ class VIZ_SERVICE_EXPORT SurfaceAggregator : public SurfaceObserver {
+ 
+   void SetMaxRenderTargetSize(int max_size);
+ 
+-  // When set, quads at or below |max_z| are drawn once into a persistent pass
+-  // and new rectangles of that pass are reported. A null callback turns it off.
++  // When set, quads at or below |max_z| are drawn into one persistent pass.
++  // A new rectangle is copied on the following frame, one GPU image per
++  // window. The callback's token is taken with TakeHaezansResult. A null
++  // callback turns it off.
+   using HaezansRegionCallback =
+-      base::RepeatingCallback<void(const gfx::Rect&, std::vector<uint8_t>)>;
++      base::RepeatingCallback<void(const gfx::Rect&, uint32_t)>;
+   void SetHaezansCapture(std::optional<int> max_z,
+                          HaezansRegionCallback callback);
++  std::unique_ptr<CopyOutputResult> TakeHaezansResult(uint32_t token);
+ 
+   // Checks if damage to `surface_id` potentially contributes to the display
+   // damage.
+@@ -475,8 +479,16 @@ class VIZ_SERVICE_EXPORT SurfaceAggregator : public SurfaceObserver {
+   HaezansRegionCallback haezans_callback_;
+   std::set<std::tuple<uint32_t, int, int, int, int>> haezans_quads_;
+   std::optional<AggregatedRenderPassId> haezans_pass_id_;
++  // Rectangles drawn last frame, copied on this one.
++  std::vector<gfx::Rect> haezans_pending_;
++  std::map<uint32_t, std::unique_ptr<CopyOutputResult>> haezans_results_;
++  uint32_t haezans_next_result_ = 0;
++  // Cleared in the destructor so a copy that finishes later is dropped.
++  std::shared_ptr<bool> haezans_alive_ = std::make_shared<bool>(true);
+ 
+   void ApplyHaezansCapture();
++  void DeliverHaezansResult(const gfx::Rect& rect,
++                            std::unique_ptr<CopyOutputResult> result);
+ };
+ 
+ }  // namespace viz
+diff --git a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc
+index 0195807940160ccb25a9b05677540fdfeffef3c3..5d593c7f9c97b0b62e01e37624ddac3f8cbf002e 100644
+--- a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc
++++ b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc
+@@ -9,6 +9,10 @@
+ #include <variant>
+ #include <vector>
+ 
++#include "components/viz/common/frame_sinks/copy_output_result.h"
++#include "gpu/command_buffer/client/client_shared_image.h"
++#include "gpu/command_buffer/common/sync_token.h"
++
+ #include "base/containers/flat_set.h"
+ #include "base/functional/bind.h"
+ #include "base/logging.h"
+@@ -355,19 +359,49 @@ void RootCompositorFrameSinkImpl::SetHaezansDomCapture(
+     int32_t max_z,
+     mojo::PendingRemote<mojom::HaezansDomCaptureClient> client) {
+   if (!enabled || !client) {
++    haezans_held_.clear();
+     haezans_client_.reset();
+     display_->SetHaezansDomCapture(std::nullopt, {});
+     return;
+   }
+   haezans_client_.Bind(std::move(client));
++  haezans_client_.set_disconnect_handler(base::BindOnce(
++      &RootCompositorFrameSinkImpl::OnHaezansClientDisconnected,
++      base::Unretained(this)));
+   display_->SetHaezansDomCapture(
+-      max_z, base::BindRepeating(
+-                 [](mojo::Remote<mojom::HaezansDomCaptureClient>* remote,
+-                    const gfx::Rect& rect, std::vector<uint8_t> pixels) {
+-                   if (remote->is_bound())
+-                     (*remote)->OnRegion(rect, pixels);
+-                 },
+-                 base::Unretained(&haezans_client_)));
++      max_z, base::BindRepeating(&RootCompositorFrameSinkImpl::OnHaezansRegion,
++                                 base::Unretained(this)));
++}
++
++void RootCompositorFrameSinkImpl::OnHaezansRegion(const gfx::Rect& rect,
++                                                  uint32_t token) {
++  auto result = display_->TakeHaezansResult(token);
++  if (!result || !haezans_client_.is_bound())
++    return;
++  scoped_refptr<gpu::ClientSharedImage> shared = result->GetSharedImage();
++  if (!shared)
++    return;
++  gpu::SyncToken sync_token = shared->creation_sync_token();
++  gpu::ExportedSharedImage exported = shared->Export();
++  haezans_held_.emplace(token, std::move(result));
++  haezans_client_->OnRegion(token, rect, std::move(exported), sync_token);
++}
++
++void RootCompositorFrameSinkImpl::ReleaseHaezansCapture(
++    uint32_t token,
++    const gpu::SyncToken& sync_token) {
++  auto found = haezans_held_.find(token);
++  if (found == haezans_held_.end())
++    return;
++  viz::ReleaseCallback release = found->second->TakeSharedImageOwnership();
++  if (release)
++    std::move(release).Run(sync_token, false);
++  haezans_held_.erase(found);
++}
++
++void RootCompositorFrameSinkImpl::OnHaezansClientDisconnected() {
++  haezans_held_.clear();
++  display_->SetHaezansDomCapture(std::nullopt, {});
+ }
+ 
+ #if BUILDFLAG(IS_WIN)
+diff --git a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h
+index 0552bc536247b5a52958d860f81309f6d2ea22ac..7d7f5f40c646016e09c59e725281a595e65ea79d 100644
+--- a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h
++++ b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h
+@@ -5,6 +5,7 @@
+ #ifndef COMPONENTS_VIZ_SERVICE_FRAME_SINKS_ROOT_COMPOSITOR_FRAME_SINK_IMPL_H_
+ #define COMPONENTS_VIZ_SERVICE_FRAME_SINKS_ROOT_COMPOSITOR_FRAME_SINK_IMPL_H_
+ 
++#include <map>
+ #include <memory>
+ #include <optional>
+ #include <vector>
+@@ -38,6 +39,7 @@
+ 
+ namespace viz {
+ 
++class CopyOutputResult;
+ class Display;
+ class OutputSurfaceProvider;
+ class ExternalBeginFrameSource;
+@@ -79,6 +81,8 @@ class VIZ_SERVICE_EXPORT RootCompositorFrameSinkImpl
+       bool enabled,
+       int32_t max_z,
+       mojo::PendingRemote<mojom::HaezansDomCaptureClient> client) override;
++  void ReleaseHaezansCapture(uint32_t token,
++                             const gpu::SyncToken& sync_token) override;
+ #if BUILDFLAG(IS_WIN)
+   void DisableSwapUntilResize(DisableSwapUntilResizeCallback callback) override;
+ #endif
+@@ -256,7 +260,11 @@ class VIZ_SERVICE_EXPORT RootCompositorFrameSinkImpl
+   // features.
+   std::optional<base::TimeDelta> max_vsync_interval_ = std::nullopt;
+ 
++  void OnHaezansRegion(const gfx::Rect& rect, uint32_t token);
++  void OnHaezansClientDisconnected();
++
+   mojo::Remote<mojom::HaezansDomCaptureClient> haezans_client_;
++  std::map<uint32_t, std::unique_ptr<CopyOutputResult>> haezans_held_;
+ };
+ 
+ }  // namespace viz
+diff --git a/services/viz/privileged/mojom/compositing/display_private.mojom b/services/viz/privileged/mojom/compositing/display_private.mojom
+index 711cf61b7e07475d0ca42d09cfd23e9ae9c8b7d1..bb8b81f62a161f8bfb3e263d4dc4ca3e99fbcbf2 100644
+--- a/services/viz/privileged/mojom/compositing/display_private.mojom
++++ b/services/viz/privileged/mojom/compositing/display_private.mojom
+@@ -5,7 +5,9 @@
+ module viz.mojom;
+ 
+ import "gpu/ipc/common/context_result.mojom";
++import "gpu/ipc/common/exported_shared_image.mojom";
+ import "gpu/ipc/common/surface_handle.mojom";
++import "gpu/ipc/common/sync_token.mojom";
+ import "mojo/public/mojom/base/time.mojom";
+ import "ui/display/mojom/display_constants.mojom";
+ import "ui/gfx/mojom/ca_layer_params.mojom";
+@@ -34,7 +36,12 @@ struct AdaptiveRefreshRateInfo {
+ // Receives rectangles of a z-cutoff capture. |rect| is in the window's pixels,
+ // origin at the top left. |pixels| is tightly packed RGBA.
+ interface HaezansDomCaptureClient {
+-  OnRegion(gfx.mojom.Rect rect, array<uint8> pixels);
++  // |image| is a GPU shared image of |rect|. |sync_token| waits for the copy.
++  // The client releases |token| after importing the image.
++  OnRegion(uint32 token,
++           gfx.mojom.Rect rect,
++           gpu.mojom.ExportedSharedImage image,
++           gpu.mojom.SyncToken sync_token);
+ };
+ 
+ // The DisplayPrivate is used by privileged clients to talk to Display.
+@@ -132,6 +139,9 @@ interface DisplayPrivate {
+       bool enabled,
+       int32 max_z,
+       pending_remote<HaezansDomCaptureClient>? client);
++
++  // Drops the compositor's reference once the client has imported |token|.
++  ReleaseHaezansCapture(uint32 token, gpu.mojom.SyncToken sync_token);
+ };
+ 
+ // DisplayClient allows privileged clients to receive events from the Display.
+diff --git a/ui/compositor/compositor.cc b/ui/compositor/compositor.cc
+index bcd7d59e9af6c18b4d5df8377c7fa1959b81d457..067afdfc1009ce18c7943f154950df58581092c0 100644
+--- a/ui/compositor/compositor.cc
++++ b/ui/compositor/compositor.cc
+@@ -608,6 +608,12 @@ void Compositor::SetHaezansDomCapture(
+     display_private_->SetHaezansDomCapture(enabled, max_z, std::move(client));
+ }
+ 
++void Compositor::ReleaseHaezansDomCapture(uint32_t token,
++                                          const gpu::SyncToken& sync_token) {
++  if (display_private_)
++    display_private_->ReleaseHaezansCapture(token, sync_token);
++}
++
+ void Compositor::SetVisible(bool visible) {
+   const bool changed = visible != IsVisible();
+   if (changed) {
+diff --git a/ui/compositor/compositor.h b/ui/compositor/compositor.h
+index 07d4e9af246c644470f49b22a21c1f3d1e98e657..a357d7538002ab43c8a289936ff290e2d9f0efe4 100644
+--- a/ui/compositor/compositor.h
++++ b/ui/compositor/compositor.h
+@@ -24,6 +24,7 @@
+ #include "base/time/time.h"
+ #include "base/types/strong_alias.h"
+ #include "build/build_config.h"
++#include "gpu/command_buffer/common/sync_token.h"
+ #include "cc/metrics/events_metrics_manager.h"
+ #include "cc/metrics/frame_sequence_tracker.h"
+ #include "cc/paint/element_id.h"
+@@ -307,6 +308,7 @@ class COMPOSITOR_EXPORT Compositor : public base::PowerSuspendObserver,
+       bool enabled,
+       int32_t max_z,
+       mojo::PendingRemote<viz::mojom::HaezansDomCaptureClient> client);
++  void ReleaseHaezansDomCapture(uint32_t token, const gpu::SyncToken& sync_token);
+ 
+   // Gets the visibility of the underlying compositor.
+   bool IsVisible();

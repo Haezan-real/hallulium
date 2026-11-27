@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cheng Zhao <zcbenz@gmail.com>
+Date: Thu, 20 Sep 2018 17:45:47 -0700
+Subject: disable_hidden.patch
+
+Electron uses this to disable background throttling for hidden windows.
+
+diff --git a/content/browser/renderer_host/render_widget_host_impl.cc b/content/browser/renderer_host/render_widget_host_impl.cc
+index 96bf858210330c67eec537a529c28adb48aaa90b..83c90b7fed9a21d218a225503913324c318baca3 100644
+--- a/content/browser/renderer_host/render_widget_host_impl.cc
++++ b/content/browser/renderer_host/render_widget_host_impl.cc
+@@ -826,6 +826,10 @@ void RenderWidgetHostImpl::WasHidden() {
+     return;
+   }
+ 
++  if (disable_hidden_) {
++    return;
++  }
++
+   // Cancel pending pointer lock requests, unless there's an open user prompt.
+   // Prompts should remain open and functional across tab switches.
+   if (!delegate_ || !delegate_->IsWaitingForPointerLockPrompt(this)) {
+diff --git a/content/browser/renderer_host/render_widget_host_impl.h b/content/browser/renderer_host/render_widget_host_impl.h
+index 583938c8ead09419c4bc10a6a936bee73aeab591..b9f33abafe4cf2a34f0d0a268941fbc7b56d44ef 100644
+--- a/content/browser/renderer_host/render_widget_host_impl.h
++++ b/content/browser/renderer_host/render_widget_host_impl.h
+@@ -1069,6 +1069,8 @@ class CONTENT_EXPORT RenderWidgetHostImpl
+ 
+   base::TimeDelta GetHungRendererDelayForTesting();
+ 
++  // Electron: Prevents the widget from getting hidden.
++  bool disable_hidden_ = false;
+  protected:
+   // |routing_id| must not be IPC::mojom::kRoutingIdNone.
+   // If this object outlives |delegate|, DetachDelegate() must be called when
+diff --git a/content/browser/renderer_host/render_widget_host_view_aura.cc b/content/browser/renderer_host/render_widget_host_view_aura.cc
+index 058ebd290882b130685a1298d17fa5b842070232..b545b615ef9e251bcaf303993509bf920b115cdb 100644
+--- a/content/browser/renderer_host/render_widget_host_view_aura.cc
++++ b/content/browser/renderer_host/render_widget_host_view_aura.cc
+@@ -722,7 +722,7 @@ void RenderWidgetHostViewAura::HideImpl() {
+   CHECK(visibility_ == Visibility::HIDDEN ||
+         visibility_ == Visibility::OCCLUDED);
+ 
+-  if (!host()->IsHidden()) {
++  if (!host()->IsHidden() && !host()->disable_hidden_) {
+     host()->WasHidden();
+     aura::WindowTreeHost* host = window_->GetHost();
+       aura::Window* parent = window_->parent();

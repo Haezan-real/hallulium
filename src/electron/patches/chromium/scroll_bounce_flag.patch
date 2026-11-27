@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cheng Zhao <zcbenz@gmail.com>
+Date: Thu, 20 Sep 2018 17:49:03 -0700
+Subject: scroll_bounce_flag.patch
+
+Patch to make scrollBounce option work.
+
+diff --git a/content/renderer/render_thread_impl.cc b/content/renderer/render_thread_impl.cc
+index 7b8f245a9071b0084476f76422ecf26128e4a69a..6c2bea15b494574255304ba895a9d766d98b8a17 100644
+--- a/content/renderer/render_thread_impl.cc
++++ b/content/renderer/render_thread_impl.cc
+@@ -1163,11 +1163,11 @@ bool RenderThreadImpl::IsLcdTextEnabled() {
+ }
+ 
+ bool RenderThreadImpl::IsElasticOverscrollEnabledOnRoot() {
+-  return is_elastic_overscroll_enabled_on_root_;
++  return base::CommandLine::ForCurrentProcess()->HasSwitch("scroll-bounce");
+ }
+ 
+ bool RenderThreadImpl::IsElasticOverscrollSupported() {
+-  return is_elastic_overscroll_supported_;
++  return base::CommandLine::ForCurrentProcess()->HasSwitch("scroll-bounce");
+ }
+ 
+ blink::scheduler::WebThreadScheduler*

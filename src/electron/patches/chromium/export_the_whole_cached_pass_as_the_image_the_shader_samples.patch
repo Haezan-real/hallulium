@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Haezan-real <exetude@gmail.com>
+Date: Sun, 15 Nov 2026 08:35:35 -0500
+Subject: Export the whole cached pass as the image the shader samples.
+
+
+diff --git a/components/viz/service/display/surface_aggregator.cc b/components/viz/service/display/surface_aggregator.cc
+index 0e8fd19b03b62b896667a2640338f055fbd71795..df4184fae51a75722a88888e3f2918cbca4bec43 100644
+--- a/components/viz/service/display/surface_aggregator.cc
++++ b/components/viz/service/display/surface_aggregator.cc
+@@ -2306,9 +2306,9 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+ 
+   haezans_quads_ = std::move(current);
+ 
+-  // Draw new rectangles into the cache now. Copy them only after the display
+-  // has produced no new rectangles for a while, so opening a window does not
+-  // export an image on the open frames. Touching rectangles are one copy.
++  // Draw new rectangles into the cache now. After the display has produced no
++  // new rectangle for a while, export the whole cached pass as one image. The
++  // page samples that image. The open frames do not export anything.
+   std::vector<gfx::Rect> new_rects = ClusterCaptureRects(std::move(fresh));
+   for (gfx::Rect& rect : new_rects)
+     rect.Intersect(content->output_rect);
+@@ -2329,7 +2329,7 @@ void SurfaceAggregator::ApplyHaezansCapture() {
+   if (new_rects.empty() && !haezans_pending_.empty() &&
+       !haezans_copy_after_.is_null() &&
+       base::TimeTicks::Now() >= haezans_copy_after_) {
+-    copy_rects = std::move(haezans_pending_);
++    copy_rects.push_back(content->output_rect);
+     haezans_pending_.clear();
+     haezans_copy_after_ = base::TimeTicks();
+   }

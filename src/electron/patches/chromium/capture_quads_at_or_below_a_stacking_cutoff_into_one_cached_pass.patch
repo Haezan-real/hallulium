@@ -1,0 +1,755 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Haezan-real <exetude@gmail.com>
+Date: Sun, 15 Nov 2026 02:45:19 -0500
+Subject: Capture quads at or below a stacking cutoff into one cached pass.
+
+
+diff --git a/cc/layers/layer_impl.cc b/cc/layers/layer_impl.cc
+index f79cb13a053c48ff7f5ead1b0d4650f6fac8bf1e..4da1e2bcbf6f197d33022878dab999001b6db67f 100644
+--- a/cc/layers/layer_impl.cc
++++ b/cc/layers/layer_impl.cc
+@@ -234,6 +234,7 @@ void LayerImpl::PopulateSharedQuadState(viz::SharedQuadState* state,
+                 GetSortingContextId(),
+                 static_cast<uint32_t>(stable_id_for_shared_quad_state()),
+                 draw_properties_.is_fast_rounded_corner);
++  state->stacking_z = effect_node->stacking_z;
+ }
+ 
+ void LayerImpl::PopulateScaledSharedQuadState(viz::SharedQuadState* state,
+@@ -272,6 +273,7 @@ void LayerImpl::PopulateScaledSharedQuadStateWithContentRects(
+                 GetSortingContextId(),
+                 static_cast<uint32_t>(stable_id_for_shared_quad_state()),
+                 draw_properties().is_fast_rounded_corner);
++  state->stacking_z = effect_node->stacking_z;
+ }
+ 
+ bool LayerImpl::WillDraw(DrawMode draw_mode,
+diff --git a/cc/layers/render_surface_impl.cc b/cc/layers/render_surface_impl.cc
+index becba7eae6cfe51e266dfb4428b7c4f1dba92622..1b4eb51c5b4018901d12516b123f98795c9e7614 100644
+--- a/cc/layers/render_surface_impl.cc
++++ b/cc/layers/render_surface_impl.cc
+@@ -581,6 +581,7 @@ void RenderSurfaceImpl::AppendQuads(const AppendQuadsContext& context,
+       sorting_context_id,
+       static_cast<uint32_t>(stable_id_for_shared_quad_state_),
+       is_fast_rounded_corner());
++  shared_quad_state->stacking_z = OwningEffectNode()->stacking_z;
+ 
+   if (layer_tree_impl_->debug_state().show_debug_borders.test(
+           DebugBorderType::RENDERPASS)) {
+diff --git a/cc/mojo_embedder/viz_layer_context.cc b/cc/mojo_embedder/viz_layer_context.cc
+index a91d1cf5cf3227600672f3f3080745986695f882..8f3fccb37fa5e9aff364ff7b07240a558ad3b756 100644
+--- a/cc/mojo_embedder/viz_layer_context.cc
++++ b/cc/mojo_embedder/viz_layer_context.cc
+@@ -146,6 +146,7 @@ void ComputePropertyTreeNodeUpdate(
+       old_node->subtree_capture_id == new_node.subtree_capture_id &&
+       old_node->subtree_size == new_node.subtree_size &&
+       old_node->blend_mode == new_node.blend_mode &&
++      old_node->stacking_z == new_node.stacking_z &&
+       old_node->target_id == new_node.target_id &&
+       old_node->view_transition_target_id ==
+           new_node.view_transition_target_id &&
+@@ -212,6 +213,7 @@ void ComputePropertyTreeNodeUpdate(
+   wire->subtree_capture_id = new_node.subtree_capture_id;
+   wire->subtree_size = new_node.subtree_size;
+   wire->blend_mode = base::checked_cast<uint32_t>(new_node.blend_mode);
++  wire->stacking_z = new_node.stacking_z;
+   wire->target_id = new_node.target_id;
+   wire->view_transition_target_id = new_node.view_transition_target_id;
+   wire->closest_ancestor_with_cached_render_surface_id =
+diff --git a/cc/trees/effect_node.h b/cc/trees/effect_node.h
+index 71b55c9cfb28961ac62a51cefa9371d5ebc3c2eb..f1f960b086822299f61f386267708ca3ad5776d9 100644
+--- a/cc/trees/effect_node.h
++++ b/cc/trees/effect_node.h
+@@ -130,6 +130,10 @@ struct CC_EXPORT EffectNode {
+ 
+   SkBlendMode blend_mode = SkBlendMode::kSrcOver;
+ 
++  // Resolved CSS stacking number for this effect. Descendants with an automatic
++  // z-index inherit the ancestor that set one. 0 is the page background.
++  int stacking_z = 0;
++
+   // RenderSurfaceReason::kNone if this effect node should not create a render
+   // surface, or the reason that this effect node should create one.
+   RenderSurfaceReason render_surface_reason = RenderSurfaceReason::kNone;
+diff --git a/components/viz/common/quads/shared_quad_state.cc b/components/viz/common/quads/shared_quad_state.cc
+index 6a193762b88b7ecb6d43377d449b794c8d1bfb88..0b8126d4415871c63908d130065c84d2632b849c 100644
+--- a/components/viz/common/quads/shared_quad_state.cc
++++ b/components/viz/common/quads/shared_quad_state.cc
+@@ -37,6 +37,7 @@ bool SharedQuadState::Equals(const SharedQuadState& other) const {
+          are_contents_opaque == other.are_contents_opaque &&
+          opacity == other.opacity && blend_mode == other.blend_mode &&
+          sorting_context_id == other.sorting_context_id &&
++         stacking_z == other.stacking_z &&
+          layer_id == other.layer_id &&
+          layer_namespace_id == other.layer_namespace_id &&
+          offset_tag == other.offset_tag;
+@@ -52,6 +53,7 @@ void SharedQuadState::SetAll(const SharedQuadState& other) {
+   opacity = other.opacity;
+   blend_mode = other.blend_mode;
+   sorting_context_id = other.sorting_context_id;
++  stacking_z = other.stacking_z;
+   layer_id = other.layer_id;
+   layer_namespace_id = other.layer_namespace_id;
+   is_fast_rounded_corner = other.is_fast_rounded_corner;
+@@ -69,6 +71,7 @@ void SharedQuadState::SetAll(const gfx::Transform& transform,
+                              int sorting_context,
+                              uint32_t layer,
+                              bool fast_rounded_corner) {
++  stacking_z = 0;
+   quad_to_target_transform = transform;
+   quad_layer_rect = layer_rect;
+   visible_quad_layer_rect = visible_layer_rect;
+@@ -97,6 +100,7 @@ void SharedQuadState::AsValueInto(base::trace_event::TracedValue* value) const {
+   value->SetDouble("opacity", opacity);
+   value->SetString("blend_mode", SkBlendMode_Name(blend_mode));
+   value->SetInteger("sorting_context_id", sorting_context_id);
++  value->SetInteger("stacking_z", stacking_z);
+   // Skip |layer_id| and |layer_namespace_id| because their values are
+   // different in renderer and viz under TreesInViz mode.
+   value->SetBoolean("is_fast_rounded_corner", is_fast_rounded_corner);
+diff --git a/components/viz/common/quads/shared_quad_state.h b/components/viz/common/quads/shared_quad_state.h
+index 872ea876b9d38661273a23d8c0f45d4b9a9f6534..75369e8c32966e9314fbcf682c2a7536077b5704 100644
+--- a/components/viz/common/quads/shared_quad_state.h
++++ b/components/viz/common/quads/shared_quad_state.h
+@@ -75,6 +75,9 @@ class VIZ_COMMON_EXPORT SharedQuadState {
+   float opacity = 1.0f;
+   SkBlendMode blend_mode = SkBlendMode::kSrcOver;
+   int sorting_context_id = 0;
++  // Hallu stacking stamp. 0 is the page background. Quads keep this through surface
++  // aggregation so a capture can include every quad at or below a cutoff.
++  int stacking_z = 0;
+   // Optionally set by the client as a performance hint for viz with a stable ID
+   // for the layer that produced the DrawQuad(s). This is used to help identify
+   // that DrawQuad(s) in one frame came from the same layer as DrawQuads() from
+diff --git a/components/viz/service/display/display.cc b/components/viz/service/display/display.cc
+index 0fb4badb89a234a02fd4955de9ea498e9952ff58..c087e5335b9276a2940fdfdb4b0da13520440789 100644
+--- a/components/viz/service/display/display.cc
++++ b/components/viz/service/display/display.cc
+@@ -418,6 +418,15 @@ void Display::SetLocalSurfaceId(const LocalSurfaceId& id,
+   damage_tracker_->SetNewRootSurface(current_surface_id_);
+ }
+ 
++void Display::SetHaezansDomCapture(
++    std::optional<int> max_z,
++    SurfaceAggregator::HaezansRegionCallback callback) {
++  haezans_max_z_ = std::move(max_z);
++  haezans_callback_ = std::move(callback);
++  if (aggregator_)
++    aggregator_->SetHaezansCapture(haezans_max_z_, haezans_callback_);
++}
++
+ void Display::SetVisible(bool visible) {
+   TRACE_EVENT1("viz", "Display::SetVisible", "visible", visible);
+   if (renderer_)
+@@ -580,6 +589,7 @@ void Display::InitializeRenderer() {
+       prevent_merging_surfaces_to_root_pass);
+ 
+   aggregator_->set_output_is_secure(output_is_secure_);
++  aggregator_->SetHaezansCapture(haezans_max_z_, haezans_callback_);
+   aggregator_->SetDisplayColorSpaces(display_color_spaces_);
+   aggregator_->SetMaxRenderTargetSize(
+       output_surface_->capabilities().max_render_target_size);
+diff --git a/components/viz/service/display/display.h b/components/viz/service/display/display.h
+index 17a59609246e9f030a675fe278a50c7e6c2ada2d..2b64ecc05785295193c45c7b7d8f1455f7eb31b2 100644
+--- a/components/viz/service/display/display.h
++++ b/components/viz/service/display/display.h
+@@ -7,6 +7,7 @@
+ 
+ #include <deque>
+ #include <memory>
++#include <optional>
+ #include <utility>
+ #include <vector>
+ 
+@@ -125,6 +126,11 @@ class VIZ_SERVICE_EXPORT Display : public DisplaySchedulerClient,
+   void SetVisible(bool visible);
+   void Resize(const gfx::Size& new_size);
+ 
++  // Draws quads at or below |max_z| into one persistent pass and reports each
++  // new rectangle. An empty callback turns the capture off.
++  void SetHaezansDomCapture(std::optional<int> max_z,
++                            SurfaceAggregator::HaezansRegionCallback callback);
++
+   // Sets additional clip rect for the OutputSurface. DirectRenderer will not
+   // draw outside of this rect.
+   void SetOutputSurfaceClipRect(const gfx::Rect& clip_rect);
+@@ -326,6 +332,8 @@ class VIZ_SERVICE_EXPORT Display : public DisplaySchedulerClient,
+   // `aggregator_` depends on `resource_provider_` so it must be declared last
+   // and destroyed first.
+   std::unique_ptr<SurfaceAggregator> aggregator_;
++  std::optional<int> haezans_max_z_;
++  SurfaceAggregator::HaezansRegionCallback haezans_callback_;
+   // `damage_tracker_` depends on `aggregator_` so it must be declared last and
+   // destroyed first.
+   std::unique_ptr<DisplayDamageTracker> damage_tracker_;
+diff --git a/components/viz/service/display/surface_aggregator.cc b/components/viz/service/display/surface_aggregator.cc
+index 5e8b897384c6d5f0ae2af5698898573bc50c7a64..bf8a07a5cae31aaa0be77d9e84e0af17fe0b83ad 100644
+--- a/components/viz/service/display/surface_aggregator.cc
++++ b/components/viz/service/display/surface_aggregator.cc
+@@ -8,21 +8,28 @@
+ 
+ #include <algorithm>
+ #include <map>
++#include <set>
++#include <tuple>
+ #include <utility>
+ #include <vector>
+ 
+ #include "base/check_op.h"
+ #include "base/containers/adapters.h"
++#include "base/containers/span.h"
+ #include "base/functional/bind.h"
+ #include "base/logging.h"
+ #include "base/metrics/histogram_macros.h"
+ #include "base/numerics/ranges.h"
+ #include "base/strings/to_string.h"
+ #include "base/task/common/task_annotator.h"
++#include "base/task/sequenced_task_runner.h"
++#include "build/build_config.h"
+ #include "base/trace_event/trace_event.h"
+ #include "base/trace_event/typed_macros.h"
+ #include "cc/base/math_util.h"
+ #include "components/viz/common/features.h"
++#include "components/viz/common/frame_sinks/copy_output_request.h"
++#include "components/viz/common/frame_sinks/copy_output_result.h"
+ #include "components/viz/common/quads/aggregated_render_pass.h"
+ #include "components/viz/common/quads/aggregated_render_pass_draw_quad.h"
+ #include "components/viz/common/quads/compositor_frame.h"
+@@ -245,6 +252,7 @@ SharedQuadState* CopyAndScaleSharedQuadState(
+       source_sqs->are_contents_opaque, source_sqs->opacity,
+       source_sqs->blend_mode, source_sqs->sorting_context_id,
+       source_sqs->layer_id, mask_filter_info_ext.is_fast_rounded_corner);
++  shared_quad_state->stacking_z = source_sqs->stacking_z;
+   shared_quad_state->layer_namespace_id = client_namespace_id;
+   return shared_quad_state;
+ }
+@@ -2126,6 +2134,177 @@ void SurfaceAggregator::MarkAndPropagateCopyRequestPasses(
+   }
+ }
+ 
++void SurfaceAggregator::SetHaezansCapture(std::optional<int> max_z,
++                                           HaezansRegionCallback callback) {
++  haezans_max_z_ = std::move(max_z);
++  haezans_callback_ = std::move(callback);
++  if (!haezans_max_z_ || !haezans_callback_)
++    haezans_quads_.clear();
++}
++
++void SurfaceAggregator::ApplyHaezansCapture() {
++  if (!haezans_max_z_ || !haezans_callback_ || !dest_pass_list_ ||
++      dest_pass_list_->empty()) {
++    haezans_quads_.clear();
++    return;
++  }
++  const int max_z = *haezans_max_z_;
++
++  size_t content_index = dest_pass_list_->size() - 1;
++  AggregatedRenderPass* content = dest_pass_list_->back().get();
++  if (content->quad_list.size() == 1) {
++    const DrawQuad* only = *content->quad_list.begin();
++    if (const auto* pass_quad =
++            only->DynamicCast<AggregatedRenderPassDrawQuad>()) {
++      for (size_t i = 0; i < dest_pass_list_->size(); ++i) {
++        if ((*dest_pass_list_)[i]->id == pass_quad->render_pass_id) {
++          content_index = i;
++          content = (*dest_pass_list_)[i].get();
++          break;
++        }
++      }
++    }
++  }
++
++  bool any_below = false;
++  for (const DrawQuad* quad : content->quad_list) {
++    if (quad->shared_quad_state->stacking_z <= max_z) {
++      any_below = true;
++      break;
++    }
++  }
++  if (!any_below) {
++    haezans_quads_.clear();
++    haezans_pass_id_.reset();
++    return;
++  }
++
++  if (!haezans_pass_id_)
++    haezans_pass_id_ = render_pass_id_generator_.GenerateNextId();
++
++  auto capture = std::make_unique<AggregatedRenderPass>(
++      content->shared_quad_state_list.size(), content->quad_list.size());
++  capture->SetAll(*haezans_pass_id_, content->output_rect, content->damage_rect,
++                  content->transform_to_root_target, content->content_color_usage,
++                  /*has_transparent_background=*/true,
++                  /*cache_render_pass=*/true,
++                  /*has_damage_from_contributing_content=*/
++                  !content->damage_rect.IsEmpty(),
++                  /*generate_mipmap=*/false);
++
++  auto replacement = content->Copy(content->id);
++  replacement->is_from_surface_root_pass = content->is_from_surface_root_pass;
++#if BUILDFLAG(IS_WIN)
++  replacement->will_backing_be_read_by_viz =
++      content->will_backing_be_read_by_viz;
++  replacement->needs_synchronous_dcomp_commit =
++      content->needs_synchronous_dcomp_commit;
++#endif
++  replacement->video_capture_enabled = content->video_capture_enabled;
++  replacement->copy_requests = std::move(content->copy_requests);
++
++  const SharedQuadState* capture_sqs = nullptr;
++  const SharedQuadState* replacement_sqs = nullptr;
++  std::set<std::tuple<uint32_t, int, int, int, int>> current;
++  std::vector<gfx::Rect> fresh;
++
++  auto append = [](AggregatedRenderPass* dest, const DrawQuad* quad,
++                   const SharedQuadState*& last) {
++    if (quad->shared_quad_state != last) {
++      last = quad->shared_quad_state;
++      *dest->CreateAndAppendSharedQuadState() = *quad->shared_quad_state;
++    }
++    if (const auto* pass_quad =
++            quad->DynamicCast<AggregatedRenderPassDrawQuad>()) {
++      dest->CopyFromAndAppendRenderPassDrawQuad(pass_quad);
++    } else {
++      dest->CopyFromAndAppendDrawQuad(quad);
++    }
++  };
++
++  for (const DrawQuad* quad : content->quad_list) {
++    if (quad->shared_quad_state->stacking_z <= max_z) {
++      append(capture.get(), quad, capture_sqs);
++      gfx::Rect rect = cc::MathUtil::MapEnclosingClippedRect(
++          quad->shared_quad_state->quad_to_target_transform, quad->visible_rect);
++      rect.Intersect(content->output_rect);
++      if (rect.IsEmpty())
++        continue;
++      std::tuple<uint32_t, int, int, int, int> key{
++          quad->shared_quad_state->layer_id, rect.x(), rect.y(), rect.width(),
++          rect.height()};
++      if (current.insert(key).second && !haezans_quads_.contains(key))
++        fresh.push_back(rect);
++    } else {
++      append(replacement.get(), quad, replacement_sqs);
++    }
++  }
++
++  auto* backdrop_sqs = replacement->CreateAndAppendSharedQuadState();
++  backdrop_sqs->SetAll(gfx::Transform(), content->output_rect,
++                       content->output_rect, gfx::MaskFilterInfo(),
++                       /*clip=*/std::nullopt, /*contents_opaque=*/false,
++                       /*opacity_f=*/1.f, SkBlendMode::kSrcOver,
++                       /*sorting_context=*/0, /*layer=*/0u,
++                       /*fast_rounded_corner=*/false);
++  backdrop_sqs->stacking_z = max_z + 1;
++  auto* backdrop = replacement->CreateAndAppendDrawQuad<
++      AggregatedRenderPassDrawQuad>();
++  backdrop->SetNew(backdrop_sqs, content->output_rect, content->output_rect,
++                   *haezans_pass_id_, kInvalidResourceId, gfx::RectF(),
++                   gfx::Size(), gfx::RectF(content->output_rect),
++                   /*force_anti_aliasing_off=*/false);
++
++  if (fresh.size() > 8) {
++    gfx::Rect united;
++    for (const gfx::Rect& rect : fresh)
++      united.Union(rect);
++    fresh.clear();
++    if (!united.IsEmpty())
++      fresh.push_back(united);
++  }
++  haezans_quads_ = std::move(current);
++
++  // Only the new rectangles are drawn and read back. An empty damage rect
++  // keeps the cached backing, so a float opening does not redraw the rest.
++  gfx::Rect capture_damage;
++  for (const gfx::Rect& rect : fresh)
++    capture_damage.Union(rect);
++  capture->damage_rect = capture_damage;
++  capture->has_damage_from_contributing_content = !capture_damage.IsEmpty();
++
++  for (const gfx::Rect& rect : fresh) {
++    auto request = std::make_unique<CopyOutputRequest>(
++        CopyOutputRequest::ResultFormat::RGBA,
++        CopyOutputRequest::ResultDestination::kSystemMemory,
++        base::BindOnce(
++            [](HaezansRegionCallback callback, gfx::Rect rect,
++               std::unique_ptr<CopyOutputResult> result) {
++              if (!result || result->IsEmpty() || !callback)
++                return;
++              const gfx::Size size = result->size();
++              if (size.IsEmpty())
++                return;
++              std::vector<uint8_t> pixels(
++                  static_cast<size_t>(size.width()) * size.height() * 4);
++              if (!result->ReadRGBAPlane(base::span<uint8_t>(pixels),
++                                         size.width() * 4)) {
++                return;
++              }
++              callback.Run(gfx::Rect(rect.origin(), size), std::move(pixels));
++            },
++            haezans_callback_, rect));
++    request->set_area(rect);
++    request->set_result_task_runner(
++        base::SequencedTaskRunner::GetCurrentDefault());
++    capture->copy_requests.push_back(std::move(request));
++  }
++
++  dest_pass_list_->insert(dest_pass_list_->begin() + content_index,
++                          std::move(capture));
++  (*dest_pass_list_)[content_index + 1] = std::move(replacement);
++}
++
+ AggregatedFrame SurfaceAggregator::Aggregate(
+     const SurfaceId& surface_id,
+     base::TimeTicks expected_display_time,
+@@ -2317,6 +2496,8 @@ AggregatedFrame SurfaceAggregator::Aggregate(
+     last_frame_had_delegated_ink_ = false;
+   }
+ 
++  ApplyHaezansCapture();
++
+   if (frame_annotator_)
+     frame_annotator_->AnnotateAggregatedFrame(&frame);
+ 
+diff --git a/components/viz/service/display/surface_aggregator.h b/components/viz/service/display/surface_aggregator.h
+index cd380c460385bdc2ec15be56c413934134fb6e75..e581b887291200dc36af005fd95636047eea8bdd 100644
+--- a/components/viz/service/display/surface_aggregator.h
++++ b/components/viz/service/display/surface_aggregator.h
+@@ -8,6 +8,9 @@
+ #include <map>
+ #include <memory>
+ #include <optional>
++#include <set>
++#include <tuple>
++#include <vector>
+ #include <unordered_map>
+ #include <unordered_set>
+ #include <utility>
+@@ -15,6 +18,7 @@
+ 
+ #include "base/containers/flat_map.h"
+ #include "base/containers/flat_set.h"
++#include "base/functional/callback.h"
+ #include "base/memory/raw_ptr.h"
+ #include "base/rand_util.h"
+ #include "base/time/time.h"
+@@ -28,6 +32,7 @@
+ #include "components/viz/service/surfaces/surface_observer.h"
+ #include "components/viz/service/viz_service_export.h"
+ #include "ui/gfx/delegated_ink_metadata.h"
++#include "ui/gfx/geometry/rect.h"
+ #include "ui/gfx/display_color_spaces.h"
+ #include "ui/gfx/overlay_layer_id.h"
+ #include "ui/gfx/overlay_transform.h"
+@@ -114,6 +119,13 @@ class VIZ_SERVICE_EXPORT SurfaceAggregator : public SurfaceObserver {
+ 
+   void SetMaxRenderTargetSize(int max_size);
+ 
++  // When set, quads at or below |max_z| are drawn once into a persistent pass
++  // and new rectangles of that pass are reported. A null callback turns it off.
++  using HaezansRegionCallback =
++      base::RepeatingCallback<void(const gfx::Rect&, std::vector<uint8_t>)>;
++  void SetHaezansCapture(std::optional<int> max_z,
++                         HaezansRegionCallback callback);
++
+   // Checks if damage to `surface_id` potentially contributes to the display
+   // damage.
+   bool CheckForDisplayDamage(const SurfaceId& surface_id);
+@@ -458,6 +470,13 @@ class VIZ_SERVICE_EXPORT SurfaceAggregator : public SurfaceObserver {
+ 
+   // Flow ids for aggregated frames. Used for tracing.
+   std::unordered_set<int64_t> flow_ids_for_resolved_frames_;
++
++  std::optional<int> haezans_max_z_;
++  HaezansRegionCallback haezans_callback_;
++  std::set<std::tuple<uint32_t, int, int, int, int>> haezans_quads_;
++  std::optional<AggregatedRenderPassId> haezans_pass_id_;
++
++  void ApplyHaezansCapture();
+ };
+ 
+ }  // namespace viz
+diff --git a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc
+index be0b51d7fec5dcc12413a8b4c1b63a0a03dd618b..0195807940160ccb25a9b05677540fdfeffef3c3 100644
+--- a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc
++++ b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.cc
+@@ -10,6 +10,7 @@
+ #include <vector>
+ 
+ #include "base/containers/flat_set.h"
++#include "base/functional/bind.h"
+ #include "base/logging.h"
+ #include "base/memory/ptr_util.h"
+ #include "base/memory/raw_ptr.h"
+@@ -349,6 +350,26 @@ void RootCompositorFrameSinkImpl::SetDisplayVisible(bool visible) {
+   display_->SetVisible(visible);
+ }
+ 
++void RootCompositorFrameSinkImpl::SetHaezansDomCapture(
++    bool enabled,
++    int32_t max_z,
++    mojo::PendingRemote<mojom::HaezansDomCaptureClient> client) {
++  if (!enabled || !client) {
++    haezans_client_.reset();
++    display_->SetHaezansDomCapture(std::nullopt, {});
++    return;
++  }
++  haezans_client_.Bind(std::move(client));
++  display_->SetHaezansDomCapture(
++      max_z, base::BindRepeating(
++                 [](mojo::Remote<mojom::HaezansDomCaptureClient>* remote,
++                    const gfx::Rect& rect, std::vector<uint8_t> pixels) {
++                   if (remote->is_bound())
++                     (*remote)->OnRegion(rect, pixels);
++                 },
++                 base::Unretained(&haezans_client_)));
++}
++
+ #if BUILDFLAG(IS_WIN)
+ void RootCompositorFrameSinkImpl::DisableSwapUntilResize(
+     DisableSwapUntilResizeCallback callback) {
+diff --git a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h
+index 7cc2624817b7fa89cbbb0e14a27cca298fbb5a71..0552bc536247b5a52958d860f81309f6d2ea22ac 100644
+--- a/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h
++++ b/components/viz/service/frame_sinks/root_compositor_frame_sink_impl.h
+@@ -75,6 +75,10 @@ class VIZ_SERVICE_EXPORT RootCompositorFrameSinkImpl
+ 
+   // mojom::DisplayPrivate:
+   void SetDisplayVisible(bool visible) override;
++  void SetHaezansDomCapture(
++      bool enabled,
++      int32_t max_z,
++      mojo::PendingRemote<mojom::HaezansDomCaptureClient> client) override;
+ #if BUILDFLAG(IS_WIN)
+   void DisableSwapUntilResize(DisableSwapUntilResizeCallback callback) override;
+ #endif
+@@ -251,6 +255,8 @@ class VIZ_SERVICE_EXPORT RootCompositorFrameSinkImpl
+   // `FrameIntervalDecider`. Absent if the display does not support those
+   // features.
+   std::optional<base::TimeDelta> max_vsync_interval_ = std::nullopt;
++
++  mojo::Remote<mojom::HaezansDomCaptureClient> haezans_client_;
+ };
+ 
+ }  // namespace viz
+diff --git a/components/viz/service/layers/layer_context_impl.cc b/components/viz/service/layers/layer_context_impl.cc
+index f0ec11b4a501449f95ab092ceaa6dc206a5ec61d..d63159ca940a9017818a5f8738da626fb6af4f5d 100644
+--- a/components/viz/service/layers/layer_context_impl.cc
++++ b/components/viz/service/layers/layer_context_impl.cc
+@@ -389,6 +389,7 @@ base::expected<void, std::string> UpdatePropertyTreeNode(
+   if (wire.effect_changed) {
+     node.effect_changed = true;
+   }
++  node.stacking_z = wire.stacking_z;
+   node.render_surface_reason = wire.render_surface_reason;
+   node.surface_contents_scale = wire.surface_contents_scale;
+   node.subtree_capture_id = wire.subtree_capture_id;
+diff --git a/services/viz/privileged/mojom/compositing/display_private.mojom b/services/viz/privileged/mojom/compositing/display_private.mojom
+index 1219bb98872c01852687d5f4b96aa08e7fc09a09..711cf61b7e07475d0ca42d09cfd23e9ae9c8b7d1 100644
+--- a/services/viz/privileged/mojom/compositing/display_private.mojom
++++ b/services/viz/privileged/mojom/compositing/display_private.mojom
+@@ -31,6 +31,12 @@ struct AdaptiveRefreshRateInfo {
+   float device_scale_factor;
+ };
+ 
++// Receives rectangles of a z-cutoff capture. |rect| is in the window's pixels,
++// origin at the top left. |pixels| is tightly packed RGBA.
++interface HaezansDomCaptureClient {
++  OnRegion(gfx.mojom.Rect rect, array<uint8> pixels);
++};
++
+ // The DisplayPrivate is used by privileged clients to talk to Display.
+ interface DisplayPrivate {
+   SetDisplayVisible(bool visible);
+@@ -119,6 +125,13 @@ interface DisplayPrivate {
+   SetMaxVSyncAndVrr(
+     mojo_base.mojom.TimeDelta? max_vsync_interval,
+     display.mojom.VariableRefreshRateState vrr_state);
++
++  // Draws every quad at or below |max_z| into one persistent texture and sends
++  // each new rectangle to |client|. |enabled| false drops the client.
++  SetHaezansDomCapture(
++      bool enabled,
++      int32 max_z,
++      pending_remote<HaezansDomCaptureClient>? client);
+ };
+ 
+ // DisplayClient allows privileged clients to receive events from the Display.
+diff --git a/services/viz/public/cpp/compositing/shared_quad_state_mojom_traits.h b/services/viz/public/cpp/compositing/shared_quad_state_mojom_traits.h
+index d985d17f1e749731358a831f9cfa4e1ba342db1f..711ed4001464e950d71f35d6289e8c43fbbdbe6f 100644
+--- a/services/viz/public/cpp/compositing/shared_quad_state_mojom_traits.h
++++ b/services/viz/public/cpp/compositing/shared_quad_state_mojom_traits.h
+@@ -72,6 +72,10 @@ struct StructTraits<viz::mojom::SharedQuadStateDataView, OptSharedQuadState> {
+     return input.sqs->sorting_context_id;
+   }
+ 
++  static int32_t stacking_z(const OptSharedQuadState& input) {
++    return input.sqs->stacking_z;
++  }
++
+   static uint32_t layer_id(const OptSharedQuadState& input) {
+     return input.sqs->layer_id;
+   }
+@@ -125,6 +129,10 @@ struct StructTraits<viz::mojom::SharedQuadStateDataView, viz::SharedQuadState> {
+     return sqs.sorting_context_id;
+   }
+ 
++  static int32_t stacking_z(const viz::SharedQuadState& sqs) {
++    return sqs.stacking_z;
++  }
++
+   static uint32_t layer_id(const viz::SharedQuadState& sqs) {
+     return sqs.layer_id;
+   }
+@@ -161,6 +169,7 @@ struct StructTraits<viz::mojom::SharedQuadStateDataView, viz::SharedQuadState> {
+     }
+     out->blend_mode = static_cast<SkBlendMode>(data.blend_mode());
+     out->sorting_context_id = data.sorting_context_id();
++    out->stacking_z = data.stacking_z();
+     out->layer_id = data.layer_id();
+     out->is_fast_rounded_corner = data.is_fast_rounded_corner();
+ 
+diff --git a/services/viz/public/mojom/compositing/layer.mojom b/services/viz/public/mojom/compositing/layer.mojom
+index 885c0b0fd1f44101badece1cbb69d70915ef7bda..943d25935d4d52e70f8ed2a6a88d9653fd1b1673 100644
+--- a/services/viz/public/mojom/compositing/layer.mojom
++++ b/services/viz/public/mojom/compositing/layer.mojom
+@@ -509,6 +509,9 @@ struct EffectNode {
+   // validated to be no greater than SkBlendMode::kLastMode.
+   uint32 blend_mode;
+ 
++  // Resolved CSS stacking number. See cc::EffectNode::stacking_z.
++  int32 stacking_z = 0;
++
+   // The index of the ancestor EffectNode which induces a render surface. Must
+   // be a valid index in the same effect tree.
+   int32 target_id;
+diff --git a/services/viz/public/mojom/compositing/shared_quad_state.mojom b/services/viz/public/mojom/compositing/shared_quad_state.mojom
+index 34ee5c2701ee959a39b58b1741477c68d1a7e7b6..b0393096e2f377af66a730c2e2c4518baa4b69e2 100644
+--- a/services/viz/public/mojom/compositing/shared_quad_state.mojom
++++ b/services/viz/public/mojom/compositing/shared_quad_state.mojom
+@@ -39,6 +39,7 @@ struct SharedQuadState {
+   // supported.
+   uint32 blend_mode;
+   int32 sorting_context_id;
++  int32 stacking_z;
+   uint32 layer_id;
+ 
+   bool is_fast_rounded_corner;
+diff --git a/third_party/blink/renderer/core/paint/paint_property_tree_builder.cc b/third_party/blink/renderer/core/paint/paint_property_tree_builder.cc
+index 89e616d84ee1806b5ae9bd3703a08f7ed823d05d..00be07b751e06c088413e231d19a3d68e2ece919 100644
+--- a/third_party/blink/renderer/core/paint/paint_property_tree_builder.cc
++++ b/third_party/blink/renderer/core/paint/paint_property_tree_builder.cc
+@@ -1982,6 +1982,8 @@ void FragmentPaintPropertyTreeBuilder::UpdateEffect() {
+       if (EffectCanUseCurrentClipAsOutputClip())
+         state.output_clip = context_.current.clip;
+       state.opacity = style.Opacity();
++      if (!style.HasAutoZIndex())
++        state.stacking_z = style.ZIndex();
+       // If the mask image is not valid, it must be treated as a transparent
+       // black image layer. See
+       // https://drafts.fxtf.org/css-masking-1/#the-mask-image.
+diff --git a/third_party/blink/renderer/platform/graphics/compositing/property_tree_manager.cc b/third_party/blink/renderer/platform/graphics/compositing/property_tree_manager.cc
+index fa431fb0f657712f9c534718ee72c5d531b0cb6e..fe4bef4b1b016086b288f38f0ab6e3cfca1533d8 100644
+--- a/third_party/blink/renderer/platform/graphics/compositing/property_tree_manager.cc
++++ b/third_party/blink/renderer/platform/graphics/compositing/property_tree_manager.cc
+@@ -1327,6 +1327,15 @@ static cc::RenderSurfaceReason RenderSurfaceReasonForEffect(
+   return conditional_reason;
+ }
+ 
++int StackingZForEffect(const EffectPaintPropertyNode& start) {
++  for (const EffectPaintPropertyNode* node = &start; node;
++       node = node->UnaliasedParent()) {
++    if (node->StackingZ().has_value())
++      return *node->StackingZ();
++  }
++  return 0;
++}
++
+ void PropertyTreeManager::PopulateCcEffectNode(
+     cc::EffectNode& effect_node,
+     const EffectPaintPropertyNode& effect,
+@@ -1335,6 +1344,7 @@ void PropertyTreeManager::PopulateCcEffectNode(
+   effect_node.clip_id = output_clip_id;
+   effect_node.render_surface_reason = RenderSurfaceReasonForEffect(effect);
+   effect_node.opacity = effect.Opacity();
++  effect_node.stacking_z = StackingZForEffect(effect);
+   const auto& transform = effect.LocalTransformSpace().Unalias();
+   effect_node.transform_id = EnsureCompositorTransformNode(transform);
+   effect_node.needs_effect_for_2d_scale_transform =
+diff --git a/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.cc b/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.cc
+index b10977df2ec0e7c26139fe671d54a44157870479..54b712337d1197a07a5f2583c03f7e740df79618 100644
+--- a/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.cc
++++ b/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.cc
+@@ -58,6 +58,7 @@ PaintPropertyChangeType EffectPaintPropertyNode::State::ComputeChange(
+       output_clip != other.output_clip || blend_mode != other.blend_mode ||
+       direct_compositing_reasons != other.direct_compositing_reasons ||
+       compositor_element_id != other.compositor_element_id ||
++      stacking_z != other.stacking_z ||
+       view_transition_element_resource_id !=
+           other.view_transition_element_resource_id ||
+       restriction_target_id != other.restriction_target_id ||
+diff --git a/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.h b/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.h
+index 793186332fab250dcb9e4f7bc579e75c7e079757..62e341ec74880c2124389dc48a68dbd7cf8797bc 100644
+--- a/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.h
++++ b/third_party/blink/renderer/platform/graphics/paint/effect_paint_property_node.h
+@@ -6,6 +6,7 @@
+ #define THIRD_PARTY_BLINK_RENDERER_PLATFORM_GRAPHICS_PAINT_EFFECT_PAINT_PROPERTY_NODE_H_
+ 
+ #include <algorithm>
++#include <optional>
+ 
+ #include "components/viz/common/view_transition_element_resource_id.h"
+ #include "third_party/blink/renderer/platform/graphics/canvas_child_paint_state.h"
+@@ -144,6 +145,8 @@ class PLATFORM_EXPORT EffectPaintPropertyNode final
+     std::unique_ptr<BackdropFilterInfo> backdrop_filter_info;
+     float opacity = 1;
+     SkBlendMode blend_mode = SkBlendMode::kSrcOver;
++    // Set when this element has an integer z-index. Unset means inherit.
++    std::optional<int> stacking_z;
+     // === End of effects ===
+     CompositingReasons direct_compositing_reasons = CompositingReason::kNone;
+     CompositorElementId compositor_element_id;
+@@ -234,6 +237,7 @@ class PLATFORM_EXPORT EffectPaintPropertyNode final
+   }
+ 
+   SkBlendMode BlendMode() const { return state_.blend_mode; }
++  const std::optional<int>& StackingZ() const { return state_.stacking_z; }
+   float Opacity() const { return state_.opacity; }
+   const CompositorFilterOperations* Filter() const {
+     return state_.filter_info ? &state_.filter_info->operations : nullptr;
+diff --git a/ui/compositor/compositor.cc b/ui/compositor/compositor.cc
+index 5cb8f51c9ef6ac098629970d195eb593720eceb4..bcd7d59e9af6c18b4d5df8377c7fa1959b81d457 100644
+--- a/ui/compositor/compositor.cc
++++ b/ui/compositor/compositor.cc
+@@ -600,6 +600,14 @@ void Compositor::SetBackgroundColor(SkColor color) {
+   ScheduleDraw();
+ }
+ 
++void Compositor::SetHaezansDomCapture(
++    bool enabled,
++    int32_t max_z,
++    mojo::PendingRemote<viz::mojom::HaezansDomCaptureClient> client) {
++  if (display_private_)
++    display_private_->SetHaezansDomCapture(enabled, max_z, std::move(client));
++}
++
+ void Compositor::SetVisible(bool visible) {
+   const bool changed = visible != IsVisible();
+   if (changed) {
+diff --git a/ui/compositor/compositor.h b/ui/compositor/compositor.h
+index b36dfec6bec2009b7761ec4ce3739a7f50f1196b..07d4e9af246c644470f49b22a21c1f3d1e98e657 100644
+--- a/ui/compositor/compositor.h
++++ b/ui/compositor/compositor.h
+@@ -301,6 +301,13 @@ class COMPOSITOR_EXPORT Compositor : public base::PowerSuspendObserver,
+   // call to CreateLayerTreeFrameSink.
+   void SetVisible(bool visible);
+ 
++  // Forwards a z-cutoff capture to this window's display. |enabled| false
++  // turns it off.
++  void SetHaezansDomCapture(
++      bool enabled,
++      int32_t max_z,
++      mojo::PendingRemote<viz::mojom::HaezansDomCaptureClient> client);
++
+   // Gets the visibility of the underlying compositor.
+   bool IsVisible();
+ 

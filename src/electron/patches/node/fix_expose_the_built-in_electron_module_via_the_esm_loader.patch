@@ -1,0 +1,155 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Samuel Attard <sattard@salesforce.com>
+Date: Thu, 6 Oct 2022 04:09:16 -0700
+Subject: fix: expose the built-in electron module via the ESM loader
+
+This allows usage of `import { app } from 'electron'` and `import('electron')` natively in the browser + non-sandboxed renderer
+
+diff --git a/lib/internal/modules/customization_hooks.js b/lib/internal/modules/customization_hooks.js
+index c2579269ec6396097aee1acd45d2830500a6a57a..70cb459d10d60caac56f9c980fbba242d5e7881c 100644
+--- a/lib/internal/modules/customization_hooks.js
++++ b/lib/internal/modules/customization_hooks.js
+@@ -286,6 +286,7 @@ function validateSourceStrict(url, context, result) {
+   // the builtins even though the default load step only provides null as source,
+   // and any source content for builtins provided by the user hooks are ignored.
+   if (!StringPrototypeStartsWith(url, 'node:') &&
++    !StringPrototypeStartsWith(url, 'electron:') &&
+     typeof result.source !== 'string' &&
+       !isAnyArrayBuffer(source) &&
+       !isArrayBufferView(source) &&
+diff --git a/lib/internal/modules/esm/get_format.js b/lib/internal/modules/esm/get_format.js
+index 7bc69b3eb5c358e1c99ee00449243f8bb4b36536..fcb9007a93293ff7227586f7f927e9121cc18348 100644
+--- a/lib/internal/modules/esm/get_format.js
++++ b/lib/internal/modules/esm/get_format.js
+@@ -83,6 +83,7 @@ const protocolHandlers = {
+   'data:': getDataProtocolModuleFormat,
+   'file:': getFileProtocolModuleFormat,
+   'node:'() { return 'builtin'; },
++  'electron:'() { return 'electron'; },
+ };
+ 
+ /**
+diff --git a/lib/internal/modules/esm/load.js b/lib/internal/modules/esm/load.js
+index 94879761553e02746853eecf316d88da61ab4277..080d917129990f3593ece63ebcf650379fe373a3 100644
+--- a/lib/internal/modules/esm/load.js
++++ b/lib/internal/modules/esm/load.js
+@@ -81,7 +81,7 @@ function defaultLoad(url, context = kEmptyObject) {
+ 
+   throwIfUnsupportedURLScheme(urlInstance);
+ 
+-  if (urlInstance.protocol === 'node:') {
++  if (urlInstance.protocol === 'node:' || format === 'electron') {
+     source = null;
+     format ??= 'builtin';
+   } else if (format === 'addon') {
+@@ -97,7 +97,7 @@ function defaultLoad(url, context = kEmptyObject) {
+       // Now that we have the source for the module, run `defaultGetFormat` to detect its format.
+       format = defaultGetFormat(urlInstance, context);
+ 
+-      if (format === 'commonjs') {
++      if (format === 'electron' || format === 'commonjs') {
+         // For backward compatibility reasons, we need to discard the source in
+         // order for the CJS loader to re-fetch it.
+         source = null;
+@@ -145,7 +145,7 @@ function defaultLoadSync(url, context = kEmptyObject) {
+ 
+   throwIfUnsupportedURLScheme(urlInstance, false);
+ 
+-  if (urlInstance.protocol === 'node:') {
++  if (urlInstance.protocol === 'node:' || format === 'electron') {
+     source = null;
+     format ??= 'builtin';
+   } else if (format === 'addon') {
+@@ -184,12 +184,13 @@ function throwIfUnsupportedURLScheme(parsed) {
+     protocol !== 'file:' &&
+     protocol !== 'data:' &&
+     protocol !== 'node:' &&
++    protocol !== 'electron:' &&
+     (
+       protocol !== 'https:' &&
+       protocol !== 'http:'
+     )
+   ) {
+-    const schemes = ['file', 'data', 'node'];
++    const schemes = ['file', 'data', 'node', 'electron'];
+     throw new ERR_UNSUPPORTED_ESM_URL_SCHEME(parsed, schemes);
+   }
+ }
+diff --git a/lib/internal/modules/esm/loader.js b/lib/internal/modules/esm/loader.js
+index b96999d80b6aaad4767b563bdbd0f9e2591d37e3..117f844efb7c6ac6f7bd9c1b0fd244443fb841f7 100644
+--- a/lib/internal/modules/esm/loader.js
++++ b/lib/internal/modules/esm/loader.js
+@@ -398,7 +398,7 @@ class ModuleLoader {
+     assert(wrap instanceof ModuleWrap, `Translator used for require(${url}) should not be async`);
+ 
+     const cjsModule = wrap[imported_cjs_symbol];
+-    if (cjsModule) {
++    if (cjsModule && translatorKey !== 'electron') {
+       // Check if the ESM initiating import CJS is being required by the same CJS module.
+       if (cjsModule?.[kIsExecuting]) {
+         const parentFilename = urlToFilename(parentURL);
+diff --git a/lib/internal/modules/esm/resolve.js b/lib/internal/modules/esm/resolve.js
+index b028f44f01388605e114130c138568f0bceea76d..185793fa305edbeab299f743e0018f34b2aaa655 100644
+--- a/lib/internal/modules/esm/resolve.js
++++ b/lib/internal/modules/esm/resolve.js
+@@ -751,6 +751,9 @@ function packageImportsResolve(name, base, conditions) {
+   throw importNotDefined(name, packageJSONUrl, base);
+ }
+ 
++const electronTypes = [
++  'electron', 'electron/main', 'electron/common', 'electron/renderer', 'electron/utility'
++];
+ 
+ /**
+  * Resolves a package specifier to a URL.
+@@ -765,6 +768,11 @@ function packageResolve(specifier, base, conditions) {
+     return new URL('node:' + specifier);
+   }
+ 
++  const electronSpecifiers = new SafeSet(electronTypes);
++  if (electronSpecifiers.has(specifier)) {
++    return new URL('electron:electron');
++  }
++
+   const { packageJSONUrl, packageJSONPath, packageSubpath } = packageJsonReader.getPackageJSONURL(specifier, base);
+ 
+   const packageConfig = packageJsonReader.read(packageJSONPath, { __proto__: null, specifier, base, isESM: true });
+diff --git a/lib/internal/modules/esm/translators.js b/lib/internal/modules/esm/translators.js
+index 7fb265c01b8d06f15fb24d9096fabf74e02c2354..f3c3399b6891dd6766e6ecf8c892aa95d91c6ec3 100644
+--- a/lib/internal/modules/esm/translators.js
++++ b/lib/internal/modules/esm/translators.js
+@@ -217,7 +217,9 @@ function createCJSModuleWrap(url, translateContext, parentURL) {
+   const { exportNames, module } = cjsPreparseModuleExports(filename, source, sourceFormat);
+   cjsCache.set(url, module);
+ 
+-  const wrapperNames = [...exportNames];
++  const wrapperNames = filename === 'electron' ?
++    ['default', ...Object.keys(module.exports)] :
++    [...exportNames];
+   if (!exportNames.has('default')) {
+     ArrayPrototypePush(wrapperNames, 'default');
+   }
+@@ -329,6 +331,10 @@ translators.set('require-commonjs', (url, translateContext, parentURL) => {
+   return createCJSModuleWrap(url, translateContext, parentURL);
+ });
+ 
++translators.set('electron', () => {
++  return createCJSModuleWrap('electron', { source: '' });
++});
++
+ // Handle TypeScript CommonJS modules referenced by `require` calls using re-invented require.
+ // This path is only used by require() from imported CJS customized by the *async*
+ // loader hooks.
+diff --git a/lib/internal/url.js b/lib/internal/url.js
+index 0845f867fcd8eef099b572422e932daf256d2db0..12b2aaa6985879e5c1500379efc50444195b3abf 100644
+--- a/lib/internal/url.js
++++ b/lib/internal/url.js
+@@ -1625,6 +1625,8 @@ function fileURLToPath(path, options = kEmptyObject) {
+     path = new URL(path);
+   else if (!isURL(path))
+     throw new ERR_INVALID_ARG_TYPE('path', ['string', 'URL'], path);
++  if (path.protocol === 'electron:')
++    return 'electron';
+   if (path.protocol !== 'file:')
+     throw new ERR_INVALID_URL_SCHEME('file');
+   return (windows ?? isWindows) ? getPathFromURLWin32(path) : getPathFromURLPosix(path);

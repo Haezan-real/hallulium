@@ -226,7 +226,7 @@ vs-chromium-project.txt
 /data
 /delegate_execute
 /device/serial/device_serial_mojo.xml
-/electron
+# Hallulium is one git repo; Electron is host source, not a nested checkout.
 /GEMINI.md
 /google_apis/gcm/gcm.xml
 /googleurl

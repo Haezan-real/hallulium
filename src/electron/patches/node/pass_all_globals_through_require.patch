@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Cheng Zhao <zcbenz@gmail.com>
+Date: Sun, 27 Mar 2016 14:42:26 +0900
+Subject: Pass all globals through "require"
+
+(cherry picked from commit 7d015419cb7a0ecfe6728431a4ed2056cd411d62)
+
+diff --git a/lib/internal/modules/cjs/loader.js b/lib/internal/modules/cjs/loader.js
+index 5382be9b10390fe8ad6bac764ed2c35a36116b3a..bc144664b02443c0c366bf355fe062bc2ebd3b7e 100644
+--- a/lib/internal/modules/cjs/loader.js
++++ b/lib/internal/modules/cjs/loader.js
+@@ -209,6 +209,13 @@ const {
+   CHAR_FORWARD_SLASH,
+ } = require('internal/constants');
+ 
++// Store the "global" variable from global scope into a local scope, so we can
++// still reference it from this file even after we deleted the "global" variable
++// from the global scope.
++const localGlobal = (typeof global !== 'undefined') ? global : undefined;
++// Do the same for "Buffer".
++const localBuffer = (typeof Buffer !== 'undefined') ? Buffer : undefined;
++
+ const {
+   isProxy,
+ } = require('internal/util/types');
+@@ -1867,9 +1874,12 @@ Module.prototype._compile = function(content, filename, format) {
+   if (this[kIsMainSymbol] && getOptionValue('--inspect-brk')) {
+     const { callAndPauseOnStart } = internalBinding('inspector');
+     result = callAndPauseOnStart(compiledWrapper, thisValue, exports,
+-                                 require, module, filename, dirname);
++                                 require, module, filename, dirname,
++                                 process, localGlobal, localBuffer);
+   } else {
+-    result = FunctionPrototypeCall(compiledWrapper, thisValue, exports, require, module, filename, dirname);
++    result = FunctionPrototypeCall(compiledWrapper, thisValue, exports,
++                                   require, module, filename, dirname,
++                                   process, localGlobal, localBuffer);
+   }
+   this[kIsExecuting] = false;
+   if (requireDepth === 0) { statCache = null; }

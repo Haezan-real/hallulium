@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Haezan-real <exetude@gmail.com>
+Date: Fri, 13 Nov 2026 09:59:22 -0500
+Subject: Don't paint the mouse cursor into tab captures.
+
+Tab capture always starts MouseCursorOverlayController, so a page that asks for cursor never still gets the pointer composited into the frames. The on-screen cursor is drawn by the window itself, and Stop is a no-op when Start never ran.
+
+diff --git a/content/browser/media/capture/frame_sink_video_capture_device.cc b/content/browser/media/capture/frame_sink_video_capture_device.cc
+index 42544226bfd12a9a37d574abc9a16b353d270c69..afea39e4fe4fbd250d2cf6575e5e7c31981b77c4 100644
+--- a/content/browser/media/capture/frame_sink_video_capture_device.cc
++++ b/content/browser/media/capture/frame_sink_video_capture_device.cc
+@@ -47,10 +47,6 @@ namespace content {
+ 
+ namespace {
+ 
+-#if !BUILDFLAG(IS_IOS)
+-constexpr int32_t kMouseCursorStackingIndex = 1;
+-#endif
+-
+ // Transfers ownership of an object to a std::unique_ptr with a custom deleter
+ // that ensures the object is destroyed on the UI BrowserThread.
+ template <typename T>
+@@ -336,15 +332,6 @@ void FrameSinkVideoCaptureDevice::AllocateCapturer(
+   if (target_) {
+     capturer_->ChangeTarget(target_, sub_capture_version_);
+   }
+-
+-#if !BUILDFLAG(IS_IOS)
+-  GetUIThreadTaskRunner({})->PostTask(
+-      FROM_HERE,
+-      base::BindOnce(&MouseCursorOverlayController::Start,
+-                     cursor_controller_->GetWeakPtr(),
+-                     capturer_->CreateOverlay(kMouseCursorStackingIndex),
+-                     base::SingleThreadTaskRunner::GetCurrentDefault()));
+-#endif
+ }
+ 
+ void FrameSinkVideoCaptureDevice::AllocateAndStart(

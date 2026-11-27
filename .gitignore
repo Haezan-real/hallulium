@@ -2,3 +2,4 @@
 src/out/
 runtime/*.exe
 *.pdb
+# Chromium gitignores /electron as a gclient overlay. Track it here.

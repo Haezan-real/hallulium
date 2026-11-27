@@ -1,0 +1,11 @@
+{
+  "git.statusLimit": 0,
+  "files.watcherExclude": {
+    "**/src/out/**": true,
+    "**/.cipd/**": true
+  },
+  "search.exclude": {
+    "**/src/out": true,
+    "**/.cipd": true
+  }
+}
